@@ -4,6 +4,8 @@ Starting point for godot projects.
 ## Setup
 Install Godot 4.6.2 https://godotengine.org/
 
+Install Godot command line and put it on your path https://docs.godotengine.org/en/latest/tutorials/editor/command_line_tutorial.html#path
+
 Install npm. Install highlight.js for gdscript at https://www.npmjs.com/package/@exercism/highlightjs-gdscript?activeTab=readme
 
 ### MCPs
