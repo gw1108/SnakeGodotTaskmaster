@@ -32,12 +32,18 @@ autostart = true
 [node name="HUD" type="CanvasLayer" parent="."]
 process_mode = 1
 
-[node name="ScoreLabel" type="Label" parent="HUD"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 200.0
-offset_bottom = 40.0
+[node name="ScorePanel" type="PanelContainer" parent="HUD"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 180.0
+offset_bottom = 56.0
+self_modulate = Color(0, 0, 0, 0.5)
+
+[node name="ScoreLabel" type="Label" parent="HUD/ScorePanel"]
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
 text = "Score: 0"
 
@@ -70,6 +76,9 @@ theme_override_constants/separation = 16
 layout_mode = 2
 text = "GAME OVER"
 horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 48
 
 [node name="FinalScoreLabel" type="Label" parent="GameOverOverlay/VBoxContainer"]
@@ -130,6 +139,9 @@ theme_override_constants/separation = 12
 layout_mode = 2
 text = "PAUSED"
 horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 3
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 48
 
 [node name="HintLabel" type="Label" parent="PauseOverlay/VBoxContainer"]
