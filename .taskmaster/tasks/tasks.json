@@ -26,11 +26,12 @@
         "dependencies": [
           "1"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 3,
         "recommendedSubtasks": 5,
-        "expansionPrompt": "Divide static rendering into: (1) Create Playfield.gd with grid constants and _draw() method for background and grid lines, (2) Create Game.tscn with Node2D root and Playfield child node, (3) Implement Snake.gd with static body array and _draw() rendering, (4) Implement Apple.gd with static position and _draw() rendering, (5) Configure Camera2D positioning and test complete scene rendering"
+        "expansionPrompt": "Divide static rendering into: (1) Create Playfield.gd with grid constants and _draw() method for background and grid lines, (2) Create Game.tscn with Node2D root and Playfield child node, (3) Implement Snake.gd with static body array and _draw() rendering, (4) Implement Apple.gd with static position and _draw() rendering, (5) Configure Camera2D positioning and test complete scene rendering",
+        "updatedAt": "2026-05-16T03:02:19.170Z"
       },
       {
         "id": "3",
@@ -195,9 +196,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-16T03:00:27.738Z",
+      "lastModified": "2026-05-16T03:02:19.171Z",
       "taskCount": 12,
-      "completedCount": 1,
+      "completedCount": 2,
       "tags": [
         "master"
       ]

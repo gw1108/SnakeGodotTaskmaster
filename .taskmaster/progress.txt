@@ -15,3 +15,11 @@
 - Added scripts/Main.gd: scene router (load_menu/load_game/change_scene) with ResourceLoader.exists guard so launching before MainMenu/Game scenes exist won't crash.
 - Added scenes/Main.tscn referencing Main.gd as a Node root.
 - Learning: Godot CLI not on PATH — couldn't run headless --check-only; syntax verified visually. Initially placed .gdignore in assets/ which would hide it from Godot — replaced with .gitkeep.
+
+## Iteration 2 — Task #2: Grid Playfield and Static Rendering (done)
+- Added scripts/Playfield.gd: Node2D, GRID_WIDTH/HEIGHT=20, CELL_SIZE=32. _draw() paints black bg, dark grid lines, white 2px border.
+- Added scripts/Snake.gd: Node2D with body Array[Vector2i] = [(10,10),(9,10),(8,10)]. Head darker GREEN, body LIME_GREEN.
+- Added scripts/Apple.gd: Node2D with position_grid Vector2i(15,10), red cell.
+- Added scenes/Game.tscn: Node2D root "Game" with Playfield, Snake, Apple, and Camera2D at (320,320) so the 640x640 grid fits the configured viewport.
+- Each _ready() calls queue_redraw() to guarantee initial paint (Godot 4 uses queue_redraw, not update).
+- Godot CLI still unavailable on PATH — syntax verified visually; runtime visual check requires editor launch.
