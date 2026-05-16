@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@exercism/highlightjs-gdscript": "^0.0.1"
+  }
+}
