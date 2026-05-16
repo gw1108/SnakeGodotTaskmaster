@@ -47,3 +47,9 @@
 - scripts/Game.gd: added `is_game_over: bool`. `_on_game_tick` early-returns when game over, calls `snake.check_collision()` *after* move and before apple-eat (a wall/self hit on the eat tick should still terminate). `_game_over()` flips the flag, stops the GameTick timer, and prints the restart hint. `_unhandled_input` early-returns to `get_tree().reload_current_scene()` on `ui_accept` when game over, otherwise feeds direction queue as before.
 - Restart via scene reload — re-initializes Snake/Apple/Game state cleanly without manual reset code. `ui_accept` is a built-in Godot action (Space/Enter), no project.godot change needed.
 - Learning: order in `_on_game_tick` matters — check_collision before apple-eat so a death on the apple tile doesn't grow before stopping. No Godot CLI for runtime verification.
+
+## Iteration 7 — Task #7: Score HUD and Score Tracking (done)
+- scripts/Game.gd: added `score: int = 0` and `@onready var score_label: Label = $HUD/ScoreLabel`. `_ready()` calls `_update_hud()` for the initial "Score: 0" paint. On apple eat, increments `score` and calls `_update_hud()` (after grow+respawn so the HUD reflects the now-true count).
+- scenes/Game.tscn: added `HUD` CanvasLayer child of root with `ScoreLabel` Label inside — offset_left/top=10 for top-left placement, white font color override, 24pt font size override, default text "Score: 0". CanvasLayer keeps the HUD fixed regardless of Camera2D position.
+- Restart already works: `reload_current_scene()` re-instantiates Game.gd, resetting `score` to 0 and `_update_hud()` repaints. Game-over leaves the HUD intact (CanvasLayer not stopped, label not cleared) so the final score stays visible.
+- Learning: no `load_steps` bump needed — added nodes use built-in classes (CanvasLayer, Label), not new ext_resources. Godot CLI still unavailable; visual verification requires editor launch.

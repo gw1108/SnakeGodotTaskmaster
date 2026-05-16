@@ -3,11 +3,14 @@ extends Node2D
 @onready var snake: Node2D = $Snake
 @onready var apple: Node2D = $Apple
 @onready var game_tick: Timer = $GameTick
+@onready var score_label: Label = $HUD/ScoreLabel
 
 var is_game_over: bool = false
+var score: int = 0
 
 func _ready() -> void:
 	game_tick.timeout.connect(_on_game_tick)
+	_update_hud()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_game_over:
@@ -33,6 +36,11 @@ func _on_game_tick() -> void:
 	if snake.body[0] == apple.position_grid:
 		snake.grow()
 		apple.respawn(snake.body)
+		score += 1
+		_update_hud()
+
+func _update_hud() -> void:
+	score_label.text = "Score: " + str(score)
 
 func _game_over() -> void:
 	is_game_over = true

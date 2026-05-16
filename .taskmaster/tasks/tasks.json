@@ -111,11 +111,12 @@
         "dependencies": [
           "6"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 3,
         "recommendedSubtasks": 4,
-        "expansionPrompt": "Break HUD implementation into: (1) Add CanvasLayer and Label nodes to Game.tscn scene tree, (2) Configure ScoreLabel properties (position, font size, color theming), (3) Add score variable and update_hud() method to Game.gd, (4) Integrate score increment in apple eating logic and test HUD updates during gameplay and restart"
+        "expansionPrompt": "Break HUD implementation into: (1) Add CanvasLayer and Label nodes to Game.tscn scene tree, (2) Configure ScoreLabel properties (position, font size, color theming), (3) Add score variable and update_hud() method to Game.gd, (4) Integrate score increment in apple eating logic and test HUD updates during gameplay and restart",
+        "updatedAt": "2026-05-16T03:10:59.814Z"
       },
       {
         "id": "8",
@@ -200,9 +201,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-16T03:09:15.574Z",
+      "lastModified": "2026-05-16T03:10:59.814Z",
       "taskCount": 12,
-      "completedCount": 6,
+      "completedCount": 7,
       "tags": [
         "master"
       ]
