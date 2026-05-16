@@ -7,3 +7,5 @@ Move the prd to the correct place that taskmaster expects it to be.
 (that moved it to .taskmaster/docs/prd.txt)
 
 (At this point i thought the thing it created kinda sucks. Reworking and rerunning the prompt, but commiting this for posterity.)
+
+Read the snake-gameplay-extracted.md file and create a very simple product requirement document based off of that file while also following the .taskmaster\templates\example_prd.txt template. The goal is to describe a simple 2D game that will be implemented in godot. It should be 2D. If it's not clear what features should be in the final game work back and forth with me by asking clarifying questions before writing out the new prd. Save out the prd into .taskmaster/docs/prd.txt.
