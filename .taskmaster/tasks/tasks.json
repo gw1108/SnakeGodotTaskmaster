@@ -94,11 +94,12 @@
         "dependencies": [
           "5"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 5,
         "recommendedSubtasks": 6,
-        "expansionPrompt": "Divide collision system into: (1) Implement Snake.check_collision() with wall boundary checking using grid constants, (2) Add self-collision detection looping through body segments, (3) Add is_game_over state flag and game_over() method to Game.gd, (4) Update _on_game_tick() to check collisions before apple eating, (5) Implement restart_game() using get_tree().reload_current_scene(), (6) Update _process() to handle game over input blocking and restart input detection"
+        "expansionPrompt": "Divide collision system into: (1) Implement Snake.check_collision() with wall boundary checking using grid constants, (2) Add self-collision detection looping through body segments, (3) Add is_game_over state flag and game_over() method to Game.gd, (4) Update _on_game_tick() to check collisions before apple eating, (5) Implement restart_game() using get_tree().reload_current_scene(), (6) Update _process() to handle game over input blocking and restart input detection",
+        "updatedAt": "2026-05-16T03:09:15.574Z"
       },
       {
         "id": "7",
@@ -199,9 +200,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-16T03:07:28.229Z",
+      "lastModified": "2026-05-16T03:09:15.574Z",
       "taskCount": 12,
-      "completedCount": 5,
+      "completedCount": 6,
       "tags": [
         "master"
       ]

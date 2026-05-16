@@ -1,6 +1,8 @@
 extends Node2D
 
 const CELL_SIZE := 32
+const GRID_WIDTH := 20
+const GRID_HEIGHT := 20
 
 var body: Array[Vector2i] = [Vector2i(10, 10), Vector2i(9, 10), Vector2i(8, 10)]
 var heading: Vector2i = Vector2i.RIGHT
@@ -34,3 +36,12 @@ func move() -> void:
 
 func grow() -> void:
 	pending_growth += 1
+
+func check_collision() -> bool:
+	var head := body[0]
+	if head.x < 0 or head.x >= GRID_WIDTH or head.y < 0 or head.y >= GRID_HEIGHT:
+		return true
+	for i in range(1, body.size()):
+		if head == body[i]:
+			return true
+	return false

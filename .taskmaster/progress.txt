@@ -41,3 +41,9 @@
 - scripts/Apple.gd: added GRID_WIDTH/HEIGHT constants and `respawn(snake_body)` which enumerates all cells, filters those not in `snake_body` (uses `Array.has()` rather than `not in` for typed-array safety), and picks a random empty cell via `randi() % empty_cells.size()`.
 - scripts/Game.gd: added `@onready var apple = $Apple`; after `snake.move()` checks `snake.body[0] == apple.position_grid` to grow + respawn on the same tick. Respawn is called *after* grow so the just-inserted head is part of `snake.body` and the apple can't land on it.
 - Learning: kept the eat-check post-move (head already advanced), which matches the task spec and avoids a one-tick visual lag. No Godot CLI for runtime verification.
+
+## Iteration 6 — Task #6: Collision Detection and Game Over State (done)
+- scripts/Snake.gd: added GRID_WIDTH/HEIGHT constants and `check_collision()` — returns true if head is out of bounds (x/y outside [0, GRID_*)) or matches any body[i] for i>=1 (skip head itself).
+- scripts/Game.gd: added `is_game_over: bool`. `_on_game_tick` early-returns when game over, calls `snake.check_collision()` *after* move and before apple-eat (a wall/self hit on the eat tick should still terminate). `_game_over()` flips the flag, stops the GameTick timer, and prints the restart hint. `_unhandled_input` early-returns to `get_tree().reload_current_scene()` on `ui_accept` when game over, otherwise feeds direction queue as before.
+- Restart via scene reload — re-initializes Snake/Apple/Game state cleanly without manual reset code. `ui_accept` is a built-in Godot action (Space/Enter), no project.godot change needed.
+- Learning: order in `_on_game_tick` matters — check_collision before apple-eat so a death on the apple tile doesn't grow before stopping. No Godot CLI for runtime verification.
