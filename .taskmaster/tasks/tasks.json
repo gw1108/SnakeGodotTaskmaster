@@ -145,11 +145,12 @@
         "dependencies": [
           "8"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 4,
         "recommendedSubtasks": 5,
-        "expansionPrompt": "Break menu creation into: (1) Create MainMenu.tscn with Control root and VBoxContainer layout structure, (2) Add and configure all UI elements (title label, high score label, buttons) with theme properties, (3) Implement MainMenu.gd with _ready() to display HighScore data and setup button signals, (4) Implement scene transition methods (_on_start_pressed, _on_quit_pressed) using scene tree API, (5) Test menu flow: launch to menu, start game, game over, return to menu with updated high score"
+        "expansionPrompt": "Break menu creation into: (1) Create MainMenu.tscn with Control root and VBoxContainer layout structure, (2) Add and configure all UI elements (title label, high score label, buttons) with theme properties, (3) Implement MainMenu.gd with _ready() to display HighScore data and setup button signals, (4) Implement scene transition methods (_on_start_pressed, _on_quit_pressed) using scene tree API, (5) Test menu flow: launch to menu, start game, game over, return to menu with updated high score",
+        "updatedAt": "2026-05-16T03:14:55.127Z"
       },
       {
         "id": "10",
@@ -202,9 +203,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-16T03:12:45.093Z",
+      "lastModified": "2026-05-16T03:14:55.127Z",
       "taskCount": 12,
-      "completedCount": 8,
+      "completedCount": 9,
       "tags": [
         "master"
       ]
