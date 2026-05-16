@@ -5,6 +5,7 @@ const CELL_SIZE := 32
 var body: Array[Vector2i] = [Vector2i(10, 10), Vector2i(9, 10), Vector2i(8, 10)]
 var heading: Vector2i = Vector2i.RIGHT
 var queued_heading: Vector2i = Vector2i.RIGHT
+var pending_growth: int = 0
 
 func _ready() -> void:
 	queue_redraw()
@@ -25,5 +26,11 @@ func move() -> void:
 	heading = queued_heading
 	var new_head: Vector2i = body[0] + heading
 	body.insert(0, new_head)
-	body.pop_back()
+	if pending_growth > 0:
+		pending_growth -= 1
+	else:
+		body.pop_back()
 	queue_redraw()
+
+func grow() -> void:
+	pending_growth += 1

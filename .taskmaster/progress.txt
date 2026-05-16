@@ -35,3 +35,9 @@
 - scripts/Game.gd: handle direction via `_unhandled_input` with `event.is_action_pressed(...)` for the four move_* actions, calling snake.queue_direction(...). Chose event-driven over _process polling — same effect, less per-frame work, and `is_action_pressed` on an InputEvent edge fires once per keypress.
 - Reversal check intentionally compares to current `heading`: rapid right→down→left between ticks correctly yields DOWN (left rejected because current heading is still RIGHT until next tick).
 - Godot CLI still unavailable on PATH — syntax verified visually only.
+
+## Iteration 5 — Task #5: Apple Eating and Snake Growth (done)
+- scripts/Snake.gd: added `pending_growth: int = 0` and `grow()` which increments it. `move()` now skips `body.pop_back()` while `pending_growth > 0` (decrementing each tick) so the new segment appears at the tail as the snake advances forward — head still moves on the eat tick, tail catches up over the next pending_growth ticks.
+- scripts/Apple.gd: added GRID_WIDTH/HEIGHT constants and `respawn(snake_body)` which enumerates all cells, filters those not in `snake_body` (uses `Array.has()` rather than `not in` for typed-array safety), and picks a random empty cell via `randi() % empty_cells.size()`.
+- scripts/Game.gd: added `@onready var apple = $Apple`; after `snake.move()` checks `snake.body[0] == apple.position_grid` to grow + respawn on the same tick. Respawn is called *after* grow so the just-inserted head is part of `snake.body` and the apple can't land on it.
+- Learning: kept the eat-check post-move (head already advanced), which matches the task spec and avoids a one-tick visual lag. No Godot CLI for runtime verification.

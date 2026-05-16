@@ -77,11 +77,12 @@
         "dependencies": [
           "4"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 4,
         "recommendedSubtasks": 5,
-        "expansionPrompt": "Break growth mechanics into: (1) Implement Apple.respawn() method with empty cell calculation logic avoiding snake body, (2) Add pending_growth counter and grow() method to Snake.gd, (3) Update Snake.move() to conditionally skip tail removal based on pending_growth, (4) Add collision detection in Game._on_game_tick() to check head position against apple, (5) Test growth behavior, apple respawn randomness, and edge case where grid is nearly full"
+        "expansionPrompt": "Break growth mechanics into: (1) Implement Apple.respawn() method with empty cell calculation logic avoiding snake body, (2) Add pending_growth counter and grow() method to Snake.gd, (3) Update Snake.move() to conditionally skip tail removal based on pending_growth, (4) Add collision detection in Game._on_game_tick() to check head position against apple, (5) Test growth behavior, apple respawn randomness, and edge case where grid is nearly full",
+        "updatedAt": "2026-05-16T03:07:28.229Z"
       },
       {
         "id": "6",
@@ -198,9 +199,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-16T03:05:23.700Z",
+      "lastModified": "2026-05-16T03:07:28.229Z",
       "taskCount": 12,
-      "completedCount": 4,
+      "completedCount": 5,
       "tags": [
         "master"
       ]

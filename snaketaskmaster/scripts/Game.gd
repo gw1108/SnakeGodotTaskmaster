@@ -1,6 +1,7 @@
 extends Node2D
 
 @onready var snake: Node2D = $Snake
+@onready var apple: Node2D = $Apple
 @onready var game_tick: Timer = $GameTick
 
 func _ready() -> void:
@@ -18,3 +19,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_game_tick() -> void:
 	snake.move()
+	if snake.body[0] == apple.position_grid:
+		snake.grow()
+		apple.respawn(snake.body)
