@@ -1,0 +1,17 @@
+
+# Taskmaster Loop Progress
+# Started: 2026-05-16T02:58:32.825Z
+# Preset: default
+# Max Iterations: 12
+
+---
+
+## Iteration 1 — Task #1: Project Setup and Input Configuration (done)
+- Updated snaketaskmaster/project.godot:
+  - run/main_scene = res://scenes/Main.tscn
+  - [display] viewport 640x640, resizable=true
+  - [input] move_up/down/left/right (arrows + WASD) and pause (Esc + P)
+- Created folders: scenes/, scripts/, assets/ (assets/.gitkeep to track empty)
+- Added scripts/Main.gd: scene router (load_menu/load_game/change_scene) with ResourceLoader.exists guard so launching before MainMenu/Game scenes exist won't crash.
+- Added scenes/Main.tscn referencing Main.gd as a Node root.
+- Learning: Godot CLI not on PATH — couldn't run headless --check-only; syntax verified visually. Initially placed .gdignore in assets/ which would hide it from Godot — replaced with .gitkeep.
