@@ -53,3 +53,10 @@
 - scenes/Game.tscn: added `HUD` CanvasLayer child of root with `ScoreLabel` Label inside — offset_left/top=10 for top-left placement, white font color override, 24pt font size override, default text "Score: 0". CanvasLayer keeps the HUD fixed regardless of Camera2D position.
 - Restart already works: `reload_current_scene()` re-instantiates Game.gd, resetting `score` to 0 and `_update_hud()` repaints. Game-over leaves the HUD intact (CanvasLayer not stopped, label not cleared) so the final score stays visible.
 - Learning: no `load_steps` bump needed — added nodes use built-in classes (CanvasLayer, Label), not new ext_resources. Godot CLI still unavailable; visual verification requires editor launch.
+
+## Iteration 8 — Task #8: Persistent High Score System (done)
+- scripts/HighScore.gd (new): autoload `Node` with `SAVE_PATH = "user://highscore.save"`, `high_score: int`, `load_high_score()` (graceful when file missing or open fails → 0), `save_high_score(new)` (early-return if not greater, otherwise update + write), `get_high_score()`. Uses `FileAccess` (Godot 4 API; `File` is gone).
+- snaketaskmaster/project.godot: added `[autoload]` section with `HighScore="*res://scripts/HighScore.gd"`. Leading `*` enables the script as a global singleton accessible as `HighScore` from any script.
+- scripts/Game.gd: `_game_over()` now calls `HighScore.save_high_score(score)` before the print, and the print now reports both current score and `HighScore.get_high_score()`. Save happens after `is_game_over=true` / `game_tick.stop()` so the persistence side-effect can't re-trigger the tick path.
+- Restart flow unchanged: `reload_current_scene()` rebuilds Game; HighScore autoload persists across scene reloads (autoloads are siblings of the SceneTree root) and the file backs it across full app restarts.
+- Learning: tightened save_high_score with an early-return on `new_score <= high_score` so we don't open the file when there's nothing to write — matches the task intent without changing observable behavior. Godot CLI still unavailable; persistence verification requires editor launch + checking `OS.get_user_data_dir()/highscore.save`.

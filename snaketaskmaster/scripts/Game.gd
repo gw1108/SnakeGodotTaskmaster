@@ -45,4 +45,5 @@ func _update_hud() -> void:
 func _game_over() -> void:
 	is_game_over = true
 	game_tick.stop()
-	print("Game Over! Press Space/Enter to restart")
+	HighScore.save_high_score(score)
+	print("Game Over! Score: ", score, " High Score: ", HighScore.get_high_score(), " — Press Space/Enter to restart")
