@@ -60,11 +60,12 @@
         "dependencies": [
           "3"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 4,
         "recommendedSubtasks": 5,
-        "expansionPrompt": "Divide input system into: (1) Add input queueing variables (heading, queued_heading) to Snake.gd, (2) Implement queue_direction() method with 180-degree reversal rejection logic, (3) Update Snake.move() to apply queued heading at tick boundaries, (4) Add _process() input polling in Game.gd for all four directions, (5) Test edge cases: 180-degree reversal blocking, rapid multi-input between ticks, and input-tick synchronization"
+        "expansionPrompt": "Divide input system into: (1) Add input queueing variables (heading, queued_heading) to Snake.gd, (2) Implement queue_direction() method with 180-degree reversal rejection logic, (3) Update Snake.move() to apply queued heading at tick boundaries, (4) Add _process() input polling in Game.gd for all four directions, (5) Test edge cases: 180-degree reversal blocking, rapid multi-input between ticks, and input-tick synchronization",
+        "updatedAt": "2026-05-16T03:05:23.699Z"
       },
       {
         "id": "5",
@@ -197,9 +198,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-16T03:04:08.158Z",
+      "lastModified": "2026-05-16T03:05:23.700Z",
       "taskCount": 12,
-      "completedCount": 3,
+      "completedCount": 4,
       "tags": [
         "master"
       ]

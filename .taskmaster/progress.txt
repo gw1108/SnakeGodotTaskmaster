@@ -29,3 +29,9 @@
 - scripts/Game.gd (new): @onready refs to $Snake and $GameTick; connects timeout to _on_game_tick which calls snake.move().
 - scenes/Game.tscn: attached Game.gd to root; added Timer child "GameTick" with wait_time=0.15, autostart=true (one_shot defaults to false). Bumped load_steps to 5 and added the new ext_resource.
 - Learning: Godot 4 .tscn `autostart` defaults already give one_shot=false (omitted to keep the diff minimal). Still no Godot CLI on PATH — runtime check is editor-only.
+
+## Iteration 4 — Task #4: Player Input and Heading Control (done)
+- scripts/Snake.gd: added `queued_heading: Vector2i = Vector2i.RIGHT`; new `queue_direction(dir)` rejects 180° reversal vs the *locked* `heading` (not vs the queued one); `move()` now commits `heading = queued_heading` at tick boundary before stepping.
+- scripts/Game.gd: handle direction via `_unhandled_input` with `event.is_action_pressed(...)` for the four move_* actions, calling snake.queue_direction(...). Chose event-driven over _process polling — same effect, less per-frame work, and `is_action_pressed` on an InputEvent edge fires once per keypress.
+- Reversal check intentionally compares to current `heading`: rapid right→down→left between ticks correctly yields DOWN (left rejected because current heading is still RIGHT until next tick).
+- Godot CLI still unavailable on PATH — syntax verified visually only.
