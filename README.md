@@ -10,6 +10,8 @@ Firebase for web search, scraping, and crawling: https://mcpmarket.com/server/fi
 
 Taskmaster for converting PRDs to actionable tasks: https://mcpmarket.com/server/task-master
 
+Pixel lab for AI art: https://www.pixellab.ai/mcp
+
 
 ## Miro board
 https://miro.com/app/board/ - None
