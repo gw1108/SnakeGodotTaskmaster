@@ -23,3 +23,9 @@
 - Added scenes/Game.tscn: Node2D root "Game" with Playfield, Snake, Apple, and Camera2D at (320,320) so the 640x640 grid fits the configured viewport.
 - Each _ready() calls queue_redraw() to guarantee initial paint (Godot 4 uses queue_redraw, not update).
 - Godot CLI still unavailable on PATH — syntax verified visually; runtime visual check requires editor launch.
+
+## Iteration 3 — Task #3: Tick-Driven Snake Movement (done)
+- scripts/Snake.gd: added `heading: Vector2i = Vector2i.RIGHT` and `move()` which inserts new_head = body[0]+heading at front, pops tail, queue_redraw.
+- scripts/Game.gd (new): @onready refs to $Snake and $GameTick; connects timeout to _on_game_tick which calls snake.move().
+- scenes/Game.tscn: attached Game.gd to root; added Timer child "GameTick" with wait_time=0.15, autostart=true (one_shot defaults to false). Bumped load_steps to 5 and added the new ext_resource.
+- Learning: Godot 4 .tscn `autostart` defaults already give one_shot=false (omitted to keep the diff minimal). Still no Godot CLI on PATH — runtime check is editor-only.
