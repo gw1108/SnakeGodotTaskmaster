@@ -1,0 +1,134 @@
+# Snake — Product Requirements Document
+
+## 1. Overview
+
+A simple, single-player 2D Snake game built in Godot. The player steers a snake around a bounded playfield, eating apples to grow longer. The run ends when the snake collides with a wall or with its own body. Best score persists across runs.
+
+The design is intentionally minimal: classic mechanics, no variants, no progression systems beyond a high-score record.
+
+## 2. Goals & Non-Goals
+
+### Goals
+- Faithful classic Snake feel — readable, responsive, fair.
+- Short build cycle: a complete, polished v1 with no scope creep.
+- Persistent best score so the player has a target to beat.
+
+### Non-Goals (out of scope for v1)
+- Multiplayer (local or networked).
+- Multiple levels, mazes, or obstacles beyond the outer walls.
+- Power-ups, enemy snakes, or special food types.
+- Difficulty settings, speed scaling, or selectable game modes.
+- Online leaderboards, accounts, or cloud saves.
+- Mobile / touch controls.
+
+## 3. Player & Input
+
+- Single player, keyboard only.
+- **Movement:** Arrow keys and WASD, mapped to absolute directions (Up / Down / Left / Right).
+- **Reverse prevention:** The snake cannot reverse directly into its own neck; an input that would cause an immediate 180° turn is ignored.
+- **Pause:** `Esc` or `P` toggles pause.
+- **Restart:** `Enter` or `Space` on the Game Over screen starts a new run.
+
+## 4. Core Gameplay
+
+### 4.1 Playfield
+- Fixed-size rectangular grid (target: **24 columns × 18 rows**, tunable).
+- Solid outer walls on all four sides — the snake cannot pass through them.
+- The grid is the single screen; no scrolling, no camera movement.
+
+### 4.2 Snake
+- Starts in the center of the grid, length **3 segments**, facing right.
+- Moves at a **constant tick rate** (target: **8 ticks/second**, tunable). Speed never changes during a run.
+- One grid cell of movement per tick, in the currently buffered direction.
+- Direction input is buffered: the most recent valid direction press is applied on the next tick.
+
+### 4.3 Apples
+- Exactly **one apple** is present on the playfield at any time.
+- Apples spawn at a uniformly random empty cell (never on the snake's body).
+- Eating an apple:
+  - Adds **1 segment** to the snake's tail.
+  - Increments the score by **1 point**.
+  - Spawns a new apple in a random empty cell.
+
+### 4.4 End conditions
+- **Game Over** triggers when the snake's head enters:
+  - any cell occupied by a wall, OR
+  - any cell occupied by its own body.
+- **Win condition (edge case):** if the snake fills every cell on the grid, treat as a win and show a Game Over screen with a "You Win!" banner. (Largely theoretical at 24×18 = 432 cells, but the game must not crash if it occurs.)
+
+## 5. Game Flow & Screens
+
+```
+Title Screen  ──Press Start──▶  Gameplay  ──Death──▶  Game Over Screen
+     ▲                              │                        │
+     │                            Pause                      │
+     │                              │                        │
+     │                          Pause Overlay                │
+     └──────────────────────────────┴────────────────────────┘
+                          (Restart returns to Gameplay; "Quit" returns to Title)
+```
+
+### 5.1 Title Screen
+- Game title.
+- "Press Enter to Start" prompt.
+- Display current best score.
+
+### 5.2 Gameplay HUD
+- Current score (top-left or top-center).
+- Best score (small, beside or below current score).
+- No timer, no lives counter (single life).
+
+### 5.3 Pause Overlay
+- Dim the playfield, show "Paused" and a hint to resume.
+- Game tick is suspended while paused.
+
+### 5.4 Game Over Screen
+- "Game Over" (or "You Win!" for the full-grid edge case).
+- Final score for this run.
+- Best score (highlighted if just beaten).
+- Prompts for **Restart** and **Quit to Title**.
+
+## 6. Scoring & Persistence
+
+- Score = number of apples eaten in the current run.
+- **Best score** is persisted to disk between sessions (Godot `user://` save file, simple key/value).
+- Best score updates immediately when the current run's score exceeds it.
+- If the save file is missing or corrupt, treat best score as 0 and overwrite cleanly.
+
+## 7. Visuals
+
+Themed art style — recognizable as a snake eating apples, not just abstract squares.
+
+- **Snake:** distinct head sprite (oriented to facing direction), repeating body segments, tail sprite. Simple cartoon style is fine; no animation required for v1 beyond grid-step movement.
+- **Apple:** single apple sprite.
+- **Playfield:** solid background, optional subtle grid pattern, visible wall border.
+- **Color palette:** small, consistent palette. Snake clearly distinguishable from background and apple.
+- All sprites align to the grid cell size (target: 32×32 px, tunable with the grid).
+
+## 8. Audio
+
+Minimum viable audio (not a hard requirement for v1, but recommended):
+- Short SFX on apple eaten.
+- Short SFX on game over.
+- No music required for v1.
+
+## 9. Technical Notes (Godot)
+
+- Engine: **Godot 4.x**, 2D project.
+- Rendering: pixel art / sprites; no 3D nodes.
+- Architecture: a single gameplay scene with a fixed-step game loop driven by a `Timer` (or accumulated `_process` delta) at the configured tick rate. Input is captured every frame and buffered for the next tick.
+- Persistence: a single small file in `user://` storing the best score (e.g. JSON or `ConfigFile`).
+- Tunables (grid size, tick rate, starting length, cell size) should live as exported constants on a single config script for easy iteration.
+
+## 10. Acceptance Criteria
+
+A v1 build is considered complete when all of the following are true:
+
+1. Player can launch the game and reach gameplay from the title screen.
+2. Snake moves at a constant rate, responds to arrow keys and WASD, and refuses immediate 180° reversals.
+3. Eating an apple grows the snake by one segment, increments the score, and spawns a new apple on an empty cell.
+4. Colliding with a wall or with the snake's own body ends the run.
+5. Game Over screen displays final score and best score; restart returns to a fresh gameplay state.
+6. Best score persists across application restarts.
+7. Pause works during gameplay and fully suspends the game tick.
+8. No crashes when the snake fills the grid; a win state is shown.
