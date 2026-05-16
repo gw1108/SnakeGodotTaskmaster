@@ -179,12 +179,11 @@
         "dependencies": [
           "10"
         ],
-        "status": "done",
+        "status": "pending",
         "subtasks": [],
         "complexity": 5,
         "recommendedSubtasks": 6,
-        "expansionPrompt": "Break polish into: (1) Update Snake._draw() to add distinct head rendering with darker color and 1px padding, (2) Implement directional eye rendering on snake head based on heading vector, (3) Refine Playfield color scheme (background, grid lines, border) for better aesthetics, (4) Apply consistent color palette to Apple and Snake body segments, (5) Create unified theme/style for all UI text elements (font, size, shadows/outlines), (6) Add HUD background panel and ensure consistent styling across all overlays (menu, pause, game over)",
-        "updatedAt": "2026-05-16T03:48:22.904Z"
+        "expansionPrompt": "Break polish into: (1) Update Snake._draw() to add distinct head rendering with darker color and 1px padding, (2) Implement directional eye rendering on snake head based on heading vector, (3) Refine Playfield color scheme (background, grid lines, border) for better aesthetics, (4) Apply consistent color palette to Apple and Snake body segments, (5) Create unified theme/style for all UI text elements (font, size, shadows/outlines), (6) Add HUD background panel and ensure consistent styling across all overlays (menu, pause, game over)"
       },
       {
         "id": "12",
@@ -205,9 +204,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-16T03:48:22.904Z",
+      "lastModified": "2026-05-16T03:45:14.421Z",
       "taskCount": 12,
-      "completedCount": 11,
+      "completedCount": 10,
       "tags": [
         "master"
       ]

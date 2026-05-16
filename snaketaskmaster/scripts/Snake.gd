@@ -4,14 +4,6 @@ const CELL_SIZE := 32
 const GRID_WIDTH := 20
 const GRID_HEIGHT := 20
 
-const HEAD_COLOR := Color(0.2, 0.6, 0.2)
-const BODY_COLOR := Color(0.4, 0.8, 0.4)
-const EYE_COLOR := Color.WHITE
-const PUPIL_COLOR := Color.BLACK
-const CELL_PADDING := 1
-const EYE_RADIUS := 3.0
-const PUPIL_RADIUS := 1.5
-
 var body: Array[Vector2i] = [Vector2i(10, 10), Vector2i(9, 10), Vector2i(8, 10)]
 var heading: Vector2i = Vector2i.RIGHT
 var queued_heading: Vector2i = Vector2i.RIGHT
@@ -23,29 +15,8 @@ func _ready() -> void:
 func _draw() -> void:
 	for i in body.size():
 		var cell := body[i]
-		var rect := Rect2(
-			cell.x * CELL_SIZE + CELL_PADDING,
-			cell.y * CELL_SIZE + CELL_PADDING,
-			CELL_SIZE - CELL_PADDING * 2,
-			CELL_SIZE - CELL_PADDING * 2,
-		)
-		if i == 0:
-			draw_rect(rect, HEAD_COLOR, true)
-			_draw_eyes(cell)
-		else:
-			draw_rect(rect, BODY_COLOR, true)
-
-func _draw_eyes(cell: Vector2i) -> void:
-	# Place two eyes on the leading edge of the head, offset perpendicular to heading.
-	var center := Vector2(cell.x * CELL_SIZE + CELL_SIZE * 0.5, cell.y * CELL_SIZE + CELL_SIZE * 0.5)
-	var forward := Vector2(heading.x, heading.y) * (CELL_SIZE * 0.28)
-	var side := Vector2(-heading.y, heading.x) * (CELL_SIZE * 0.22)
-	var eye_a := center + forward + side
-	var eye_b := center + forward - side
-	draw_circle(eye_a, EYE_RADIUS, EYE_COLOR)
-	draw_circle(eye_b, EYE_RADIUS, EYE_COLOR)
-	draw_circle(eye_a, PUPIL_RADIUS, PUPIL_COLOR)
-	draw_circle(eye_b, PUPIL_RADIUS, PUPIL_COLOR)
+		var color := Color.GREEN if i == 0 else Color.LIME_GREEN
+		draw_rect(Rect2(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE), color, true)
 
 func queue_direction(new_direction: Vector2i) -> void:
 	# Reject 180° reversal against the *current* heading (locked once per tick).
