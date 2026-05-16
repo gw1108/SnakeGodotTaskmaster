@@ -2,214 +2,164 @@
   "master": {
     "tasks": [
       {
-        "id": "1",
+        "id": 1,
         "title": "Project Setup and Input Configuration",
         "description": "Configure Godot 4 project settings, create input action map, and set up the Main.tscn scene router",
         "details": "1. Open project.godot and configure:\n   - Verify config_version=5 (Godot 4.6)\n   - Set display/window/size/viewport_width=640 and viewport_height=640\n   - Set display/window/size/resizable=true\n\n2. Configure Input Map (Project > Project Settings > Input Map):\n   - Create 'move_up' action: bind Arrow Up + W\n   - Create 'move_down' action: bind Arrow Down + S  \n   - Create 'move_left' action: bind Arrow Left + A\n   - Create 'move_right' action: bind Arrow Right + D\n   - Create 'pause' action: bind Escape + P\n   - Verify ui_accept (Enter/Space) and ui_cancel (Escape) exist by default\n\n3. Create Main.tscn:\n   - Root node: Node (rename to 'Main')\n   - Attach script Main.gd with scene switching logic:\n     ```gdscript\n     extends Node\n     var current_scene: Node = null\n     \n     func _ready():\n         load_menu()\n     \n     func load_menu():\n         change_scene(\"res://scenes/MainMenu.tscn\")\n     \n     func load_game():\n         change_scene(\"res://scenes/Game.tscn\")\n     \n     func change_scene(path: String):\n         if current_scene:\n             current_scene.queue_free()\n         var scene = load(path).instantiate()\n         add_child(scene)\n         current_scene = scene\n     ```\n\n4. Create folder structure:\n   - res://scenes/ (for .tscn files)\n   - res://scripts/ (for .gd files)\n   - res://assets/ (for sprites/textures if needed)",
         "testStrategy": "1. Launch project - Main.tscn should be set as main scene in project settings\n2. Test input actions work in Input Map tester\n3. Verify folder structure exists\n4. Confirm Main.gd can compile (no syntax errors)",
         "priority": "high",
         "dependencies": [],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 2,
-        "recommendedSubtasks": 4,
-        "expansionPrompt": "Break down the project setup into: (1) Configure project.godot display and engine settings, (2) Create and configure input action map with all movement and UI actions, (3) Create folder structure (scenes/, scripts/, assets/), (4) Implement Main.tscn with scene router script and test scene switching logic",
-        "updatedAt": "2026-05-16T03:00:27.738Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "2",
+        "id": 2,
         "title": "Grid Playfield and Static Rendering",
         "description": "Implement the 20x20 grid playfield with visible bounds, render static snake and apple at fixed positions",
         "details": "1. Create Playfield.gd script:\n   ```gdscript\n   extends Node2D\n   const GRID_WIDTH = 20\n   const GRID_HEIGHT = 20  \n   const CELL_SIZE = 32\n   \n   func _ready():\n       queue_redraw()\n   \n   func _draw():\n       # Draw background\n       draw_rect(Rect2(0, 0, GRID_WIDTH * CELL_SIZE, GRID_HEIGHT * CELL_SIZE), Color.BLACK, true)\n       # Draw grid lines (optional, for visibility)\n       for x in range(GRID_WIDTH + 1):\n           draw_line(Vector2(x * CELL_SIZE, 0), Vector2(x * CELL_SIZE, GRID_HEIGHT * CELL_SIZE), Color(0.2, 0.2, 0.2))\n       for y in range(GRID_HEIGHT + 1):\n           draw_line(Vector2(0, y * CELL_SIZE), Vector2(GRID_WIDTH * CELL_SIZE, y * CELL_SIZE), Color(0.2, 0.2, 0.2))\n       # Draw border\n       draw_rect(Rect2(0, 0, GRID_WIDTH * CELL_SIZE, GRID_HEIGHT * CELL_SIZE), Color.WHITE, false, 2.0)\n   ```\n\n2. Create Game.tscn:\n   - Root: Node2D (rename to 'Game')\n   - Add child Node2D named 'Playfield' with Playfield.gd script\n   - Add Camera2D centered at (GRID_WIDTH * CELL_SIZE / 2, GRID_HEIGHT * CELL_SIZE / 2)\n\n3. Create Snake.gd (static for now):\n   ```gdscript\n   extends Node2D\n   const CELL_SIZE = 32\n   var body: Array[Vector2i] = [Vector2i(10, 10), Vector2i(9, 10), Vector2i(8, 10)] # Head at index 0\n   \n   func _draw():\n       for i in body.size():\n           var cell = body[i]\n           var color = Color.GREEN if i == 0 else Color.LIME_GREEN # Head darker\n           draw_rect(Rect2(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE), color, true)\n   ```\n\n4. Create Apple.gd (static):\n   ```gdscript\n   extends Node2D\n   const CELL_SIZE = 32\n   var position_grid: Vector2i = Vector2i(15, 10)\n   \n   func _draw():\n       draw_rect(Rect2(position_grid.x * CELL_SIZE, position_grid.y * CELL_SIZE, CELL_SIZE, CELL_SIZE), Color.RED, true)\n   ```\n\n5. Add Snake and Apple nodes to Game.tscn as children of Game root",
         "testStrategy": "1. Run Game.tscn - should see 20x20 black grid with white border\n2. Verify static snake (3 green cells) appears at grid position (8-10, 10)\n3. Verify static red apple appears at grid position (15, 10)\n4. Check camera framing - entire grid should be visible",
         "priority": "high",
         "dependencies": [
-          "1"
+          1
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 3,
-        "recommendedSubtasks": 5,
-        "expansionPrompt": "Divide static rendering into: (1) Create Playfield.gd with grid constants and _draw() method for background and grid lines, (2) Create Game.tscn with Node2D root and Playfield child node, (3) Implement Snake.gd with static body array and _draw() rendering, (4) Implement Apple.gd with static position and _draw() rendering, (5) Configure Camera2D positioning and test complete scene rendering",
-        "updatedAt": "2026-05-16T03:02:19.170Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "3",
+        "id": 3,
         "title": "Tick-Driven Snake Movement",
         "description": "Implement Timer-based game tick system and make snake move continuously in a fixed direction",
         "details": "1. Update Snake.gd to add movement:\n   ```gdscript\n   extends Node2D\n   const CELL_SIZE = 32\n   var body: Array[Vector2i] = [Vector2i(10, 10), Vector2i(9, 10), Vector2i(8, 10)]\n   var heading: Vector2i = Vector2i.RIGHT\n   \n   func _draw():\n       for i in body.size():\n           var cell = body[i]\n           var color = Color.GREEN if i == 0 else Color.LIME_GREEN\n           draw_rect(Rect2(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE), color, true)\n   \n   func move():\n       var new_head = body[0] + heading\n       body.insert(0, new_head)\n       body.pop_back() # Remove tail (no growth yet)\n       queue_redraw()\n   ```\n\n2. Update Game.tscn and add Game.gd script:\n   - Add Timer node as child of Game root, name it 'GameTick'\n   - Set Timer properties: wait_time=0.15, autostart=true, one_shot=false\n   \n3. Create Game.gd:\n   ```gdscript\n   extends Node2D\n   @onready var snake = $Snake\n   @onready var game_tick = $GameTick\n   \n   func _ready():\n       game_tick.timeout.connect(_on_game_tick)\n   \n   func _on_game_tick():\n       snake.move()\n   ```\n\n4. Ensure Snake node has access to move() signal",
         "testStrategy": "1. Run Game.tscn - snake should move right continuously\n2. Verify movement happens at ~150ms intervals (tick rate)\n3. Snake should maintain 3-cell length as it moves\n4. Snake should eventually move off-screen right (no collision detection yet)",
         "priority": "high",
         "dependencies": [
-          "2"
+          2
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 3,
-        "recommendedSubtasks": 4,
-        "expansionPrompt": "Break movement system into: (1) Add Timer node to Game.tscn and configure tick rate properties, (2) Update Snake.gd to add heading vector and move() method with body manipulation, (3) Implement Game.gd signal connection between Timer.timeout and snake movement, (4) Test tick-based movement and verify snake maintains constant length while moving",
-        "updatedAt": "2026-05-16T03:04:08.158Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "4",
+        "id": 4,
         "title": "Player Input and Heading Control",
         "description": "Wire keyboard input to change snake heading with queued application and 180-degree reversal rejection",
         "details": "1. Update Snake.gd to handle input queueing:\n   ```gdscript\n   extends Node2D\n   const CELL_SIZE = 32\n   const UP = Vector2i(0, -1)\n   const DOWN = Vector2i(0, 1)\n   const LEFT = Vector2i(-1, 0)\n   const RIGHT = Vector2i(1, 0)\n   \n   var body: Array[Vector2i] = [Vector2i(10, 10), Vector2i(9, 10), Vector2i(8, 10)]\n   var heading: Vector2i = RIGHT\n   var queued_heading: Vector2i = RIGHT\n   \n   func _draw():\n       for i in body.size():\n           var cell = body[i]\n           var color = Color.GREEN if i == 0 else Color.LIME_GREEN\n           draw_rect(Rect2(cell.x * CELL_SIZE, cell.y * CELL_SIZE, CELL_SIZE, CELL_SIZE), color, true)\n   \n   func queue_direction(new_direction: Vector2i):\n       # Reject direct reversal (opposite direction)\n       if new_direction + heading != Vector2i.ZERO:\n           queued_heading = new_direction\n   \n   func move():\n       heading = queued_heading # Apply queued heading at tick boundary\n       var new_head = body[0] + heading\n       body.insert(0, new_head)\n       body.pop_back()\n       queue_redraw()\n   ```\n\n2. Update Game.gd to handle input:\n   ```gdscript\n   extends Node2D\n   @onready var snake = $Snake\n   @onready var game_tick = $GameTick\n   \n   func _ready():\n       game_tick.timeout.connect(_on_game_tick)\n   \n   func _process(_delta):\n       if Input.is_action_just_pressed(\"move_up\"):\n           snake.queue_direction(Vector2i(0, -1))\n       elif Input.is_action_just_pressed(\"move_down\"):\n           snake.queue_direction(Vector2i(0, 1))\n       elif Input.is_action_just_pressed(\"move_left\"):\n           snake.queue_direction(Vector2i(-1, 0))\n       elif Input.is_action_just_pressed(\"move_right\"):\n           snake.queue_direction(Vector2i(1, 0))\n   \n   func _on_game_tick():\n       snake.move()\n   ```",
         "testStrategy": "1. Run game and press arrow keys / WASD - snake should change direction\n2. Test 180° reversal rejection: moving right, press left - should be ignored\n3. Test rapid input between ticks: right→down→left should result in down (not illegal left)\n4. Verify snake responds on next tick after input, not immediately\n5. Test all four directions work correctly",
         "priority": "high",
         "dependencies": [
-          "3"
+          3
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 4,
-        "recommendedSubtasks": 5,
-        "expansionPrompt": "Divide input system into: (1) Add input queueing variables (heading, queued_heading) to Snake.gd, (2) Implement queue_direction() method with 180-degree reversal rejection logic, (3) Update Snake.move() to apply queued heading at tick boundaries, (4) Add _process() input polling in Game.gd for all four directions, (5) Test edge cases: 180-degree reversal blocking, rapid multi-input between ticks, and input-tick synchronization",
-        "updatedAt": "2026-05-16T03:05:23.699Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "5",
+        "id": 5,
         "title": "Apple Eating and Snake Growth",
         "description": "Implement collision detection between snake head and apple, grow snake on eat, respawn apple in empty cell",
         "details": "1. Update Apple.gd with respawn logic:\n   ```gdscript\n   extends Node2D\n   const CELL_SIZE = 32\n   const GRID_WIDTH = 20\n   const GRID_HEIGHT = 20\n   var position_grid: Vector2i = Vector2i(15, 10)\n   \n   func _draw():\n       draw_rect(Rect2(position_grid.x * CELL_SIZE, position_grid.y * CELL_SIZE, CELL_SIZE, CELL_SIZE), Color.RED, true)\n   \n   func respawn(snake_body: Array[Vector2i]):\n       var empty_cells: Array[Vector2i] = []\n       for x in range(GRID_WIDTH):\n           for y in range(GRID_HEIGHT):\n               var cell = Vector2i(x, y)\n               if cell not in snake_body:\n                   empty_cells.append(cell)\n       \n       if empty_cells.size() > 0:\n           position_grid = empty_cells[randi() % empty_cells.size()]\n           queue_redraw()\n   ```\n\n2. Update Snake.gd to add growth:\n   ```gdscript\n   var pending_growth: int = 0\n   \n   func move():\n       heading = queued_heading\n       var new_head = body[0] + heading\n       body.insert(0, new_head)\n       \n       if pending_growth > 0:\n           pending_growth -= 1\n       else:\n           body.pop_back() # Only remove tail if not growing\n       \n       queue_redraw()\n   \n   func grow():\n       pending_growth += 1\n   ```\n\n3. Update Game.gd to detect eating:\n   ```gdscript\n   @onready var apple = $Apple\n   \n   func _on_game_tick():\n       snake.move()\n       \n       # Check if snake head is on apple\n       if snake.body[0] == apple.position_grid:\n           snake.grow()\n           apple.respawn(snake.body)\n   ```",
         "testStrategy": "1. Run game and navigate snake to apple\n2. When snake head touches apple, snake should grow by 1 segment\n3. Apple should immediately respawn in a random empty cell\n4. Verify apple never spawns on snake body\n5. Test multiple apple eats - snake should keep growing\n6. Verify growth happens at tail (new segment stays behind)",
         "priority": "high",
         "dependencies": [
-          "4"
+          4
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 4,
-        "recommendedSubtasks": 5,
-        "expansionPrompt": "Break growth mechanics into: (1) Implement Apple.respawn() method with empty cell calculation logic avoiding snake body, (2) Add pending_growth counter and grow() method to Snake.gd, (3) Update Snake.move() to conditionally skip tail removal based on pending_growth, (4) Add collision detection in Game._on_game_tick() to check head position against apple, (5) Test growth behavior, apple respawn randomness, and edge case where grid is nearly full",
-        "updatedAt": "2026-05-16T03:07:28.229Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "6",
+        "id": 6,
         "title": "Collision Detection and Game Over State",
         "description": "Implement wall and self-collision detection, trigger game over state, add basic restart mechanism",
         "details": "1. Update Snake.gd to add collision checking:\n   ```gdscript\n   const GRID_WIDTH = 20\n   const GRID_HEIGHT = 20\n   \n   func check_collision() -> bool:\n       var head = body[0]\n       \n       # Wall collision\n       if head.x < 0 or head.x >= GRID_WIDTH or head.y < 0 or head.y >= GRID_HEIGHT:\n           return true\n       \n       # Self collision (check if head collides with any body segment except head)\n       for i in range(1, body.size()):\n           if head == body[i]:\n               return true\n       \n       return false\n   ```\n\n2. Update Game.gd to handle game over:\n   ```gdscript\n   var is_game_over: bool = false\n   \n   func _ready():\n       game_tick.timeout.connect(_on_game_tick)\n   \n   func _process(_delta):\n       if is_game_over:\n           if Input.is_action_just_pressed(\"ui_accept\"): # Space or Enter to restart\n               restart_game()\n           return\n       \n       # Input handling (existing code)\n       if Input.is_action_just_pressed(\"move_up\"):\n           snake.queue_direction(Vector2i(0, -1))\n       # ... etc\n   \n   func _on_game_tick():\n       if is_game_over:\n           return\n       \n       snake.move()\n       \n       if snake.check_collision():\n           game_over()\n           return\n       \n       if snake.body[0] == apple.position_grid:\n           snake.grow()\n           apple.respawn(snake.body)\n   \n   func game_over():\n       is_game_over = true\n       game_tick.stop()\n       print(\"Game Over! Press Space/Enter to restart\")\n   \n   func restart_game():\n       get_tree().reload_current_scene()\n   ```",
         "testStrategy": "1. Run game and deliberately hit top wall - game should stop, print message\n2. Hit bottom, left, right walls - all should trigger game over\n3. Grow snake long enough to make it collide with itself - should trigger game over\n4. Press Space or Enter during game over - scene should reload and restart\n5. Verify snake stops moving after game over\n6. Verify input is ignored during game over state",
         "priority": "high",
         "dependencies": [
-          "5"
+          5
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 5,
-        "recommendedSubtasks": 6,
-        "expansionPrompt": "Divide collision system into: (1) Implement Snake.check_collision() with wall boundary checking using grid constants, (2) Add self-collision detection looping through body segments, (3) Add is_game_over state flag and game_over() method to Game.gd, (4) Update _on_game_tick() to check collisions before apple eating, (5) Implement restart_game() using get_tree().reload_current_scene(), (6) Update _process() to handle game over input blocking and restart input detection",
-        "updatedAt": "2026-05-16T03:09:15.574Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "7",
+        "id": 7,
         "title": "Score HUD and Score Tracking",
         "description": "Add score counter that increments on apple eat and display it via CanvasLayer HUD",
         "details": "1. Update Game.gd to track score:\n   ```gdscript\n   var score: int = 0\n   @onready var hud = $HUD\n   \n   func _ready():\n       game_tick.timeout.connect(_on_game_tick)\n       update_hud()\n   \n   func _on_game_tick():\n       if is_game_over:\n           return\n       \n       snake.move()\n       \n       if snake.check_collision():\n           game_over()\n           return\n       \n       if snake.body[0] == apple.position_grid:\n           snake.grow()\n           apple.respawn(snake.body)\n           score += 1\n           update_hud()\n   \n   func update_hud():\n       hud.get_node(\"ScoreLabel\").text = \"Score: \" + str(score)\n   ```\n\n2. Create HUD scene in Game.tscn:\n   - Add CanvasLayer node as child of Game, name it 'HUD'\n   - Add Label child to HUD, name it 'ScoreLabel'\n   - Set ScoreLabel properties:\n     - Position: (10, 10) top-left\n     - Text: \"Score: 0\"\n     - Font size: 24\n     - Modulate color: White\n     - Add Theme Override for font size if needed\n\n3. Style the label for visibility against dark background",
         "testStrategy": "1. Run game - \"Score: 0\" should appear in top-left corner\n2. Eat first apple - score should update to \"Score: 1\"\n3. Eat multiple apples - score should increment correctly\n4. Trigger game over - score should remain visible showing final score\n5. Restart - score should reset to 0\n6. Verify label is readable against black grid background",
         "priority": "medium",
         "dependencies": [
-          "6"
+          6
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 3,
-        "recommendedSubtasks": 4,
-        "expansionPrompt": "Break HUD implementation into: (1) Add CanvasLayer and Label nodes to Game.tscn scene tree, (2) Configure ScoreLabel properties (position, font size, color theming), (3) Add score variable and update_hud() method to Game.gd, (4) Integrate score increment in apple eating logic and test HUD updates during gameplay and restart",
-        "updatedAt": "2026-05-16T03:10:59.814Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "8",
+        "id": 8,
         "title": "Persistent High Score System",
         "description": "Implement HighScore autoload singleton to load, track, and save high score to user:// filesystem",
         "details": "1. Create HighScore.gd autoload script:\n   ```gdscript\n   extends Node\n   const SAVE_PATH = \"user://highscore.save\"\n   var high_score: int = 0\n   \n   func _ready():\n       load_high_score()\n   \n   func load_high_score():\n       if not FileAccess.file_exists(SAVE_PATH):\n           high_score = 0\n           return\n       \n       var file = FileAccess.open(SAVE_PATH, FileAccess.READ)\n       if file:\n           var data = file.get_as_text()\n           file.close()\n           high_score = int(data)\n       else:\n           high_score = 0\n   \n   func save_high_score(new_score: int):\n       if new_score > high_score:\n           high_score = new_score\n           var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)\n           if file:\n               file.store_string(str(high_score))\n               file.close()\n   \n   func get_high_score() -> int:\n       return high_score\n   ```\n\n2. Register HighScore as autoload:\n   - Project > Project Settings > Autoload\n   - Add HighScore.gd as autoload with name 'HighScore'\n\n3. Update Game.gd to use HighScore:\n   ```gdscript\n   func game_over():\n       is_game_over = true\n       game_tick.stop()\n       HighScore.save_high_score(score)\n       print(\"Game Over! Score: \", score, \" High Score: \", HighScore.get_high_score())\n   ```",
         "testStrategy": "1. Run game, get score of 5, trigger game over\n2. Check user data directory (OS-specific, use OS.get_user_data_dir()) - highscore.save should exist with value 5\n3. Restart game, get score of 3, game over - high score should remain 5\n4. Get score of 10, game over - highscore.save should update to 10\n5. Close and relaunch entire Godot project - high score should persist\n6. Manually delete highscore.save - game should handle gracefully, start at 0",
         "priority": "medium",
         "dependencies": [
-          "7"
+          7
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 4,
-        "recommendedSubtasks": 5,
-        "expansionPrompt": "Divide persistence system into: (1) Create HighScore.gd autoload singleton script with high_score variable and SAVE_PATH constant, (2) Implement load_high_score() using FileAccess API with error handling for missing files, (3) Implement save_high_score() with comparison logic and file writing, (4) Register HighScore as autoload in project settings, (5) Integrate HighScore.save_high_score() into Game.game_over() and test persistence across launches",
-        "updatedAt": "2026-05-16T03:12:45.092Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "9",
+        "id": 9,
         "title": "Main Menu Scene",
         "description": "Create main menu with title, high score display, Start button, and Quit button",
         "details": "1. Create MainMenu.tscn:\n   - Root: Control node (rename to 'MainMenu')\n   - Add VBoxContainer centered on screen (anchor preset: Center)\n   - Children of VBoxContainer:\n     a. Label 'TitleLabel' - text: \"SNAKE\", font size: 48, alignment: center\n     b. Label 'HighScoreLabel' - text: \"High Score: 0\", font size: 24, alignment: center\n     c. Button 'StartButton' - text: \"Start Game\"\n     d. Button 'QuitButton' - text: \"Quit\"\n   - Set VBoxContainer separation: 20\n\n2. Create MainMenu.gd script:\n   ```gdscript\n   extends Control\n   @onready var high_score_label = $VBoxContainer/HighScoreLabel\n   @onready var start_button = $VBoxContainer/StartButton\n   @onready var quit_button = $VBoxContainer/QuitButton\n   \n   func _ready():\n       high_score_label.text = \"High Score: \" + str(HighScore.get_high_score())\n       start_button.pressed.connect(_on_start_pressed)\n       quit_button.pressed.connect(_on_quit_pressed)\n       start_button.grab_focus() # Keyboard navigation\n   \n   func _on_start_pressed():\n       get_tree().change_scene_to_file(\"res://scenes/Game.tscn\")\n   \n   func _on_quit_pressed():\n       get_tree().quit()\n   ```\n\n3. Update Main.gd to start with menu:\n   ```gdscript\n   func _ready():\n       get_tree().change_scene_to_file(\"res://scenes/MainMenu.tscn\")\n   ```\n\n4. Set Main.tscn as main scene in Project Settings",
         "testStrategy": "1. Launch game - should open to Main Menu, not Game scene\n2. Verify high score displays correctly (should match saved value)\n3. Click Start or press Enter - should transition to Game.tscn\n4. Return to menu after game over - high score should update if beaten\n5. Click Quit or press Escape then Enter - application should close\n6. Test keyboard navigation (Tab to cycle, Enter to select)",
         "priority": "medium",
         "dependencies": [
-          "8"
+          8
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 4,
-        "recommendedSubtasks": 5,
-        "expansionPrompt": "Break menu creation into: (1) Create MainMenu.tscn with Control root and VBoxContainer layout structure, (2) Add and configure all UI elements (title label, high score label, buttons) with theme properties, (3) Implement MainMenu.gd with _ready() to display HighScore data and setup button signals, (4) Implement scene transition methods (_on_start_pressed, _on_quit_pressed) using scene tree API, (5) Test menu flow: launch to menu, start game, game over, return to menu with updated high score",
-        "updatedAt": "2026-05-16T03:14:55.127Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "10",
+        "id": 10,
         "title": "Game Over Screen and Pause Overlay",
         "description": "Create game over overlay showing final score, high score, restart/menu options, and implement pause system",
         "details": "1. Create GameOver UI in Game.tscn:\n   - Add CanvasLayer named 'GameOverOverlay', set visible=false initially\n   - Add ColorRect child filling screen with semi-transparent black (Color: 0, 0, 0, 0.7)\n   - Add VBoxContainer centered with:\n     a. Label 'GameOverLabel' - text: \"GAME OVER\", font size: 48\n     b. Label 'FinalScoreLabel' - text: \"Score: 0\", font size: 32\n     c. Label 'HighScoreLabel' - text: \"High Score: 0\", font size: 24\n     d. Label 'NewBestLabel' - text: \"NEW BEST!\", font size: 28, color: yellow, initially hidden\n     e. Button 'RestartButton' - text: \"Restart\"\n     f. Button 'MenuButton' - text: \"Return to Menu\"\n\n2. Create PauseOverlay in Game.tscn:\n   - Add CanvasLayer named 'PauseOverlay', set visible=false, process_mode=PROCESS_MODE_WHEN_PAUSED\n   - Add ColorRect with semi-transparent background\n   - Add centered VBoxContainer with:\n     a. Label - text: \"PAUSED\", font size: 48\n     b. Label - text: \"Press ESC or P to Resume\", font size: 20\n\n3. Update Game.gd:\n   ```gdscript\n   var is_paused: bool = false\n   @onready var game_over_overlay = $GameOverOverlay\n   @onready var pause_overlay = $PauseOverlay\n   \n   func _process(_delta):\n       if is_game_over:\n           return\n       \n       if Input.is_action_just_pressed(\"pause\"):\n           toggle_pause()\n           return\n       \n       if is_paused:\n           return\n       \n       # Input handling...\n   \n   func toggle_pause():\n       is_paused = !is_paused\n       pause_overlay.visible = is_paused\n       get_tree().paused = is_paused\n   \n   func game_over():\n       is_game_over = true\n       game_tick.stop()\n       var old_high = HighScore.get_high_score()\n       HighScore.save_high_score(score)\n       var new_high = HighScore.get_high_score()\n       show_game_over_screen(old_high, new_high)\n   \n   func show_game_over_screen(old_high: int, new_high: int):\n       game_over_overlay.get_node(\"VBoxContainer/FinalScoreLabel\").text = \"Score: \" + str(score)\n       game_over_overlay.get_node(\"VBoxContainer/HighScoreLabel\").text = \"High Score: \" + str(new_high)\n       game_over_overlay.get_node(\"VBoxContainer/NewBestLabel\").visible = (new_high > old_high)\n       game_over_overlay.get_node(\"VBoxContainer/RestartButton\").pressed.connect(restart_game)\n       game_over_overlay.get_node(\"VBoxContainer/MenuButton\").pressed.connect(return_to_menu)\n       game_over_overlay.visible = true\n   \n   func restart_game():\n       get_tree().paused = false\n       get_tree().reload_current_scene()\n   \n   func return_to_menu():\n       get_tree().paused = false\n       get_tree().change_scene_to_file(\"res://scenes/MainMenu.tscn\")\n   ```\n\n4. Set process_mode for game nodes:\n   - Snake, Apple, Playfield, GameTick, HUD: PROCESS_MODE_PAUSABLE\n   - PauseOverlay: PROCESS_MODE_WHEN_PAUSED",
         "testStrategy": "1. During gameplay, press Esc or P - pause overlay should appear, game should freeze\n2. Press Esc/P again - game should resume\n3. Trigger game over - overlay should show with correct score\n4. If new high score, verify \"NEW BEST!\" appears in yellow\n5. If not new high score, verify \"NEW BEST!\" is hidden\n6. Click Restart - should reload game scene and start fresh\n7. Click Return to Menu - should go back to main menu with updated high score\n8. Verify input is blocked while paused (snake doesn't queue moves)",
         "priority": "medium",
         "dependencies": [
-          "9"
+          9
         ],
-        "status": "done",
-        "subtasks": [],
-        "complexity": 6,
-        "recommendedSubtasks": 7,
-        "expansionPrompt": "Divide overlay systems into: (1) Create GameOverOverlay CanvasLayer with semi-transparent ColorRect and VBoxContainer in Game.tscn, (2) Add all game over UI elements including conditional 'NEW BEST!' label, (3) Create PauseOverlay CanvasLayer with PROCESS_MODE_WHEN_PAUSED and pause UI, (4) Implement toggle_pause() using get_tree().paused and overlay visibility, (5) Enhance game_over() to compare old/new high scores and show_game_over_screen(), (6) Set process_mode properties on all game nodes for proper pause behavior, (7) Test pause during gameplay, game over states (new high score vs not), and navigation between overlays/scenes",
-        "updatedAt": "2026-05-16T03:45:14.421Z"
+        "status": "pending",
+        "subtasks": []
       },
       {
-        "id": "11",
+        "id": 11,
         "title": "Visual Polish and Refinement",
         "description": "Polish visual presentation: distinct head sprite, consistent theming, proper HUD positioning, readable colors",
         "details": "1. Update Snake.gd rendering for visual distinction:\n   ```gdscript\n   func _draw():\n       for i in body.size():\n           var cell = body[i]\n           var rect = Rect2(cell.x * CELL_SIZE + 1, cell.y * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2) # 1px padding\n           \n           if i == 0: # Head\n               draw_rect(rect, Color.DARK_GREEN, true)\n               # Draw eyes\n               var eye_size = 4\n               var eye_offset = 8\n               if heading == Vector2i.RIGHT:\n                   draw_circle(Vector2(cell.x * CELL_SIZE + CELL_SIZE - eye_offset, cell.y * CELL_SIZE + 10), eye_size, Color.WHITE)\n                   draw_circle(Vector2(cell.x * CELL_SIZE + CELL_SIZE - eye_offset, cell.y * CELL_SIZE + 22), eye_size, Color.WHITE)\n               # Add similar for other directions\n           else: # Body\n               draw_rect(rect, Color.LIME_GREEN, true)\n   ```\n\n2. Refine color scheme:\n   - Background: Color(0.1, 0.1, 0.1) (dark gray instead of pure black)\n   - Grid lines: Color(0.2, 0.2, 0.2)\n   - Border: Color.WHITE, 3px thickness\n   - Apple: Color(0.9, 0.2, 0.2) (bright red)\n   - Snake head: Color(0.2, 0.6, 0.2) (darker green)\n   - Snake body: Color(0.4, 0.8, 0.4) (lighter green)\n\n3. Update all UI text styling for consistency:\n   - Use same font family throughout\n   - Ensure all labels have proper contrast\n   - Add subtle shadows/outlines to improve readability\n\n4. Polish HUD positioning:\n   - Score label: top-left (16, 16) with padding\n   - Add background panel to HUD for better readability\n\n5. Ensure all overlays use consistent styling:\n   - Same semi-transparent background color\n   - Same font sizes for equivalent elements\n   - Consistent button styling",
         "testStrategy": "1. Visual inspection - snake head should be clearly distinguishable from body\n2. Verify eyes on snake head point in direction of movement\n3. Check all colors are readable and have good contrast\n4. Verify 1-2px padding between grid cells makes segments distinct\n5. Test all UI screens (menu, game, pause, game over) use consistent theme\n6. Verify HUD doesn't overlap with playfield content\n7. Take screenshots and verify professional appearance",
         "priority": "low",
         "dependencies": [
-          "10"
+          10
         ],
         "status": "pending",
-        "subtasks": [],
-        "complexity": 5,
-        "recommendedSubtasks": 6,
-        "expansionPrompt": "Break polish into: (1) Update Snake._draw() to add distinct head rendering with darker color and 1px padding, (2) Implement directional eye rendering on snake head based on heading vector, (3) Refine Playfield color scheme (background, grid lines, border) for better aesthetics, (4) Apply consistent color palette to Apple and Snake body segments, (5) Create unified theme/style for all UI text elements (font, size, shadows/outlines), (6) Add HUD background panel and ensure consistent styling across all overlays (menu, pause, game over)"
+        "subtasks": []
       },
       {
-        "id": "12",
+        "id": 12,
         "title": "Export Configuration and Build Verification",
         "description": "Configure Windows export preset, create executable build, and verify persistence works in exported build",
         "details": "1. Configure Windows export preset:\n   - Project > Export > Add > Windows Desktop\n   - Set export path: builds/windows/Snake.exe\n   - Application settings:\n     - Name: \"Snake\"\n     - Icon: Use icon.svg or create custom 256x256 icon\n   - Verify 'Embed PCK' is enabled\n   - Set architecture to x86_64\n\n2. Export the project:\n   - Click 'Export Project'\n   - Choose output directory: builds/windows/\n   - Export with debug disabled for final build\n\n3. Test exported build:\n   - Launch Snake.exe directly (not from Godot)\n   - Play full game loop: Menu > Game > Eat apples > Game Over > Restart > Return to Menu\n   - Close exe completely\n   - Relaunch Snake.exe\n   - Verify high score persisted between launches\n   - Check OS.get_user_data_dir() for save location\n\n4. Create distribution folder structure:\n   ```\n   Snake_v1.0/\n   ├── Snake.exe\n   ├── README.txt (optional: controls, credits)\n   └── (any .pck files if not embedded)\n   ```\n\n5. Document export settings in project notes for future builds",
         "testStrategy": "1. Export completes without errors\n2. Launch Snake.exe - game runs identically to editor version\n3. All input actions work (arrows, WASD, Esc, P, Enter, Space)\n4. Play complete game, achieve score of 10, quit\n5. Relaunch exe - high score should show 10 on main menu\n6. Verify highscore.save file exists in user data directory\n7. Test on clean Windows machine (no Godot installed) to verify independence\n8. File size should be reasonable (<50MB for simple 2D game)\n9. No console window appears (unless debug build)",
         "priority": "medium",
         "dependencies": [
-          "11"
+          11
         ],
         "status": "pending",
-        "subtasks": [],
-        "complexity": 4,
-        "recommendedSubtasks": 5,
-        "expansionPrompt": "Divide export process into: (1) Configure Windows Desktop export preset with all settings (name, icon, embed PCK, architecture), (2) Create builds/windows/ directory structure and export executable, (3) Test exported build on development machine with full game loop and persistence verification, (4) Verify user data directory location and highscore.save file creation in exported build, (5) Document export settings and test on clean Windows machine without Godot to ensure independence"
+        "subtasks": []
       }
     ],
     "metadata": {
-      "version": "1.0.0",
-      "lastModified": "2026-05-16T03:45:14.421Z",
-      "taskCount": 12,
-      "completedCount": 10,
-      "tags": [
-        "master"
-      ]
+      "created": "2026-05-16T02:09:11.261Z",
+      "updated": "2026-05-16T02:09:11.261Z",
+      "description": "Tasks for master context"
     }
   }
 }
