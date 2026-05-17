@@ -39,14 +39,21 @@ func _on_tick() -> void:
 
 	var head: Vector2i = player.get_head_position()
 	if not GameConstants.is_valid_grid_pos(head):
-		wall_collision.emit()
-		stop_game()
+		game_over("wall")
 		return
 
 	for i in range(1, player.segments.size()):
 		if player.segments[i] == head:
-			self_collision.emit()
-			stop_game()
+			game_over("self")
 			return
 
 	tick.emit()
+
+
+func game_over(collision_type: String) -> void:
+	GameState.collision_type = collision_type
+	stop_game()
+	if collision_type == "wall":
+		wall_collision.emit()
+	elif collision_type == "self":
+		self_collision.emit()

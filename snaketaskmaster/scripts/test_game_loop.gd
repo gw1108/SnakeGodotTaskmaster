@@ -108,7 +108,8 @@ func _run_tests() -> void:
 	p.queue_free()
 	await get_tree().process_frame
 
-	# Test 6: wall collision stops loop and emits signal
+	# Test 6: wall collision on right wall — signal, stop, GameState.collision_type='wall'
+	GameState.reset()
 	pair = _make_loop_with_player()
 	g = pair[0]
 	p = pair[1]
@@ -125,9 +126,48 @@ func _run_tests() -> void:
 		failures.append("wall_collision not emitted: %d" % wall_signal_count)
 	if g.is_active:
 		failures.append("loop still active after wall collision")
+	if GameState.collision_type != "wall":
+		failures.append("GameState.collision_type expected 'wall', got '%s'" % GameState.collision_type)
 	g.queue_free()
 	p.queue_free()
 	await get_tree().process_frame
+
+	# Test 6b: wall collision on all four walls trips game_over with 'wall'
+	var wall_cases := [
+		{"start": Vector2i(0, 5), "dir": Vector2i.LEFT, "label": "left wall"},
+		{"start": Vector2i(GameConstants.GRID_WIDTH - 1, 5), "dir": Vector2i.RIGHT, "label": "right wall"},
+		{"start": Vector2i(5, 0), "dir": Vector2i.UP, "label": "top wall"},
+		{"start": Vector2i(5, GameConstants.GRID_HEIGHT - 1), "dir": Vector2i.DOWN, "label": "bottom wall"},
+	]
+	for case in wall_cases:
+		GameState.reset()
+		pair = _make_loop_with_player()
+		g = pair[0]
+		p = pair[1]
+		var local_wall_count: Array[int] = [0]
+		g.wall_collision.connect(func(): local_wall_count[0] += 1)
+		# Build segments where the head is at `start` and body trails opposite of dir
+		# so we don't accidentally place a body cell at the new-head position.
+		var wall_dir: Vector2i = case["dir"]
+		var wall_start: Vector2i = case["start"]
+		p.segments.clear()
+		p.segments.append(wall_start)
+		p.segments.append(wall_start - wall_dir)
+		p.segments.append(wall_start - wall_dir * 2)
+		p.current_direction = wall_dir
+		# Clear any leftover buffered direction from previous tests
+		InputManager.buffered_direction = Vector2i.ZERO
+		g.start_game()
+		g._on_tick()
+		if local_wall_count[0] != 1:
+			failures.append("%s: wall_collision not emitted (%d)" % [case["label"], local_wall_count[0]])
+		if g.is_active:
+			failures.append("%s: loop still active after wall collision" % case["label"])
+		if GameState.collision_type != "wall":
+			failures.append("%s: GameState.collision_type expected 'wall', got '%s'" % [case["label"], GameState.collision_type])
+		g.queue_free()
+		p.queue_free()
+		await get_tree().process_frame
 
 	# Test 7: self-collision stops loop and emits signal
 	pair = _make_loop_with_player()
