@@ -49,3 +49,16 @@
 - Registered as autoload "GameConstants" via [autoload] block in snaketaskmaster/project.godot.
 - Added scripts/test_game_constants.gd; `godot --headless --script res://scripts/test_game_constants.gd` → "OK: all GameConstants tests passed" (covers constants, both conversions, and 5 is_valid_grid_pos boundary cases).
 - Learning: When running a `extends SceneTree` test via `--script`, project autoloads are NOT instantiated, so referencing the autoload by its registered name fails compile. Load the script with `load("res://...").new()` inside the test instead. (`--headless --import` is what actually validates the autoload registration.)
+
+# Taskmaster Loop Progress
+# Started: 2026-05-17T04:25:03.921Z
+# Preset: default
+# Max Iterations: 19
+
+---
+
+## Iter 1 — Task 21: InputManager autoload (arrow keys + WASD with reversal blocking)
+- Wrote snaketaskmaster/scripts/input_manager.gd: _input handles ui_up/ui_down/ui_left/ui_right (arrow keys via default actions) plus KEY_W/A/S/D fallback, storing latest dir in buffered_direction. get_buffered_direction(current) clears buffer on every call and returns current when buffer is empty or would reverse 180°.
+- Registered as autoload "InputManager" in snaketaskmaster/project.godot.
+- Added scripts/test_input_manager.gd; `godot --headless --script res://scripts/test_input_manager.gd` → "OK: all InputManager tests passed". Covers WASD, arrow keys, empty buffer, 180° block (both axes), perpendicular turns, buffer-clear-on-blocked-retrieval, and latest-input-wins.
+- Learning: in headless `--script` test, autoloads aren't instantiated and `Input.parse_input_event` requires a window/main loop. Calling `IM._input(synthetic_event)` directly is the simplest way to exercise input handling. `is_action_pressed("ui_up")` on a synthetic InputEventKey with `keycode=KEY_UP` works in headless because ui_* actions are bound by the engine defaults loaded from project.godot.
