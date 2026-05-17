@@ -70,10 +70,40 @@ func _run_tests() -> void:
 	if fm.food_sprite == null or not fm.food_sprite.visible:
 		failures.append("food sprite not visible after spawn")
 
-	# Test 5: HUD shows initial score 0
+	# Test 5: HUD shows initial score 0 with readable styling
 	var lbl: Label = game.get_node("HUD/ScoreLabel")
 	if lbl.text != "Score: 0":
 		failures.append("HUD initial text wrong: '%s'" % lbl.text)
+	# Contrasting font color override
+	if not lbl.has_theme_color_override("font_color"):
+		failures.append("ScoreLabel missing font_color override (need contrast)")
+	else:
+		var fc: Color = lbl.get_theme_color("font_color")
+		if fc.a < 1.0:
+			failures.append("ScoreLabel font_color not fully opaque: %s" % fc)
+	# Readable font size
+	if lbl.get_theme_font_size("font_size") < 14:
+		failures.append("ScoreLabel font size too small")
+	# Top-left positioning (offset_left < viewport_width/2, offset_top in top half)
+	if lbl.offset_left > GameConstants.GRID_WIDTH * GameConstants.CELL_SIZE / 2:
+		failures.append("ScoreLabel not in left half of screen")
+	if lbl.offset_top > GameConstants.GRID_HEIGHT * GameConstants.CELL_SIZE / 2:
+		failures.append("ScoreLabel not in top half of screen")
+	# Semi-transparent background panel for readability
+	var panel: Panel = game.get_node_or_null("HUD/ScorePanel")
+	if panel == null:
+		failures.append("HUD/ScorePanel missing (need semi-transparent backing)")
+	else:
+		if not panel.has_theme_stylebox_override("panel"):
+			failures.append("ScorePanel missing stylebox override")
+		else:
+			var sb := panel.get_theme_stylebox("panel") as StyleBoxFlat
+			if sb == null:
+				failures.append("ScorePanel stylebox not StyleBoxFlat")
+			elif sb.bg_color.a >= 1.0:
+				failures.append("ScorePanel bg should be semi-transparent: alpha=%f" % sb.bg_color.a)
+			elif sb.bg_color.a <= 0.0:
+				failures.append("ScorePanel bg fully transparent (invisible)")
 
 	# Test 6: playfield rendered as a child Node2D with tile layers
 	var pf := game.get_node("Playfield")
@@ -104,6 +134,18 @@ func _run_tests() -> void:
 		failures.append("HUD did not refresh on eat: '%s'" % lbl.text)
 	if pl.grow_pending != 1:
 		failures.append("grow_pending not queued after eat: %d" % pl.grow_pending)
+
+	# Test 7b: HUD updates in real-time across consecutive eats
+	for expected in range(2, 5):
+		head = pl.get_head_position()
+		fm.current_food_position = head + Vector2i.RIGHT
+		fm.food_sprite.position = GameConstants.grid_to_pixel(fm.current_food_position)
+		InputManager.buffered_direction = Vector2i.ZERO
+		loop._on_tick()
+		if GameState.current_score != expected:
+			failures.append("score off after %d eats: got %d" % [expected, GameState.current_score])
+		if lbl.text != "Score: %d" % expected:
+			failures.append("HUD lagging at eat %d: '%s'" % [expected, lbl.text])
 	game.queue_free()
 	await get_tree().process_frame
 
