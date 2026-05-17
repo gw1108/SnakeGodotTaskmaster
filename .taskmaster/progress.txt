@@ -16,3 +16,7 @@
 - Verified with `godot --headless --import` — editor loaded cleanly with no errors.
 - Learning: task-master CLI isn't pre-installed; `npm i -g task-master-ai` is required at start. MCP `mcp__task-master-ai__*` tools are deferred and need ToolSearch to load schemas before first use.
 
+## Iter 3 — Task 14: Generate player body segment sprite (PixelLab)
+- Created 32x32 top-down tileable body segment via mcp__pixellab__create_object (object_id 5652fb6b-a978-4780-89bf-5c9c9d7d6b0b). Downloaded to snaketaskmaster/assets/sprites/player_body.png (32x32 RGBA, 1432 bytes).
+- Ran `godot --headless --import` from snaketaskmaster/ — auto-generated player_body.png.import without errors.
+- Learning: Bash standalone `sleep N` is blocked in this harness. Use `run_in_background: true` with a powershell Start-Sleep, or Monitor with an until-loop, when waiting for async jobs (e.g. PixelLab generation polls). `cd` into snaketaskmaster/ before `godot --headless --import` since project.godot lives there.
