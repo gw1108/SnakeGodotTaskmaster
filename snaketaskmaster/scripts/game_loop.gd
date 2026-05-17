@@ -3,8 +3,10 @@ extends Node
 signal tick
 signal wall_collision
 signal self_collision
+signal food_eaten
 
 @export var player: Node2D
+@export var food_manager: Node2D
 
 var is_active: bool = false
 var _timer: Timer
@@ -46,6 +48,12 @@ func _on_tick() -> void:
 		if player.segments[i] == head:
 			game_over("self")
 			return
+
+	if food_manager != null and food_manager.check_collision(head):
+		GameState.add_score(1)
+		player.add_growth()
+		food_manager.spawn_food(player.segments)
+		food_eaten.emit()
 
 	tick.emit()
 

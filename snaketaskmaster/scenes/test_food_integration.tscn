@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0fdmtest00004"]
+
+[ext_resource type="Script" path="res://scripts/test_food_integration.gd" id="1"]
+
+[node name="TestFoodIntegration" type="Node"]
+script = ExtResource("1")
