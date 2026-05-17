@@ -43,3 +43,9 @@
 - Quota refreshed since last loop. Generated 32x32 top-down red apple via mcp__pixellab__create_object (object_id 3975ec86-5dbf-48d0-8867-7cad72d15f19). Downloaded to snaketaskmaster/assets/sprites/food.png (32x32 RGBA, 808 bytes).
 - Ran `godot --headless --import` from snaketaskmaster/ — auto-generated food.png.import without errors.
 - Learning: PixelLab generation time can vary wildly. Today's run took ~20 minutes despite ETA repeatedly reporting ~150s; the ETA field is unreliable when their backend is congested. Continue polling at ~3-5min intervals rather than trusting ETA. Also: when curl-ing with backslash Windows paths inside Bash, paths get mangled — use forward-slash paths or quote heavily.
+
+## Iter 2 — Task 19: GameConstants autoload + grid coord utilities
+- Wrote snaketaskmaster/scripts/game_constants.gd with GRID_WIDTH=20, GRID_HEIGHT=15, CELL_SIZE=32, TICK_INTERVAL=0.15 and helpers grid_to_pixel/pixel_to_grid/is_valid_grid_pos.
+- Registered as autoload "GameConstants" via [autoload] block in snaketaskmaster/project.godot.
+- Added scripts/test_game_constants.gd; `godot --headless --script res://scripts/test_game_constants.gd` → "OK: all GameConstants tests passed" (covers constants, both conversions, and 5 is_valid_grid_pos boundary cases).
+- Learning: When running a `extends SceneTree` test via `--script`, project autoloads are NOT instantiated, so referencing the autoload by its registered name fails compile. Load the script with `load("res://...").new()` inside the test instead. (`--headless --import` is what actually validates the autoload registration.)
