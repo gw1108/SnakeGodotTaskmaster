@@ -20,3 +20,26 @@
 - Created 32x32 top-down tileable body segment via mcp__pixellab__create_object (object_id 5652fb6b-a978-4780-89bf-5c9c9d7d6b0b). Downloaded to snaketaskmaster/assets/sprites/player_body.png (32x32 RGBA, 1432 bytes).
 - Ran `godot --headless --import` from snaketaskmaster/ — auto-generated player_body.png.import without errors.
 - Learning: Bash standalone `sleep N` is blocked in this harness. Use `run_in_background: true` with a powershell Start-Sleep, or Monitor with an until-loop, when waiting for async jobs (e.g. PixelLab generation polls). `cd` into snaketaskmaster/ before `godot --headless --import` since project.godot lives there.
+
+## Iter 4 — Task 15: Generate food sprite (PixelLab) — BLOCKED
+- mcp__pixellab__create_object returned "❌ Insufficient generations available". PixelLab account is out of credits/subscription quota.
+- Reset task 15 status back to pending. No file changes made.
+- Learning: PixelLab quota can be exhausted mid-loop; surface as <loop-blocked> rather than fabricating placeholder art, since downstream tasks expect style-consistent sprites from the same model.
+
+---
+# Loop Complete: 2026-05-17T02:11:06.731Z
+- Total iterations: 4
+- Tasks completed: 3
+- Final status: blocked
+
+# Taskmaster Loop Progress
+# Started: 2026-05-17T03:50:58.774Z
+# Preset: default
+# Max Iterations: 21
+
+---
+
+## Iter 1 — Task 15: Generate food sprite (PixelLab) — UNBLOCKED
+- Quota refreshed since last loop. Generated 32x32 top-down red apple via mcp__pixellab__create_object (object_id 3975ec86-5dbf-48d0-8867-7cad72d15f19). Downloaded to snaketaskmaster/assets/sprites/food.png (32x32 RGBA, 808 bytes).
+- Ran `godot --headless --import` from snaketaskmaster/ — auto-generated food.png.import without errors.
+- Learning: PixelLab generation time can vary wildly. Today's run took ~20 minutes despite ETA repeatedly reporting ~150s; the ETA field is unreliable when their backend is congested. Continue polling at ~3-5min intervals rather than trusting ETA. Also: when curl-ing with backslash Windows paths inside Bash, paths get mangled — use forward-slash paths or quote heavily.
