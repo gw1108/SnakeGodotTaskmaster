@@ -10,6 +10,7 @@ var game_over_scene_path: String = "res://scenes/game_over_screen.tscn"
 @onready var game_loop: Node = $GameLoop
 @onready var score_label: Label = $HUD/ScoreLabel
 @onready var eat_sound: AudioStreamPlayer = $EatSound
+@onready var death_sound: AudioStreamPlayer = $DeathSound
 
 
 func _ready() -> void:
@@ -35,7 +36,11 @@ func _on_food_eaten() -> void:
 
 
 func _on_game_over() -> void:
+	if death_sound != null and death_sound.stream != null:
+		death_sound.play()
 	if not ResourceLoader.exists(game_over_scene_path):
 		push_warning("Game: %s not found" % game_over_scene_path)
 		return
-	get_tree().change_scene_to_file(game_over_scene_path)
+	await get_tree().create_timer(0.5).timeout
+	if is_inside_tree():
+		get_tree().change_scene_to_file(game_over_scene_path)

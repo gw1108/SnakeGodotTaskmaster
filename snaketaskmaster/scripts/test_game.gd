@@ -127,6 +127,18 @@ func _run_tests() -> void:
 		if eat.playing:
 			failures.append("EatSound should not be playing before any food eat")
 
+	# Test 6c: DeathSound AudioStreamPlayer present with audio stream loaded
+	var death: AudioStreamPlayer = game.get_node_or_null("DeathSound")
+	if death == null:
+		failures.append("DeathSound AudioStreamPlayer missing")
+	else:
+		if death.stream == null:
+			failures.append("DeathSound has no stream loaded")
+		if death.volume_db > 0.0:
+			failures.append("DeathSound volume_db too loud: %f" % death.volume_db)
+		if death.playing:
+			failures.append("DeathSound should not be playing before any collision")
+
 	game.queue_free()
 	await get_tree().process_frame
 
@@ -168,11 +180,12 @@ func _run_tests() -> void:
 	game.queue_free()
 	await get_tree().process_frame
 
-	# Test 8: wall collision triggers game-over flow (warning expected, no crash)
+	# Test 8: wall collision triggers game-over flow + death sound (warning expected, no crash)
 	game = _instantiate_game()
 	await get_tree().process_frame
 	loop = game.get_node("GameLoop")
 	pl = game.get_node("Player")
+	var death_player: AudioStreamPlayer = game.get_node("DeathSound")
 	pl.segments.clear()
 	pl.segments.append(Vector2i(GameConstants.GRID_WIDTH - 1, 5))
 	pl.segments.append(Vector2i(GameConstants.GRID_WIDTH - 2, 5))
@@ -184,5 +197,34 @@ func _run_tests() -> void:
 		failures.append("game_loop still active after wall collision")
 	if GameState.collision_type != "wall":
 		failures.append("collision_type not 'wall': '%s'" % GameState.collision_type)
+	if not death_player.playing:
+		failures.append("DeathSound.play() not invoked after wall collision")
+	game.queue_free()
+	await get_tree().process_frame
+
+	# Test 9: self collision also fires the death sound. Box-shaped snake with
+	# growth pinned so the tail doesn't vacate the target cell mid-tick. Head
+	# moves RIGHT into segments[3]; can't use buffered_direction reversal since
+	# InputManager blocks 180 degree flips.
+	game = _instantiate_game()
+	await get_tree().process_frame
+	loop = game.get_node("GameLoop")
+	pl = game.get_node("Player")
+	death_player = game.get_node("DeathSound")
+	pl.segments.clear()
+	pl.segments.append(Vector2i(5, 5))
+	pl.segments.append(Vector2i(5, 6))
+	pl.segments.append(Vector2i(6, 6))
+	pl.segments.append(Vector2i(6, 5))
+	pl.current_direction = Vector2i.RIGHT
+	pl.add_growth()
+	InputManager.buffered_direction = Vector2i.ZERO
+	loop._on_tick()
+	if loop.is_active:
+		failures.append("game_loop still active after self collision")
+	if GameState.collision_type != "self":
+		failures.append("collision_type not 'self': '%s'" % GameState.collision_type)
+	if not death_player.playing:
+		failures.append("DeathSound.play() not invoked after self collision")
 	game.queue_free()
 	await get_tree().process_frame
