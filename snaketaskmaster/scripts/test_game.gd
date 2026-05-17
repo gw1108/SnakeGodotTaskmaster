@@ -115,6 +115,18 @@ func _run_tests() -> void:
 	if pf.get_node_or_null("WallLayer") == null:
 		failures.append("Playfield/WallLayer missing")
 
+	# Test 6b: EatSound AudioStreamPlayer present with audio stream loaded
+	var eat: AudioStreamPlayer = game.get_node_or_null("EatSound")
+	if eat == null:
+		failures.append("EatSound AudioStreamPlayer missing")
+	else:
+		if eat.stream == null:
+			failures.append("EatSound has no stream loaded")
+		if eat.volume_db > 0.0:
+			failures.append("EatSound volume_db too loud: %f" % eat.volume_db)
+		if eat.playing:
+			failures.append("EatSound should not be playing before any food eat")
+
 	game.queue_free()
 	await get_tree().process_frame
 
@@ -125,6 +137,7 @@ func _run_tests() -> void:
 	pl = game.get_node("Player")
 	fm = game.get_node("FoodManager")
 	lbl = game.get_node("HUD/ScoreLabel")
+	var eat_player: AudioStreamPlayer = game.get_node("EatSound")
 	var head: Vector2i = pl.get_head_position()
 	# Force food directly in front of head (head defaults to moving RIGHT)
 	fm.current_food_position = head + Vector2i.RIGHT
@@ -137,6 +150,9 @@ func _run_tests() -> void:
 		failures.append("HUD did not refresh on eat: '%s'" % lbl.text)
 	if pl.grow_pending != 1:
 		failures.append("grow_pending not queued after eat: %d" % pl.grow_pending)
+	# Eat sound should have been triggered by _on_food_eaten
+	if not eat_player.playing:
+		failures.append("EatSound.play() not invoked after food eaten")
 
 	# Test 7b: HUD updates in real-time across consecutive eats
 	for expected in range(2, 5):

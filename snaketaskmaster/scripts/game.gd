@@ -9,6 +9,7 @@ var game_over_scene_path: String = "res://scenes/game_over_screen.tscn"
 @onready var food_manager: Node2D = $FoodManager
 @onready var game_loop: Node = $GameLoop
 @onready var score_label: Label = $HUD/ScoreLabel
+@onready var eat_sound: AudioStreamPlayer = $EatSound
 
 
 func _ready() -> void:
@@ -29,6 +30,8 @@ func _refresh_score() -> void:
 
 func _on_food_eaten() -> void:
 	_refresh_score()
+	if eat_sound != null and eat_sound.stream != null:
+		eat_sound.play()
 
 
 func _on_game_over() -> void:
