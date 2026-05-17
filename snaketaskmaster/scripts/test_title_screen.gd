@@ -38,6 +38,7 @@ func _ready() -> void:
 
 	GameState.high_score = 42
 	var ts2 = TitleScene.instantiate()
+	ts2.game_scene_path = "res://scenes/__nonexistent_for_test.tscn"
 	add_child(ts2)
 	await get_tree().process_frame
 	var hs_label: Label = ts2.get_node("Control/VBoxContainer/HighScoreLabel")
