@@ -8,6 +8,12 @@ var self_signal_count: int = 0
 
 
 func _ready() -> void:
+	# Safety auto-quit: if the await chain in _run_tests is aborted by a runtime
+	# error (e.g. typed-array reassignment), the trailing get_tree().quit() below
+	# never fires and the headless process zombies. This guarantees termination.
+	get_tree().create_timer(15.0).timeout.connect(func() -> void:
+		printerr("FAIL: test exceeded 15s safety timeout (await chain likely aborted)")
+		get_tree().quit(2))
 	await _run_tests()
 	if failures.is_empty():
 		print("OK: all GameLoop tests passed")
@@ -169,7 +175,8 @@ func _run_tests() -> void:
 		p.queue_free()
 		await get_tree().process_frame
 
-	# Test 7: self-collision stops loop and emits signal
+	# Test 7: self-collision stops loop, emits signal, sets GameState.collision_type='self'
+	GameState.reset()
 	pair = _make_loop_with_player()
 	g = pair[0]
 	p = pair[1]
@@ -191,6 +198,63 @@ func _run_tests() -> void:
 		failures.append("self_collision not emitted: %d" % self_signal_count)
 	if g.is_active:
 		failures.append("loop still active after self-collision")
+	if GameState.collision_type != "self":
+		failures.append("GameState.collision_type expected 'self', got '%s'" % GameState.collision_type)
+	g.queue_free()
+	p.queue_free()
+	await get_tree().process_frame
+
+	# Test 7b: self-collision against a deeper body segment (not segments[1])
+	# Long snake curls so head hits segments[3] on the next move.
+	GameState.reset()
+	pair = _make_loop_with_player()
+	g = pair[0]
+	p = pair[1]
+	var deep_self_count: Array[int] = [0]
+	g.self_collision.connect(func(): deep_self_count[0] += 1)
+	# Layout (head H, body 1..4, target T == segments[4]):
+	#   T 4 3
+	#   H 1 2
+	# Head at (3,5) moving UP into (3,4) which is segments[4]=(3,4).
+	p.segments.clear()
+	p.segments.append(Vector2i(3, 5))  # head
+	p.segments.append(Vector2i(4, 5))  # 1
+	p.segments.append(Vector2i(5, 5))  # 2
+	p.segments.append(Vector2i(5, 4))  # 3
+	p.segments.append(Vector2i(4, 4))  # 4
+	p.segments.append(Vector2i(3, 4))  # 5 — collision target
+	p.current_direction = Vector2i.LEFT
+	p.add_growth()  # freeze tail so segments[5] stays put this tick
+	InputManager.buffered_direction = Vector2i.UP
+	g.start_game()
+	g._on_tick()
+	if deep_self_count[0] != 1:
+		failures.append("deep self_collision not emitted: %d" % deep_self_count[0])
+	if g.is_active:
+		failures.append("loop still active after deep self-collision")
+	if GameState.collision_type != "self":
+		failures.append("deep collision GameState.collision_type expected 'self', got '%s'" % GameState.collision_type)
+	g.queue_free()
+	p.queue_free()
+	await get_tree().process_frame
+
+	# Test 7c: head-only snake (no body) never triggers self-collision
+	GameState.reset()
+	pair = _make_loop_with_player()
+	g = pair[0]
+	p = pair[1]
+	var lone_self_count: Array[int] = [0]
+	g.self_collision.connect(func(): lone_self_count[0] += 1)
+	p.segments.clear()
+	p.segments.append(Vector2i(5, 5))
+	p.current_direction = Vector2i.RIGHT
+	InputManager.buffered_direction = Vector2i.ZERO
+	g.start_game()
+	g._on_tick()
+	if lone_self_count[0] != 0:
+		failures.append("head-only snake fired spurious self_collision: %d" % lone_self_count[0])
+	if not g.is_active:
+		failures.append("head-only snake stopped loop unexpectedly")
 	g.queue_free()
 	p.queue_free()
 	await get_tree().process_frame
