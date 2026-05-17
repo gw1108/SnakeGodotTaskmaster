@@ -1,6 +1,6 @@
 ; Placeholder main scene — the entrypoint of the game.
 ; Wired up via `run/main_scene` in project.godot so F5 / `godot --path .` loads this.
-; Replace this with the real gameplay scene (snake board, HUD, etc.) when ready.
+; Replace this with the real gameplay scene (HUD, etc.) when ready.
 
 [gd_scene format=3]
 
