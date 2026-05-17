@@ -12,6 +12,8 @@ The role of this file is to describe common mistakes and confusion points that a
 
 ## Project Structure
 
+Godot is on PATH.
+
 Do NOT scan files in the /thoughts/ folder unless specified.
 Do NOT scan files under any folder named ARCHIVE unless specified.
 
