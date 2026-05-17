@@ -11,3 +11,8 @@
 - Downloaded PNG to snaketaskmaster/assets/sprites/player_head.png (32x32 RGBA, 1070 bytes).
 - Learning: PixelLab create_object returns a job ID; must poll get_object until status=completed (~60-180s), then curl the storage URL to disk. The Godot project lives under snaketaskmaster/.
 
+## Iter 2 — Task 18: Project directory structure
+- Created snaketaskmaster/assets/audio/, snaketaskmaster/scenes/, snaketaskmaster/scripts/ (assets/sprites/ already existed). Added .gitkeep placeholders so git tracks the empty dirs.
+- Verified with `godot --headless --import` — editor loaded cleanly with no errors.
+- Learning: task-master CLI isn't pre-installed; `npm i -g task-master-ai` is required at start. MCP `mcp__task-master-ai__*` tools are deferred and need ToolSearch to load schemas before first use.
+

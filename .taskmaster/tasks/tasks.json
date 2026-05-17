@@ -73,8 +73,9 @@
         "testStrategy": "Verify all directories exist: snaketaskmaster/assets/sprites/, snaketaskmaster/assets/audio/, snaketaskmaster/scenes/, snaketaskmaster/scripts/. Open the Godot editor and confirm folders are visible in the FileSystem dock.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-17T02:05:56.122Z"
       },
       {
         "id": "19",
@@ -342,9 +343,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-17T02:03:23.839Z",
+      "lastModified": "2026-05-17T02:05:56.122Z",
       "taskCount": 24,
-      "completedCount": 1,
+      "completedCount": 2,
       "tags": [
         "master"
       ]
