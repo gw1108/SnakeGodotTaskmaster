@@ -5,11 +5,16 @@ extends Node
 var collision_type: String = ""
 var current_score: int = 0
 var high_score: int = 0
+# Snapshot of high_score at the start of the current run; lets the game-over
+# screen tell whether the player *beat* the prior best (high_score gets
+# updated incrementally during play by add_score()).
+var previous_high_score: int = 0
 
 
 func reset() -> void:
 	collision_type = ""
 	current_score = 0
+	previous_high_score = high_score
 
 
 func add_score(amount: int) -> void:

@@ -25,6 +25,9 @@ func _instantiate_game() -> Node:
 	InputManager.buffered_direction = Vector2i.ZERO
 	var GameScene: PackedScene = load("res://scenes/game.tscn")
 	var inst := GameScene.instantiate()
+	# Steer the game-over guard at a nonexistent path so triggering a
+	# collision in tests doesn't actually change the scene out from under us.
+	inst.game_over_scene_path = "res://scenes/__nonexistent_for_test.tscn"
 	add_child(inst)
 	return inst
 

@@ -1,6 +1,8 @@
 extends Node2D
 
-const GAME_OVER_SCENE_PATH := "res://scenes/game_over_screen.tscn"
+# Overridable so tests can point at a nonexistent path and exercise the
+# guard branch without triggering a real scene change.
+var game_over_scene_path: String = "res://scenes/game_over_screen.tscn"
 
 @onready var playfield: Node2D = $Playfield
 @onready var player: Node2D = $Player
@@ -30,8 +32,7 @@ func _on_food_eaten() -> void:
 
 
 func _on_game_over() -> void:
-	# Guard: game-over screen scene comes from a later task.
-	if not ResourceLoader.exists(GAME_OVER_SCENE_PATH):
-		push_warning("Game: %s not found yet" % GAME_OVER_SCENE_PATH)
+	if not ResourceLoader.exists(game_over_scene_path):
+		push_warning("Game: %s not found" % game_over_scene_path)
 		return
-	get_tree().change_scene_to_file(GAME_OVER_SCENE_PATH)
+	get_tree().change_scene_to_file(game_over_scene_path)
