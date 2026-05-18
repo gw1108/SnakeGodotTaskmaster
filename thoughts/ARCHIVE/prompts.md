@@ -15,3 +15,5 @@ Read the snake-gameplay-extracted.md file and create a very simple product requi
 (trying again 5/16/2026 6:38PM)
 
 Read the .firecrawl/snake-gameplay-extracted.md file and create a very simple product requirement document based off of that file into .taskmaster/docs/prd.txt. The goal is to describe a simple 2D game that will be implemented in godot. It should be 2D. If the feature or task requires art split the task into code-implementation-task and a art-implementation-task. For art-implementation-tasks use claude + pixellab mcp and generate the necessary assets that will be used by the code-implementation-task. If it's not clear what features should be in the final game work back and forth with me by asking clarifying questions before writing out the prd.
+
+(It edited the readme reeee. Make sure to primarily edit the godot project C:\GameDev\SnakeGodotTaskmaster\snaketaskmaster . Do not edit any readmes.)
