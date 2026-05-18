@@ -2,6 +2,9 @@ extends Node
 
 
 func _ready() -> void:
+	get_tree().create_timer(10.0).timeout.connect(func() -> void:
+		printerr("FAIL: test exceeded 10s safety timeout")
+		get_tree().quit(2))
 	var failures: Array[String] = []
 
 	var PlayerScript: Script = load("res://scripts/player.gd")

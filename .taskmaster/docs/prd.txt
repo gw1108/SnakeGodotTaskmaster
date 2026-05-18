@@ -1,0 +1,161 @@
+# Product Requirements Document: 2D Grid Survival Game (Godot)
+
+## 1. Overview
+
+A simple single-player 2D arcade game built in Godot 4. The player controls a
+creature that moves continuously on a fixed grid, eating food items to grow
+longer. Each food item adds a new body segment to the trailing line behind
+the player's head. The run ends when the head collides with a wall or with
+any part of its own body. The objective is to achieve the highest possible
+score (length) before dying.
+
+The game is intentionally small in scope: one screen, one game mode, one
+input scheme, no menus beyond a title screen and a game-over screen.
+
+## 2. Goals and Non-Goals
+
+### Goals
+- Ship a complete, playable 2D arcade game in Godot 4.
+- Use pixel-art assets generated via the PixelLab MCP for all visible game
+  entities (player head, body segments, food).
+- Keep the implementation small enough that it can be broken down into a
+  short, linear list of tasks.
+
+### Non-Goals (explicitly out of scope)
+- Multiplayer of any kind (no local co-op, no networked play).
+- AI-controlled enemy entities.
+- Multiple levels, mazes, or procedural layouts.
+- Difficulty scaling (speed is constant for the entire run).
+- Save files, accounts, online leaderboards.
+- Mobile/touch input.
+- Sound design beyond a small set of basic SFX (see Audio section).
+
+## 3. Target Platform and Tech
+
+- Engine: Godot 4 (project already initialized at the repo root).
+- Platform: Desktop (Windows primary; cross-platform is a bonus, not a
+  requirement).
+- Language: GDScript.
+- Asset generation: PixelLab MCP for all sprite art.
+- Resolution: 2D pixel-art. Logical playfield is a fixed grid (see below);
+  window size scales the grid up with integer scaling so pixels stay crisp.
+
+## 4. Gameplay
+
+### 4.1 Playfield
+- A rectangular grid of fixed dimensions: **20 cells wide x 15 cells tall**.
+- Each cell is a square (e.g. 32x32 px on screen).
+- The grid is bordered by solid walls on all four sides. Walls are lethal.
+
+### 4.2 Player Entity
+- The player controls a chain of cells with a designated head cell and a
+  trailing tail of body segments.
+- Starting length: **3 segments** (1 head + 2 body), positioned horizontally
+  in the middle of the playfield, moving rightward.
+- Movement is grid-based and tick-based: every `tick_interval` seconds the
+  head advances one cell in its current facing direction; each body segment
+  takes the position the segment in front of it occupied last tick.
+- Tick interval: **0.15 seconds** (constant for the entire run).
+
+### 4.3 Input
+- Absolute direction input via the four arrow keys (Up, Down, Left, Right)
+  AND the WASD keys.
+- The player may not reverse 180 degrees into their own neck in a single
+  tick. Inputs that would reverse direction are ignored.
+- Direction inputs are buffered: the most recent legal direction pressed
+  between ticks is the direction used on the next tick.
+
+### 4.4 Food
+- Exactly **one food item** is present on the playfield at any time.
+- When eaten, the food is removed and a new food item is spawned at a
+  uniformly random empty cell (a cell not occupied by any player segment).
+- Eating food increases the player's length by **1 segment** (the tail does
+  not retract on the tick the food is eaten).
+- Score increases by **1** per food eaten.
+
+### 4.5 Death Conditions
+The current run ends immediately when any of the following occur:
+- The head moves into a wall cell (outside the 20x15 grid).
+- The head moves into a cell currently occupied by a body segment of the
+  player.
+
+### 4.6 Game States
+The game has three states:
+1. **Title** — shows the game name, the current high score (in-memory only,
+   resets on application restart), and a "Press any key to start" prompt.
+2. **Playing** — the gameplay loop described above. A small HUD shows the
+   current score.
+3. **Game Over** — shows final score, whether it was a new high score, and
+   a "Press any key to restart" prompt that returns to Title.
+
+## 5. Audio (minimal)
+
+The following SFX should play. Use placeholder sounds (free/CC0 or simple
+generated tones) — sound design is not a focus of this PRD:
+- Eat food: short blip.
+- Death: short descending tone.
+
+No music is required.
+
+## 6. Art Requirements (PixelLab MCP)
+
+All sprite art for this project must be generated using the PixelLab MCP.
+Each art deliverable below is a distinct asset that the code will load and
+render. Art tasks must be created and completed BEFORE the code tasks that
+depend on them, so the code has real assets to integrate.
+
+Target size for all sprites: **32x32 pixels**, top-down view, consistent
+pixel-art style and palette across all assets.
+
+### 6.1 Required Assets
+1. **Player head sprite** — top-down view of the player creature's head. The
+   sprite must read clearly when rotated 0°, 90°, 180°, 270° to represent
+   facing right, down, left, and up respectively. (One asset, rotated in
+   code; OR four directional variants — either is acceptable.)
+2. **Player body segment sprite** — a single 32x32 sprite used for every
+   non-head segment of the trailing line. Should visually tile with itself
+   when placed in adjacent cells.
+3. **Player tail sprite** (optional polish) — a sprite for the final
+   trailing segment, rotated to face away from the segment in front of it.
+   If omitted, reuse the body segment sprite.
+4. **Food sprite** — a single 32x32 sprite for the food item the player
+   eats (e.g. an apple).
+5. **Background tile** — a single 32x32 sprite for the playfield floor,
+   tiled across the entire 20x15 grid.
+6. **Wall tile** — a single 32x32 sprite for the border that surrounds the
+   playfield. Should tile cleanly when placed in a continuous border.
+
+## 7. Task Decomposition Guidance
+
+When this PRD is parsed into tasks, any feature that requires both new art
+and new code must be split into two tasks:
+
+- An **art-implementation-task** that uses Claude + the PixelLab MCP to
+  generate the required sprite(s) and place them under `assets/` (or a
+  similar conventional Godot asset folder). The deliverable is the asset
+  file(s) committed to the repo.
+- A **code-implementation-task** that integrates those assets into the
+  Godot scene and gameplay code. This task lists the art-implementation-task
+  as a dependency.
+
+Pure-code features (input handling, tick loop, collision logic, scoring,
+state machine) are single code-implementation-tasks with no art dependency.
+
+Pure-art features (the asset list in section 6.1) are single
+art-implementation-tasks with no code dependency.
+
+## 8. Acceptance Criteria
+
+The game is considered complete when all of the following are true:
+- All six asset categories in section 6.1 exist in the repo, generated via
+  the PixelLab MCP, and are rendered in-game.
+- The player can start a new run from the Title screen using any key.
+- The player can move the head in all four cardinal directions using both
+  arrow keys and WASD, with 180° reversals correctly blocked.
+- Eating food grows the player by exactly one segment, increases score by
+  one, and spawns a new food item in an empty random cell.
+- The run ends correctly on both wall collisions and self collisions.
+- The Game Over screen shows the final score and a "new high score"
+  indicator when applicable, and returns to Title on any keypress.
+- The game runs at a stable, constant tick rate of 0.15s per tick on a
+  typical desktop machine.

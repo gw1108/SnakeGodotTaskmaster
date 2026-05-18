@@ -2,6 +2,9 @@ extends SceneTree
 
 
 func _initialize() -> void:
+	create_timer(10.0).timeout.connect(func() -> void:
+		printerr("FAIL: test exceeded 10s safety timeout")
+		quit(2))
 	var GC = load("res://scripts/game_constants.gd").new()
 	var failures: Array[String] = []
 
