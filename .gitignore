@@ -52,8 +52,8 @@ ExportedObj/
 *.aab
 *.app
 *.exe
-/builds/
-build/
+[Bb]uild/
+[Bb]uilds/
 
 # Python bytecode cache files (auto-generated when Python imports a module; not source)
 *.pyc
