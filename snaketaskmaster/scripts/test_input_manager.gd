@@ -9,6 +9,9 @@ func _make_key_event(keycode: int) -> InputEventKey:
 
 
 func _initialize() -> void:
+	create_timer(10.0).timeout.connect(func() -> void:
+		printerr("FAIL: test exceeded 10s safety timeout")
+		quit(2))
 	var IM = load("res://scripts/input_manager.gd").new()
 	get_root().add_child(IM)
 	var failures: Array[String] = []
