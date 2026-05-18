@@ -53,6 +53,7 @@ ExportedObj/
 *.app
 *.exe
 /builds/
+build/
 
 # Python bytecode cache files (auto-generated when Python imports a module; not source)
 *.pyc
