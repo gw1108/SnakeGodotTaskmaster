@@ -41,11 +41,12 @@
         "dependencies": [
           "2"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 3,
         "recommendedSubtasks": 4,
-        "expansionPrompt": "Break movement system into: (1) Add Timer node to Game.tscn and configure tick rate properties, (2) Update Snake.gd to add heading vector and move() method with body manipulation, (3) Implement Game.gd signal connection between Timer.timeout and snake movement, (4) Test tick-based movement and verify snake maintains constant length while moving"
+        "expansionPrompt": "Break movement system into: (1) Add Timer node to Game.tscn and configure tick rate properties, (2) Update Snake.gd to add heading vector and move() method with body manipulation, (3) Implement Game.gd signal connection between Timer.timeout and snake movement, (4) Test tick-based movement and verify snake maintains constant length while moving",
+        "updatedAt": "2026-05-19T00:48:28.527Z"
       },
       {
         "id": "4",
@@ -238,9 +239,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-19T00:45:33.960Z",
+      "lastModified": "2026-05-19T00:48:28.527Z",
       "taskCount": 15,
-      "completedCount": 2,
+      "completedCount": 3,
       "tags": [
         "master"
       ]
