@@ -131,6 +131,85 @@ func test_perpendicular_turn_then_move() -> void:
 	assert_int(s.current_direction).is_equal(InputHandlerScript.Direction.UP)
 
 
+func test_check_collision_false_for_interior_head_no_self_overlap() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(5, 5), Vector2i(4, 5), Vector2i(3, 5)])
+	assert_bool(s.check_collision()).is_false()
+
+
+func test_check_collision_true_when_head_on_left_wall() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5)])
+	assert_bool(s.check_collision()).is_true()
+
+
+func test_check_collision_true_when_head_on_right_wall() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(Grid.GRID_WIDTH + 1, 5), Vector2i(Grid.GRID_WIDTH, 5)])
+	assert_bool(s.check_collision()).is_true()
+
+
+func test_check_collision_true_when_head_on_top_wall() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(5, 0), Vector2i(5, 1)])
+	assert_bool(s.check_collision()).is_true()
+
+
+func test_check_collision_true_when_head_on_bottom_wall() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(5, Grid.GRID_HEIGHT + 1), Vector2i(5, Grid.GRID_HEIGHT)])
+	assert_bool(s.check_collision()).is_true()
+
+
+func test_check_collision_true_when_head_overlaps_body_segment() -> void:
+	var s := _make_snake()
+	# Snake curls back on itself: head occupies same cell as segments[3]
+	_set_body(s, [
+		Vector2i(5, 5),
+		Vector2i(5, 6),
+		Vector2i(6, 6),
+		Vector2i(6, 5),
+		Vector2i(5, 5),  # head collides here
+	])
+	assert_bool(s.check_collision()).is_true()
+
+
+func test_check_collision_false_for_single_segment_snake() -> void:
+	# Head-only snake (no body to self-collide with), in interior.
+	var s := _make_snake()
+	_set_body(s, [Vector2i(5, 5)])
+	assert_bool(s.check_collision()).is_false()
+
+
+func test_check_collision_after_move_into_wall() -> void:
+	# Drive snake into the right wall via move() and verify collision detected.
+	var s := _make_snake()
+	_set_body(s, [Vector2i(Grid.GRID_WIDTH, 5), Vector2i(Grid.GRID_WIDTH - 1, 5)])
+	s.current_direction = InputHandlerScript.Direction.RIGHT
+	s.move(InputHandlerScript.Direction.RIGHT)
+	assert_that(s.get_head()).is_equal(Vector2i(Grid.GRID_WIDTH + 1, 5))
+	assert_bool(s.check_collision()).is_true()
+
+
+func test_check_collision_after_move_into_self() -> void:
+	# Snake U-turns into itself. Schedule growth so segments[3] doesn't vacate
+	# before the colliding tick (iter 17 lesson from prior loop).
+	var s := _make_snake()
+	_set_body(s, [
+		Vector2i(5, 5),
+		Vector2i(4, 5),
+		Vector2i(4, 6),
+		Vector2i(5, 6),
+		Vector2i(6, 6),
+		Vector2i(6, 5),  # head will collide here in 1 tick
+	])
+	s.current_direction = InputHandlerScript.Direction.RIGHT
+	s.schedule_growth()
+	s.move(InputHandlerScript.Direction.RIGHT)
+	assert_that(s.get_head()).is_equal(Vector2i(6, 5))
+	assert_bool(s.check_collision()).is_true()
+
+
 func test_three_consecutive_growths_extend_body_one_per_move() -> void:
 	var s := _make_snake()
 	_set_body(s, [Vector2i(5, 5), Vector2i(4, 5), Vector2i(3, 5)])

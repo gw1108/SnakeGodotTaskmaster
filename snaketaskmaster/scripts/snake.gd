@@ -41,6 +41,16 @@ func get_head() -> Vector2i:
 	return body[0]
 
 
+func check_collision() -> bool:
+	var head: Vector2i = body[0]
+	if Grid.is_wall(head):
+		return true
+	for i in range(1, body.size()):
+		if body[i] == head:
+			return true
+	return false
+
+
 func direction_to_vector(direction: int) -> Vector2i:
 	match direction:
 		InputHandlerScript.Direction.UP:
