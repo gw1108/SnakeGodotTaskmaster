@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/game_tick.gd" id="1_game_tick"]
+
+[node name="GameTick" type="Node"]
+script = ExtResource("1_game_tick")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.15
