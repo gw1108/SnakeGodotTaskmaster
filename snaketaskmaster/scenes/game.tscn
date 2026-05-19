@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_game"]
 [ext_resource type="PackedScene" path="res://scenes/playfield.tscn" id="2_playfield"]
 [ext_resource type="PackedScene" path="res://scenes/game_tick.tscn" id="3_game_tick"]
+[ext_resource type="Script" path="res://scripts/game_state_machine.gd" id="4_state_machine"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_game")
@@ -12,5 +13,6 @@ script = ExtResource("1_game")
 [node name="HUD" type="CanvasLayer" parent="."]
 
 [node name="GameStateMachine" type="Node" parent="."]
+script = ExtResource("4_state_machine")
 
 [node name="GameTick" parent="." instance=ExtResource("3_game_tick")]
