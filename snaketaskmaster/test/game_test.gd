@@ -161,3 +161,37 @@ func test_restart_starts_game_tick() -> void:
 	game.restart()
 	# transition_to(PLAYING) via restart should have started the tick.
 	assert_bool(gt.is_running()).is_true()
+
+
+func test_eat_sound_node_present_with_stream() -> void:
+	var game := _make_game()
+	var eat: AudioStreamPlayer = game.get_node("EatSound")
+	assert_object(eat).is_not_null()
+	assert_object(eat).is_instanceof(AudioStreamPlayer)
+	assert_object(eat.stream).is_not_null()
+	# Volume should not be deafening — sanity check ≤ 0 dB.
+	assert_float(eat.volume_db).is_less_equal(0.0)
+	assert_bool(eat.playing).is_false()
+
+
+func test_on_food_eaten_plays_eat_sound() -> void:
+	var game := _make_game()
+	game._on_food_eaten()
+	var eat: AudioStreamPlayer = game.get_node("EatSound")
+	assert_bool(eat.playing).is_true()
+
+
+func test_food_eaten_signal_triggers_eat_sound() -> void:
+	# Wire a Food child BEFORE adding the Game to the tree so game.gd._ready()
+	# discovers it via get_node_or_null("Food") and connects the signal.
+	var packed := load(GAME_SCENE_PATH) as PackedScene
+	var game: Node2D = auto_free(packed.instantiate())
+	var FoodScript := load("res://scripts/food.gd") as GDScript
+	var food: Node = FoodScript.new()
+	food.name = "Food"
+	game.add_child(food)
+	add_child(game)
+	# Now emit the signal — game.gd should have connected to it.
+	food.food_eaten.emit()
+	var eat: AudioStreamPlayer = game.get_node("EatSound")
+	assert_bool(eat.playing).is_true()

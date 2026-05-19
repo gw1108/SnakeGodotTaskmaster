@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_game"]
 [ext_resource type="PackedScene" path="res://scenes/playfield.tscn" id="2_playfield"]
 [ext_resource type="PackedScene" path="res://scenes/game_tick.tscn" id="3_game_tick"]
 [ext_resource type="Script" path="res://scripts/game_state_machine.gd" id="4_state_machine"]
 [ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="5_hud"]
+[ext_resource type="AudioStream" uid="uid://4n32bdyxyjtm" path="res://source/audio/eat_food.wav" id="6_eat_sound"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_game")
@@ -17,3 +18,7 @@ script = ExtResource("1_game")
 script = ExtResource("4_state_machine")
 
 [node name="GameTick" parent="." instance=ExtResource("3_game_tick")]
+
+[node name="EatSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_eat_sound")
+volume_db = -4.0

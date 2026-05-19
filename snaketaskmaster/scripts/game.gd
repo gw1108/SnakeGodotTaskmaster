@@ -6,6 +6,7 @@ const GameStateMachineScript := preload("res://scripts/game_state_machine.gd")
 @onready var hud: CanvasLayer = $HUD
 @onready var state_machine: Node = $GameStateMachine
 @onready var game_tick: Node = $GameTick
+@onready var eat_sound: AudioStreamPlayer = $EatSound
 
 var score: int = 0
 
@@ -16,6 +17,14 @@ func _ready() -> void:
 	if hud != null:
 		hud.update_score(score)
 		hud.hide_game_over()
+	var food := get_node_or_null("Food")
+	if food != null and food.has_signal("food_eaten") and not food.food_eaten.is_connected(_on_food_eaten):
+		food.food_eaten.connect(_on_food_eaten)
+
+
+func _on_food_eaten() -> void:
+	if eat_sound != null and eat_sound.stream != null:
+		eat_sound.play()
 
 
 func _input(event: InputEvent) -> void:
