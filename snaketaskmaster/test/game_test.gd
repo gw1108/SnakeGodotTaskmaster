@@ -47,3 +47,117 @@ func test_viewport_dimensions() -> void:
 
 func test_main_scene_points_at_game_tscn() -> void:
 	assert_str(ProjectSettings.get_setting("application/run/main_scene")).is_equal(GAME_SCENE_PATH)
+
+
+const GameStateMachineScript := preload("res://scripts/game_state_machine.gd")
+
+
+func _make_game() -> Node2D:
+	var game: Node2D = auto_free((load(GAME_SCENE_PATH) as PackedScene).instantiate())
+	add_child(game)
+	return game
+
+
+func test_game_initially_hides_game_over_panel() -> void:
+	var game := _make_game()
+	var panel: Panel = game.get_node("HUD/GameOverPanel")
+	assert_bool(panel.visible).is_false()
+
+
+func test_game_shows_game_over_overlay_on_state_change_to_game_over() -> void:
+	var game := _make_game()
+	game.score = 5
+	var sm: Node = game.get_node("GameStateMachine")
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	var panel: Panel = game.get_node("HUD/GameOverPanel")
+	var final_label: Label = game.get_node("HUD/GameOverPanel/VBoxContainer/FinalScoreLabel")
+	assert_bool(panel.visible).is_true()
+	assert_str(final_label.text).is_equal("Final Score: 5")
+
+
+func test_game_hides_overlay_when_returning_to_playing() -> void:
+	var game := _make_game()
+	var sm: Node = game.get_node("GameStateMachine")
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	sm.transition_to(GameStateMachineScript.State.PLAYING)
+	var panel: Panel = game.get_node("HUD/GameOverPanel")
+	assert_bool(panel.visible).is_false()
+
+
+func test_key_press_in_playing_state_does_not_trigger_restart() -> void:
+	var game := _make_game()
+	game.score = 9
+	# State is PLAYING by default; key press should be ignored.
+	var event := InputEventKey.new()
+	event.keycode = KEY_SPACE
+	event.pressed = true
+	game._input(event)
+	assert_int(game.score).is_equal(9)
+
+
+func test_key_press_in_game_over_calls_restart() -> void:
+	var game := _make_game()
+	game.score = 12
+	var sm: Node = game.get_node("GameStateMachine")
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	# Simulate any key press.
+	var event := InputEventKey.new()
+	event.keycode = KEY_SPACE
+	event.pressed = true
+	game._input(event)
+	assert_int(game.score).is_equal(0)
+	assert_int(sm.current_state).is_equal(GameStateMachineScript.State.PLAYING)
+
+
+func test_key_release_in_game_over_ignored() -> void:
+	var game := _make_game()
+	game.score = 7
+	var sm: Node = game.get_node("GameStateMachine")
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	var event := InputEventKey.new()
+	event.keycode = KEY_SPACE
+	event.pressed = false
+	game._input(event)
+	# Released key should not trigger restart.
+	assert_int(sm.current_state).is_equal(GameStateMachineScript.State.GAME_OVER)
+	assert_int(game.score).is_equal(7)
+
+
+func test_key_echo_in_game_over_ignored() -> void:
+	var game := _make_game()
+	game.score = 4
+	var sm: Node = game.get_node("GameStateMachine")
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	var event := InputEventKey.new()
+	event.keycode = KEY_SPACE
+	event.pressed = true
+	event.echo = true
+	game._input(event)
+	assert_int(sm.current_state).is_equal(GameStateMachineScript.State.GAME_OVER)
+	assert_int(game.score).is_equal(4)
+
+
+func test_restart_resets_score_and_transitions_to_playing() -> void:
+	var game := _make_game()
+	game.score = 99
+	var sm: Node = game.get_node("GameStateMachine")
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	game.restart()
+	assert_int(game.score).is_equal(0)
+	assert_int(sm.current_state).is_equal(GameStateMachineScript.State.PLAYING)
+	var score_label: Label = game.get_node("HUD/ScoreLabel")
+	assert_str(score_label.text).is_equal("Score: 0")
+	var panel: Panel = game.get_node("HUD/GameOverPanel")
+	assert_bool(panel.visible).is_false()
+
+
+func test_restart_starts_game_tick() -> void:
+	var game := _make_game()
+	var sm: Node = game.get_node("GameStateMachine")
+	var gt: Node = game.get_node("GameTick")
+	# Trigger GAME_OVER to stop the tick first.
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	assert_bool(gt.is_running()).is_false()
+	game.restart()
+	# transition_to(PLAYING) via restart should have started the tick.
+	assert_bool(gt.is_running()).is_true()

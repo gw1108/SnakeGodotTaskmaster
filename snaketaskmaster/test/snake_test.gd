@@ -289,6 +289,32 @@ func test_body_sprites_pool_grows_after_growth() -> void:
 		assert_that(s.body_sprites[i].position).is_equal(Grid.grid_to_world(s.body[i + 1]))
 
 
+func test_reset_restores_initial_centered_body_and_defaults() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(2, 5)])
+	s.current_direction = InputHandlerScript.Direction.DOWN
+	s.grow_next_tick = true
+	s.reset()
+	var center := Vector2i(Grid.GRID_WIDTH / 2, Grid.GRID_HEIGHT / 2)
+	assert_array(s.body).has_size(3)
+	assert_that(s.body[0]).is_equal(center)
+	assert_that(s.body[1]).is_equal(center - Vector2i(1, 0))
+	assert_that(s.body[2]).is_equal(center - Vector2i(2, 0))
+	assert_int(s.current_direction).is_equal(InputHandlerScript.Direction.RIGHT)
+	assert_bool(s.grow_next_tick).is_false()
+
+
+func test_reset_updates_sprite_positions_and_pool_size() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(2, 5)])
+	s.reset()
+	# Body length 3 after reset -> 2 body sprites.
+	assert_array(s.body_sprites).has_size(2)
+	assert_that(s.head_sprite.position).is_equal(Grid.grid_to_world(s.body[0]))
+	for i in range(s.body_sprites.size()):
+		assert_that(s.body_sprites[i].position).is_equal(Grid.grid_to_world(s.body[i + 1]))
+
+
 func test_three_consecutive_growths_extend_body_one_per_move() -> void:
 	var s := _make_snake()
 	_set_body(s, [Vector2i(5, 5), Vector2i(4, 5), Vector2i(3, 5)])

@@ -73,6 +73,13 @@ func schedule_growth() -> void:
 	grow_next_tick = true
 
 
+func reset() -> void:
+	_initialize_body()
+	current_direction = InputHandlerScript.Direction.RIGHT
+	grow_next_tick = false
+	_update_rendering()
+
+
 func get_head() -> Vector2i:
 	return body[0]
 
