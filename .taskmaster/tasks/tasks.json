@@ -24,11 +24,12 @@
         "testStrategy": "Unit test: Verify grid_to_world and world_to_grid are inverse operations. Verify is_wall returns true for border cells, false for interior. Verify get_interior_cells returns exactly GRID_WIDTH * GRID_HEIGHT cells",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 3,
         "recommendedSubtasks": 5,
-        "expansionPrompt": "Divide static rendering into: (1) Create Playfield.gd with grid constants and _draw() method for background and grid lines, (2) Create Game.tscn with Node2D root and Playfield child node, (3) Implement Snake.gd with static body array and _draw() rendering, (4) Implement Apple.gd with static position and _draw() rendering, (5) Configure Camera2D positioning and test complete scene rendering"
+        "expansionPrompt": "Divide static rendering into: (1) Create Playfield.gd with grid constants and _draw() method for background and grid lines, (2) Create Game.tscn with Node2D root and Playfield child node, (3) Implement Snake.gd with static body array and _draw() rendering, (4) Implement Apple.gd with static position and _draw() rendering, (5) Configure Camera2D positioning and test complete scene rendering",
+        "updatedAt": "2026-05-19T00:45:33.959Z"
       },
       {
         "id": "3",
@@ -237,9 +238,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-19T00:43:11.827Z",
+      "lastModified": "2026-05-19T00:45:33.960Z",
       "taskCount": 15,
-      "completedCount": 1,
+      "completedCount": 2,
       "tags": [
         "master"
       ]
