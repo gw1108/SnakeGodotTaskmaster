@@ -6,7 +6,7 @@ REM Requires:
 REM   - Godot 4.6 on PATH
 REM   - Web export templates installed (Editor > Manage Export Templates)
 
-set PROJECT_DIR=%~dp0snaketaskmaster
+set PROJECT_DIR=%~dp0..\snaketaskmaster
 set BUILD_DIR=%PROJECT_DIR%\build\web
 set PRESET=Web
 
