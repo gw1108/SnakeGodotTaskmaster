@@ -110,3 +110,42 @@ func test_spawn_can_produce_different_positions_over_many_calls() -> void:
 		assert_bool(f.spawn(_to_typed([]))).is_true()
 		seen[f.position] = true
 	assert_int(seen.size()).is_greater(1)
+
+
+func test_sprite_is_created_as_child_with_food_texture() -> void:
+	var f := _make_food()
+	assert_object(f.sprite).is_not_null()
+	assert_object(f.sprite).is_instanceof(Sprite2D)
+	assert_object(f.sprite.get_parent()).is_same(f)
+	assert_object(f.sprite.texture).is_same(load("res://source/sprites/food.png"))
+
+
+func test_sprite_position_matches_grid_to_world_after_spawn() -> void:
+	var f := _make_food()
+	# Force food into a single known cell so we can assert exact position.
+	var occupied := Grid.get_interior_cells()
+	var target: Vector2i = occupied.pop_back()
+	assert_bool(f.spawn(occupied)).is_true()
+	assert_that(f.position).is_equal(target)
+	assert_that(f.sprite.position).is_equal(Grid.grid_to_world(target))
+
+
+func test_sprite_position_updates_on_each_successful_spawn() -> void:
+	var f := _make_food()
+	for _i in range(20):
+		assert_bool(f.spawn(_to_typed([]))).is_true()
+		assert_that(f.sprite.position).is_equal(Grid.grid_to_world(f.position))
+
+
+func test_sprite_position_unchanged_when_spawn_returns_false() -> void:
+	var f := _make_food()
+	# First successful spawn at a known cell.
+	var all_cells := Grid.get_interior_cells()
+	var target: Vector2i = all_cells.pop_back()
+	assert_bool(f.spawn(all_cells)).is_true()
+	var locked_sprite_pos: Vector2 = f.sprite.position
+	var locked_pos: Vector2i = f.position
+	# Now fill ALL interior cells → spawn must return false and leave state intact.
+	assert_bool(f.spawn(Grid.get_interior_cells())).is_false()
+	assert_that(f.position).is_equal(locked_pos)
+	assert_that(f.sprite.position).is_equal(locked_sprite_pos)

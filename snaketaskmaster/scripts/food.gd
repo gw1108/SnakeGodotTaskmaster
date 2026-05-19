@@ -2,7 +2,17 @@ extends Node
 
 signal food_eaten
 
+const FOOD_TEXTURE_PATH := "res://source/sprites/food.png"
+
 var position: Vector2i = Vector2i.ZERO
+var sprite: Sprite2D
+
+
+func _ready() -> void:
+	sprite = Sprite2D.new()
+	sprite.texture = load(FOOD_TEXTURE_PATH)
+	add_child(sprite)
+	sprite.position = Grid.grid_to_world(position)
 
 
 func spawn(occupied_cells: Array[Vector2i]) -> bool:
@@ -16,6 +26,8 @@ func spawn(occupied_cells: Array[Vector2i]) -> bool:
 	if available.is_empty():
 		return false
 	position = available[randi() % available.size()]
+	if sprite != null:
+		sprite.position = Grid.grid_to_world(position)
 	return true
 
 
