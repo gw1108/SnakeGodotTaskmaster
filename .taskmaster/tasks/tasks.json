@@ -1,11 +1,245 @@
 {
   "master": {
-    "tasks": [],
+    "tasks": [
+      {
+        "id": "1",
+        "title": "Godot project scaffolding",
+        "description": "Set up the main game scene structure with root node, playfield placeholder, and input map configuration for arrow keys and WASD",
+        "details": "Replace Main.tscn placeholder with proper game structure:\n1. Root node: Node2D named 'Game'\n2. Add input actions to project.godot via ProjectSettings:\n   - 'move_up': Arrow Up, W\n   - 'move_down': Arrow Down, S\n   - 'move_left': Arrow Left, A\n   - 'move_right': Arrow Right, D\n   - 'restart': Any key (handle in game-over state)\n3. Viewport already configured (640x480)\n4. Add child nodes: Playfield (Node2D), HUD (CanvasLayer), GameStateMachine (Node)\n\nPseudo-code:\n```gdscript\n# Game.gd\nextends Node2D\n@onready var playfield = $Playfield\n@onready var hud = $HUD\n@onready var state_machine = $GameStateMachine\n\nfunc _ready():\n    state_machine.transition_to('Playing')\n```",
+        "testStrategy": "Unit test: Verify Game scene instantiates, has required child nodes (Playfield, HUD, GameStateMachine). Verify input actions exist in ProjectSettings with correct key mappings",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "complexity": 2,
+        "recommendedSubtasks": 4,
+        "expansionPrompt": "Break down the project setup into: (1) Configure project.godot display and engine settings, (2) Create and configure input action map with all movement and UI actions, (3) Create folder structure (scenes/, scripts/, assets/), (4) Implement Main.tscn with scene router script and test scene switching logic",
+        "updatedAt": "2026-05-19T00:43:11.826Z"
+      },
+      {
+        "id": "2",
+        "title": "Grid system",
+        "description": "Define grid cell size, playfield dimensions, and coordinate conversion helpers",
+        "details": "Create Grid.gd autoload singleton:\n1. Constants: CELL_SIZE = 32 (pixels), GRID_WIDTH = 18 (interior cells), GRID_HEIGHT = 13 (interior cells)\n2. Total dimensions including 1-cell border: 20x15 cells\n3. Functions:\n   - grid_to_world(grid_pos: Vector2i) -> Vector2: return grid_pos * CELL_SIZE + Vector2(CELL_SIZE/2, CELL_SIZE/2)\n   - world_to_grid(world_pos: Vector2) -> Vector2i: return Vector2i(world_pos / CELL_SIZE)\n   - is_wall(grid_pos: Vector2i) -> bool: return grid_pos.x == 0 or grid_pos.x == GRID_WIDTH+1 or grid_pos.y == 0 or grid_pos.y == GRID_HEIGHT+1\n   - get_interior_cells() -> Array[Vector2i]: return all non-wall cells\n\nPseudo-code:\n```gdscript\n# Grid.gd (autoload)\nextends Node\nconst CELL_SIZE = 32\nconst GRID_WIDTH = 18\nconst GRID_HEIGHT = 13\n\nfunc grid_to_world(pos: Vector2i) -> Vector2:\n    return Vector2(pos * CELL_SIZE) + Vector2(CELL_SIZE, CELL_SIZE) * 0.5\n```",
+        "testStrategy": "Unit test: Verify grid_to_world and world_to_grid are inverse operations. Verify is_wall returns true for border cells, false for interior. Verify get_interior_cells returns exactly GRID_WIDTH * GRID_HEIGHT cells",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 3,
+        "recommendedSubtasks": 5,
+        "expansionPrompt": "Divide static rendering into: (1) Create Playfield.gd with grid constants and _draw() method for background and grid lines, (2) Create Game.tscn with Node2D root and Playfield child node, (3) Implement Snake.gd with static body array and _draw() rendering, (4) Implement Apple.gd with static position and _draw() rendering, (5) Configure Camera2D positioning and test complete scene rendering"
+      },
+      {
+        "id": "3",
+        "title": "Playfield tile rendering",
+        "description": "Render playfield using TileMap with floor and wall tiles from source/sprites/",
+        "details": "Create Playfield.tscn and script:\n1. Add TileMapLayer node to Playfield scene\n2. Create tileset resource importing source/sprites/floor_tile.png and source/sprites/wall_tile.png\n3. Set tile size to match Grid.CELL_SIZE (32x32)\n4. In Playfield.gd _ready():\n   - Loop through all grid positions (0 to GRID_WIDTH+1, 0 to GRID_HEIGHT+1)\n   - Use Grid.is_wall() to determine tile type\n   - Set cells using TileMapLayer.set_cell()\n\nPseudo-code:\n```gdscript\n# Playfield.gd\nextends Node2D\n@onready var tilemap = $TileMapLayer\nconst FLOOR_TILE_ID = 0\nconst WALL_TILE_ID = 1\n\nfunc _ready():\n    for x in range(Grid.GRID_WIDTH + 2):\n        for y in range(Grid.GRID_HEIGHT + 2):\n            var tile_id = WALL_TILE_ID if Grid.is_wall(Vector2i(x, y)) else FLOOR_TILE_ID\n            tilemap.set_cell(Vector2i(x, y), 0, Vector2i(tile_id, 0))\n```",
+        "testStrategy": "Visual test: Run game and verify floor tiles fill interior, wall tiles border on all sides. Unit test: Verify tilemap has correct number of cells set, border cells use wall tile, interior uses floor tile",
+        "priority": "high",
+        "dependencies": [
+          "2"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 3,
+        "recommendedSubtasks": 4,
+        "expansionPrompt": "Break movement system into: (1) Add Timer node to Game.tscn and configure tick rate properties, (2) Update Snake.gd to add heading vector and move() method with body manipulation, (3) Implement Game.gd signal connection between Timer.timeout and snake movement, (4) Test tick-based movement and verify snake maintains constant length while moving"
+      },
+      {
+        "id": "4",
+        "title": "Game tick",
+        "description": "Implement fixed-interval timer emitting tick signal for snake movement",
+        "details": "Create GameTick.gd component:\n1. Extends Node, add to Game scene\n2. Add Timer node as child, configure one_shot=false\n3. Define tick_rate constant (e.g., 0.15 seconds)\n4. Define signal: signal tick_occurred\n5. Connect Timer.timeout to _on_timer_timeout()\n6. In _on_timer_timeout(), emit tick_occurred signal\n7. Public methods: start_tick(), stop_tick()\n\nPseudo-code:\n```gdscript\n# GameTick.gd\nextends Node\nsignal tick_occurred\nconst TICK_RATE = 0.15\n@onready var timer = $Timer\n\nfunc _ready():\n    timer.wait_time = TICK_RATE\n    timer.timeout.connect(_on_timer_timeout)\n\nfunc start_tick():\n    timer.start()\n\nfunc stop_tick():\n    timer.stop()\n\nfunc _on_timer_timeout():\n    tick_occurred.emit()\n```",
+        "testStrategy": "Unit test: Verify tick_occurred signal emits at correct interval. Count signals over 1 second, assert approximately 1/TICK_RATE ticks. Verify start_tick/stop_tick control emission",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 4,
+        "recommendedSubtasks": 5,
+        "expansionPrompt": "Divide input system into: (1) Add input queueing variables (heading, queued_heading) to Snake.gd, (2) Implement queue_direction() method with 180-degree reversal rejection logic, (3) Update Snake.move() to apply queued heading at tick boundaries, (4) Add _process() input polling in Game.gd for all four directions, (5) Test edge cases: 180-degree reversal blocking, rapid multi-input between ticks, and input-tick synchronization"
+      },
+      {
+        "id": "5",
+        "title": "Player input",
+        "description": "Read 4-way directional input, buffer legal direction changes, reject reversals",
+        "details": "Create InputHandler.gd component:\n1. Extends Node\n2. Enum Direction { UP, DOWN, LEFT, RIGHT }\n3. Variables: current_direction, buffered_direction\n4. In _input(event):\n   - Check Input.is_action_just_pressed for move_up/down/left/right\n   - Map to Direction enum\n   - Check if new direction is opposite of current_direction (UP<->DOWN, LEFT<->RIGHT)\n   - If not opposite, set buffered_direction\n5. Public method consume_buffered_direction() -> Direction: returns buffered_direction, resets buffer\n\nPseudo-code:\n```gdscript\n# InputHandler.gd\nextends Node\nenum Direction { UP, DOWN, LEFT, RIGHT }\nvar current_direction = Direction.RIGHT\nvar buffered_direction: Variant = null\n\nfunc _input(event):\n    if Input.is_action_just_pressed('move_up'): _buffer_direction(Direction.UP)\n    elif Input.is_action_just_pressed('move_down'): _buffer_direction(Direction.DOWN)\n    elif Input.is_action_just_pressed('move_left'): _buffer_direction(Direction.LEFT)\n    elif Input.is_action_just_pressed('move_right'): _buffer_direction(Direction.RIGHT)\n\nfunc _buffer_direction(dir: Direction):\n    if not _is_opposite(dir, current_direction):\n        buffered_direction = dir\n\nfunc _is_opposite(a: Direction, b: Direction) -> bool:\n    return (a == Direction.UP and b == Direction.DOWN) or (a == Direction.DOWN and b == Direction.UP) or (a == Direction.LEFT and b == Direction.RIGHT) or (a == Direction.RIGHT and b == Direction.LEFT)\n```",
+        "testStrategy": "Unit test: Simulate input actions via Input.action_press/release. Verify buffered_direction updates for legal inputs. Verify reversals are ignored (e.g., UP input when current=DOWN). Test all 4 directions and all reversal cases",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 4,
+        "recommendedSubtasks": 5,
+        "expansionPrompt": "Break growth mechanics into: (1) Implement Apple.respawn() method with empty cell calculation logic avoiding snake body, (2) Add pending_growth counter and grow() method to Snake.gd, (3) Update Snake.move() to conditionally skip tail removal based on pending_growth, (4) Add collision detection in Game._on_game_tick() to check head position against apple, (5) Test growth behavior, apple respawn randomness, and edge case where grid is nearly full"
+      },
+      {
+        "id": "6",
+        "title": "Snake movement and growth",
+        "description": "Maintain snake as ordered list of grid cells, handle movement and growth on tick",
+        "details": "Create Snake.gd script:\n1. Variables: body: Array[Vector2i], current_direction (from InputHandler.Direction), grow_next_tick: bool\n2. Initialize in _ready(): body = [center_cell, center_cell - direction, center_cell - 2*direction] (length 3)\n3. Function move(direction: InputHandler.Direction):\n   - Calculate new_head = body[0] + direction_vector(direction)\n   - body.push_front(new_head)\n   - If not grow_next_tick: body.pop_back()\n   - Else: grow_next_tick = false\n   - current_direction = direction\n4. Function schedule_growth(): grow_next_tick = true\n5. Helper direction_vector(dir) -> Vector2i: maps Direction enum to Vector2i\n\nPseudo-code:\n```gdscript\n# Snake.gd\nextends Node2D\nvar body: Array[Vector2i] = []\nvar current_direction = InputHandler.Direction.RIGHT\nvar grow_next_tick = false\n\nfunc _ready():\n    var center = Vector2i(Grid.GRID_WIDTH / 2, Grid.GRID_HEIGHT / 2)\n    body = [center, center - Vector2i(1, 0), center - Vector2i(2, 0)]\n\nfunc move(direction: int):\n    var dir_vec = _direction_to_vector(direction)\n    var new_head = body[0] + dir_vec\n    body.push_front(new_head)\n    if not grow_next_tick:\n        body.pop_back()\n    else:\n        grow_next_tick = false\n    current_direction = direction\n\nfunc get_head() -> Vector2i:\n    return body[0]\n```",
+        "testStrategy": "Unit test: Verify initial snake length is 3 at center. Test move() updates head position correctly for all 4 directions. Verify tail removed when not growing. Verify tail retained when grow_next_tick=true. Test schedule_growth() sets flag correctly",
+        "priority": "high",
+        "dependencies": [
+          "2",
+          "5"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 6,
+        "expansionPrompt": "Divide collision system into: (1) Implement Snake.check_collision() with wall boundary checking using grid constants, (2) Add self-collision detection looping through body segments, (3) Add is_game_over state flag and game_over() method to Game.gd, (4) Update _on_game_tick() to check collisions before apple eating, (5) Implement restart_game() using get_tree().reload_current_scene(), (6) Update _process() to handle game over input blocking and restart input detection"
+      },
+      {
+        "id": "7",
+        "title": "Snake rendering",
+        "description": "Draw snake head and body sprites aligned to grid cells",
+        "details": "Extend Snake.gd with rendering:\n1. Preload source/sprites/player_head.png and source/sprites/player_body.png as Texture2D\n2. Add CanvasItem drawing or use Sprite2D nodes\n3. Option A (manual drawing): Override _draw(), call queue_redraw() after move\n   - For each cell in body: draw_texture_rect_region() at Grid.grid_to_world(cell)\n   - Use head texture for body[0], body texture for rest\n4. Option B (Sprite2D pool): Maintain Sprite2D node pool, update positions each frame\n   - More Godot-idiomatic, easier rotation for head direction\n\nRecommended: Option B\n```gdscript\n# Snake.gd (add to existing)\nvar head_sprite: Sprite2D\nvar body_sprites: Array[Sprite2D] = []\n\nfunc _ready():\n    # ... existing body init\n    head_sprite = Sprite2D.new()\n    head_sprite.texture = preload('res://../source/sprites/player_head.png')\n    add_child(head_sprite)\n    _update_rendering()\n\nfunc _update_rendering():\n    head_sprite.position = Grid.grid_to_world(body[0])\n    # Manage body_sprites pool, update positions\n```",
+        "testStrategy": "Visual test: Run game, verify head sprite at front, body sprites follow. Unit test: Verify sprite positions match Grid.grid_to_world() for each body cell. Verify correct texture assigned (head vs body)",
+        "priority": "medium",
+        "dependencies": [
+          "6"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 3,
+        "recommendedSubtasks": 4,
+        "expansionPrompt": "Break HUD implementation into: (1) Add CanvasLayer and Label nodes to Game.tscn scene tree, (2) Configure ScoreLabel properties (position, font size, color theming), (3) Add score variable and update_hud() method to Game.gd, (4) Integrate score increment in apple eating logic and test HUD updates during gameplay and restart"
+      },
+      {
+        "id": "8",
+        "title": "Food logic",
+        "description": "Spawn food at random empty cell, detect collision, trigger growth and score increment",
+        "details": "Create Food.gd script:\n1. Variables: position: Vector2i, signal food_eaten\n2. Function spawn(occupied_cells: Array[Vector2i]):\n   - Get all interior cells from Grid.get_interior_cells()\n   - Filter out occupied_cells\n   - Pick random cell from remaining\n   - Set position to chosen cell\n3. Function check_collision(head_pos: Vector2i) -> bool:\n   - Return head_pos == position\n4. In Game.gd, connect GameTick.tick_occurred:\n   - Move snake\n   - If Food.check_collision(snake.get_head()):\n     - snake.schedule_growth()\n     - score += 1\n     - Food.spawn(snake.body)\n\nPseudo-code:\n```gdscript\n# Food.gd\nextends Node\nvar position: Vector2i\nsignal eaten\n\nfunc spawn(occupied_cells: Array[Vector2i]):\n    var available = Grid.get_interior_cells().filter(func(c): return c not in occupied_cells)\n    position = available[randi() % available.size()]\n\nfunc check_collision(head_pos: Vector2i) -> bool:\n    return head_pos == position\n```",
+        "testStrategy": "Unit test: Verify spawn() places food in interior cell not in occupied list. Verify check_collision() returns true when head matches position. Test multiple spawns produce different positions (probabilistic). Integration test: Snake eats food, grows, score increments",
+        "priority": "high",
+        "dependencies": [
+          "2",
+          "6"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 4,
+        "recommendedSubtasks": 5,
+        "expansionPrompt": "Divide persistence system into: (1) Create HighScore.gd autoload singleton script with high_score variable and SAVE_PATH constant, (2) Implement load_high_score() using FileAccess API with error handling for missing files, (3) Implement save_high_score() with comparison logic and file writing, (4) Register HighScore as autoload in project settings, (5) Integrate HighScore.save_high_score() into Game.game_over() and test persistence across launches"
+      },
+      {
+        "id": "9",
+        "title": "Food rendering",
+        "description": "Render food sprite at grid-aligned position",
+        "details": "Extend Food.gd with rendering:\n1. Add Sprite2D node as child\n2. Preload source/sprites/food.png\n3. In spawn(), update sprite position: sprite.position = Grid.grid_to_world(position)\n\nPseudo-code:\n```gdscript\n# Food.gd (add to existing)\nvar sprite: Sprite2D\n\nfunc _ready():\n    sprite = Sprite2D.new()\n    sprite.texture = preload('res://../source/sprites/food.png')\n    add_child(sprite)\n\nfunc spawn(occupied_cells: Array[Vector2i]):\n    # ... existing spawn logic\n    sprite.position = Grid.grid_to_world(position)\n```",
+        "testStrategy": "Visual test: Verify food sprite appears at correct grid cell. Unit test: Verify sprite.position equals Grid.grid_to_world(Food.position) after spawn",
+        "priority": "medium",
+        "dependencies": [
+          "8"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 4,
+        "recommendedSubtasks": 5,
+        "expansionPrompt": "Break menu creation into: (1) Create MainMenu.tscn with Control root and VBoxContainer layout structure, (2) Add and configure all UI elements (title label, high score label, buttons) with theme properties, (3) Implement MainMenu.gd with _ready() to display HighScore data and setup button signals, (4) Implement scene transition methods (_on_start_pressed, _on_quit_pressed) using scene tree API, (5) Test menu flow: launch to menu, start game, game over, return to menu with updated high score"
+      },
+      {
+        "id": "10",
+        "title": "Eat-food sound effect",
+        "description": "Play eat_food.wav when snake eats food",
+        "details": "Add AudioStreamPlayer to Game scene:\n1. Create AudioStreamPlayer node named 'EatSound'\n2. Load source/audio/eat_food.wav as stream\n3. In Game.gd, when food collision detected, call EatSound.play()\n\nPseudo-code:\n```gdscript\n# Game.gd (extend tick handler)\n@onready var eat_sound = $EatSound\n\nfunc _on_tick():\n    snake.move(input_handler.consume_buffered_direction())\n    if food.check_collision(snake.get_head()):\n        snake.schedule_growth()\n        score += 1\n        food.spawn(snake.body)\n        eat_sound.play()\n```",
+        "testStrategy": "Manual test: Play game, eat food, verify sound plays. Unit test: Mock AudioStreamPlayer, verify play() called when collision occurs",
+        "priority": "low",
+        "dependencies": [
+          "8"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 6,
+        "recommendedSubtasks": 7,
+        "expansionPrompt": "Divide overlay systems into: (1) Create GameOverOverlay CanvasLayer with semi-transparent ColorRect and VBoxContainer in Game.tscn, (2) Add all game over UI elements including conditional 'NEW BEST!' label, (3) Create PauseOverlay CanvasLayer with PROCESS_MODE_WHEN_PAUSED and pause UI, (4) Implement toggle_pause() using get_tree().paused and overlay visibility, (5) Enhance game_over() to compare old/new high scores and show_game_over_screen(), (6) Set process_mode properties on all game nodes for proper pause behavior, (7) Test pause during gameplay, game over states (new high score vs not), and navigation between overlays/scenes"
+      },
+      {
+        "id": "11",
+        "title": "Collision detection and game-over trigger",
+        "description": "Detect wall and self-collision each tick, transition to game-over state",
+        "details": "Extend Snake.gd with collision detection:\n1. Function check_collision() -> bool:\n   - var head = body[0]\n   - If Grid.is_wall(head): return true\n   - If head in body[1:]: return true (self-collision)\n   - Return false\n2. In Game.gd tick handler:\n   - After snake.move()\n   - If snake.check_collision(): state_machine.transition_to('GameOver')\n\nPseudo-code:\n```gdscript\n# Snake.gd (add to existing)\nfunc check_collision() -> bool:\n    var head = body[0]\n    if Grid.is_wall(head):\n        return true\n    for i in range(1, body.size()):\n        if body[i] == head:\n            return true\n    return false\n\n# Game.gd tick handler\nfunc _on_tick():\n    snake.move(direction)\n    if snake.check_collision():\n        game_tick.stop_tick()\n        state_machine.transition_to('GameOver')\n```",
+        "testStrategy": "Unit test: Verify check_collision() returns true when head at wall cell. Verify returns true when head matches any body segment. Verify returns false for valid positions. Integration test: Force collision scenarios, verify game-over triggered",
+        "priority": "high",
+        "dependencies": [
+          "6",
+          "4"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 5,
+        "recommendedSubtasks": 6,
+        "expansionPrompt": "Break polish into: (1) Update Snake._draw() to add distinct head rendering with darker color and 1px padding, (2) Implement directional eye rendering on snake head based on heading vector, (3) Refine Playfield color scheme (background, grid lines, border) for better aesthetics, (4) Apply consistent color palette to Apple and Snake body segments, (5) Create unified theme/style for all UI text elements (font, size, shadows/outlines), (6) Add HUD background panel and ensure consistent styling across all overlays (menu, pause, game over)"
+      },
+      {
+        "id": "12",
+        "title": "Death sound effect",
+        "description": "Play death.wav when game-over state entered",
+        "details": "Add AudioStreamPlayer to Game scene:\n1. Create AudioStreamPlayer node named 'DeathSound'\n2. Load source/audio/death.wav as stream\n3. In GameStateMachine.gd, when transitioning to GameOver state, call death_sound.play()\n\nPseudo-code:\n```gdscript\n# GameStateMachine.gd\nfunc transition_to(state_name: String):\n    if state_name == 'GameOver':\n        get_node('/root/Game/DeathSound').play()\n    current_state = state_name\n    emit_signal('state_changed', state_name)\n```",
+        "testStrategy": "Manual test: Trigger game over, verify death sound plays. Unit test: Mock AudioStreamPlayer, verify play() called on GameOver transition",
+        "priority": "low",
+        "dependencies": [
+          "11"
+        ],
+        "status": "pending",
+        "subtasks": [],
+        "complexity": 4,
+        "recommendedSubtasks": 5,
+        "expansionPrompt": "Divide export process into: (1) Configure Windows Desktop export preset with all settings (name, icon, embed PCK, architecture), (2) Create builds/windows/ directory structure and export executable, (3) Test exported build on development machine with full game loop and persistence verification, (4) Verify user data directory location and highscore.save file creation in exported build, (5) Document export settings and test on clean Windows machine without Godot to ensure independence"
+      },
+      {
+        "id": "13",
+        "title": "Score HUD",
+        "description": "Display current score on-screen, update when score changes",
+        "details": "Create HUD.tscn and script:\n1. CanvasLayer with Label node\n2. Label positioned at top-left or top-center\n3. HUD.gd exposes update_score(new_score: int)\n4. Label.text = 'Score: %d' % new_score\n5. In Game.gd, call hud.update_score(score) whenever score increments\n\nPseudo-code:\n```gdscript\n# HUD.gd\nextends CanvasLayer\n@onready var score_label = $ScoreLabel\n\nfunc update_score(score: int):\n    score_label.text = 'Score: %d' % score\n\n# Game.gd (when food eaten)\nfunc _on_food_eaten():\n    score += 1\n    hud.update_score(score)\n```",
+        "testStrategy": "Visual test: Play game, eat food, verify score increments on screen. Unit test: Verify update_score() updates label.text correctly with formatted string",
+        "priority": "medium",
+        "dependencies": [
+          "8"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "14",
+        "title": "Game-over screen and restart",
+        "description": "Display final score and restart prompt on game over, handle restart input",
+        "details": "Extend HUD.gd:\n1. Add game-over overlay: Panel with VBoxContainer containing:\n   - Label for 'Game Over'\n   - Label for final score\n   - Label for 'Press any key to restart'\n2. Initially hidden, show when GameStateMachine transitions to GameOver\n3. In GameOver state, listen for Input.is_anything_pressed()\n4. On any key press, call Game.restart()\n5. Game.restart():\n   - Reset snake (position, length, direction)\n   - Reset score to 0\n   - Respawn food\n   - state_machine.transition_to('Playing')\n   - game_tick.start_tick()\n\nPseudo-code:\n```gdscript\n# HUD.gd\n@onready var game_over_panel = $GameOverPanel\n\nfunc show_game_over(final_score: int):\n    game_over_panel.visible = true\n    game_over_panel.get_node('FinalScoreLabel').text = 'Final Score: %d' % final_score\n\n# Game.gd\nfunc _on_state_changed(state: String):\n    if state == 'GameOver':\n        hud.show_game_over(score)\n\nfunc _input(event):\n    if state_machine.current_state == 'GameOver' and event is InputEventKey and event.pressed:\n        restart()\n\nfunc restart():\n    score = 0\n    snake.reset()\n    food.spawn(snake.body)\n    hud.update_score(0)\n    hud.hide_game_over()\n    state_machine.transition_to('Playing')\n    game_tick.start_tick()\n```",
+        "testStrategy": "Integration test: Trigger game over, verify overlay appears with correct final score. Simulate key press, verify game restarts (snake reset, score=0, food respawned, Playing state). Visual test: Complete full game cycle",
+        "priority": "high",
+        "dependencies": [
+          "11",
+          "13"
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": "15",
+        "title": "Game state machine",
+        "description": "Implement explicit Playing and GameOver states with transitions",
+        "details": "Create GameStateMachine.gd:\n1. Enum State { PLAYING, GAME_OVER }\n2. Variable current_state: State = State.PLAYING\n3. Signal state_changed(new_state: State)\n4. Function transition_to(new_state: State):\n   - If new_state == current_state: return\n   - _exit_state(current_state)\n   - current_state = new_state\n   - _enter_state(new_state)\n   - emit_signal('state_changed', new_state)\n5. _enter_state(state) / _exit_state(state) handle state-specific logic\n6. Connect state_changed to Game.gd for coordination\n\nPseudo-code:\n```gdscript\n# GameStateMachine.gd\nextends Node\nenum State { PLAYING, GAME_OVER }\nvar current_state = State.PLAYING\nsignal state_changed(new_state: State)\n\nfunc transition_to(new_state: State):\n    if new_state == current_state:\n        return\n    _exit_state(current_state)\n    current_state = new_state\n    _enter_state(new_state)\n    state_changed.emit(new_state)\n\nfunc _enter_state(state: State):\n    match state:\n        State.PLAYING:\n            get_parent().game_tick.start_tick()\n        State.GAME_OVER:\n            get_parent().game_tick.stop_tick()\n\nfunc _exit_state(state: State):\n    pass\n```",
+        "testStrategy": "Unit test: Verify transition_to() updates current_state. Verify state_changed signal emits with correct state. Verify _enter_state/_exit_state called appropriately. Test Playing->GameOver and GameOver->Playing transitions. Verify no transition when new_state == current_state",
+        "priority": "high",
+        "dependencies": [
+          "1",
+          "4"
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-18T00:00:00.000Z",
-      "taskCount": 0,
-      "completedCount": 0,
+      "lastModified": "2026-05-19T00:43:11.827Z",
+      "taskCount": 15,
+      "completedCount": 1,
       "tags": [
         "master"
       ]

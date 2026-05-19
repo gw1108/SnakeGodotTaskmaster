@@ -1,0 +1,136 @@
+Product Requirements Document: Snake (Godot 4, 2D)
+===================================================
+
+1. Overview
+-----------
+A minimal single-player Snake game built in Godot 4 as a 2D, top-down,
+grid-based action game. The player steers a continuously moving snake
+around a walled playfield, eating food to grow longer. The game ends
+when the snake's head hits a wall or its own body. After game over the
+player sees their score and can restart.
+
+The Godot project lives in `snaketaskmaster/`. All art assets referenced
+below live under `source/sprites/` and audio under `source/audio/`.
+
+2. Core gameplay rules
+----------------------
+- Top-down 2D view on a rectangular grid of cells.
+- The play area is bordered on all four sides by wall cells. The
+  interior is filled with floor cells.
+- The snake occupies a contiguous chain of grid cells: one head cell
+  followed by zero or more body segments. It starts at length 3 in
+  the center of the playfield, moving in a fixed initial direction.
+- A fixed-interval game tick advances the snake exactly one cell per
+  tick. Tick speed is constant for the entire run (no ramp-up).
+- Input is 4-way absolute: Up / Down / Left / Right (arrow keys and
+  WASD both supported). The new direction takes effect on the next
+  tick. The snake cannot reverse directly into itself; inputs that
+  would reverse the current heading are ignored.
+- Exactly one food item exists on the playfield at any time. It spawns
+  at a random cell that is not currently occupied by the snake or a
+  wall. When the head enters the food's cell, the snake grows by one
+  segment, the score increases by 1, and a new food spawns.
+- Collisions: if the head enters a wall cell or a cell occupied by any
+  body segment, the game ends.
+- Game over: gameplay halts, final score is displayed, and the player
+  can press any key to restart. Restart resets the snake, score, and
+  food to the starting state.
+- Score is the number of food items eaten in the current run. The
+  current score is shown on-screen during play. No high score is
+  persisted between sessions.
+
+3. Feature list (each task tagged art / code / audio)
+-----------------------------------------------------
+Tasks are split so each touches only one of art, code, or audio.
+
+Task A1 [code] Godot project scaffolding
+  Set up the main scene in `snaketaskmaster/` with a root node for the
+  game, a placeholder for the playfield, and the project's main scene
+  entry point. Configure window size, viewport, and input map entries
+  for arrow keys and WASD.
+
+Task A2 [code] Grid system
+  Define a single grid cell size (in pixels) and the playfield
+  dimensions in cells (interior playable area plus a 1-cell wall border
+  on every side). Provide helpers to convert between grid coordinates
+  and world pixel positions, and to enumerate cells occupied by the
+  wall border vs. the interior floor.
+
+Task A3 [art]  Playfield tile rendering
+  Render the playfield as a tile grid. Use `source/sprites/floor_tile.png`
+  for every interior cell and `source/sprites/wall_tile.png` for every
+  cell on the 1-cell-wide border around the interior. Use a TileMap
+  (or equivalent) so the visuals align exactly to the grid defined in
+  Task A2.
+
+Task A4 [code] Game tick
+  Implement a fixed-interval timer that emits a tick signal at a
+  constant rate. All snake movement and collision evaluation runs on
+  this tick. Tick rate is a single tunable constant.
+
+Task A5 [code] Player input
+  Read 4-way absolute direction input from arrow keys and WASD. Buffer
+  the most recent legal direction request and apply it on the next
+  tick. Reject any input that would reverse the snake's current heading.
+
+Task A6 [code] Snake movement and growth
+  Maintain the snake as an ordered list of grid cells (head first).
+  On each tick: compute the new head cell from the current direction,
+  prepend it to the list, and remove the tail cell unless the snake
+  is growing this tick. Growing-this-tick is set by Task A8 when food
+  is eaten.
+
+Task A7 [art]  Snake rendering
+  Draw the snake on the grid each frame (or each tick) using
+  `source/sprites/player_head.png` for the head cell and
+  `source/sprites/player_body.png` for every other segment. Sprites
+  must align to grid cells defined in Task A2.
+
+Task A8 [code] Food logic
+  Spawn one food item at a uniformly random cell that is not currently
+  occupied by the snake or a wall, both at game start and immediately
+  after the snake eats. Detect head-food collision each tick; when it
+  occurs, increment score, flag the snake to grow on the current tick,
+  and spawn the next food.
+
+Task A9 [art]  Food rendering
+  Render the active food item at its grid cell using
+  `source/sprites/food.png`, aligned to the grid from Task A2.
+
+Task A10 [audio] Eat-food sound effect
+  Play `source/audio/eat_food.wav` once each time the snake eats food.
+
+Task A11 [code] Collision detection and game-over trigger
+  Each tick, after computing the new head cell, end the game if the
+  head cell is a wall cell or matches any existing body segment cell.
+  Halt the game tick and transition to the game-over state.
+
+Task A12 [audio] Death sound effect
+  Play `source/audio/death.wav` once when the game-over state is
+  entered.
+
+Task A13 [code] Score HUD
+  Display the current score as a number on-screen during play. Update
+  the displayed value whenever the score changes.
+
+Task A14 [code] Game-over screen and restart
+  When the game enters the game-over state, display the final score
+  and a "Press any key to restart" prompt over the playfield. On the
+  next key press, reset the snake (length 3, center, fixed initial
+  direction), reset score to 0, respawn food, and resume the game
+  tick.
+
+Task A15 [code] Game state machine
+  Implement explicit Playing and GameOver states and the transitions
+  between them. Playing -> GameOver is triggered by Task A11.
+  GameOver -> Playing is triggered by Task A14's restart input.
+
+4. Out of scope
+---------------
+- Title / main menu screen.
+- High score persistence between sessions.
+- Sound effects beyond eat and death.
+- Speed ramp-up, multiple lives, multiple snakes, mazes, enemies,
+  wrapping walls, or any input scheme other than 4-way absolute.
+- Animations beyond static sprite placement on the grid.
+- Settings / options screens.
