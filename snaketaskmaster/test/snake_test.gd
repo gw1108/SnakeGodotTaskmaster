@@ -210,6 +210,85 @@ func test_check_collision_after_move_into_self() -> void:
 	assert_bool(s.check_collision()).is_true()
 
 
+func test_head_sprite_created_after_ready() -> void:
+	var s := _make_snake()
+	assert_object(s.head_sprite).is_not_null()
+	assert_object(s.head_sprite).is_instanceof(Sprite2D)
+	assert_object(s.head_sprite.texture).is_not_null()
+	assert_object(s.head_sprite.texture).is_instanceof(Texture2D)
+	# Head texture must differ from body texture (different files).
+	assert_object(s.head_sprite.texture).is_not_same(load(s.BODY_TEXTURE_PATH))
+
+
+func test_head_sprite_uses_head_texture_path() -> void:
+	var s := _make_snake()
+	var expected := load("res://source/sprites/player_head.png")
+	assert_object(s.head_sprite.texture).is_same(expected)
+
+
+func test_head_sprite_positioned_at_grid_center_of_body0() -> void:
+	var s := _make_snake()
+	var expected := Grid.grid_to_world(s.body[0])
+	assert_that(s.head_sprite.position).is_equal(expected)
+
+
+func test_body_sprites_pool_size_is_body_minus_one() -> void:
+	var s := _make_snake()
+	# Default body length 3 -> 2 body sprites.
+	assert_array(s.body_sprites).has_size(s.body.size() - 1)
+	for sprite in s.body_sprites:
+		assert_object(sprite).is_instanceof(Sprite2D)
+		assert_object(sprite.texture).is_same(load("res://source/sprites/player_body.png"))
+
+
+func test_body_sprites_positioned_at_each_body_cell() -> void:
+	var s := _make_snake()
+	for i in range(s.body_sprites.size()):
+		var expected := Grid.grid_to_world(s.body[i + 1])
+		assert_that(s.body_sprites[i].position).is_equal(expected)
+
+
+func test_head_sprite_position_updates_after_move() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(5, 5), Vector2i(4, 5), Vector2i(3, 5)])
+	s.current_direction = InputHandlerScript.Direction.RIGHT
+	s.move(InputHandlerScript.Direction.RIGHT)
+	assert_that(s.head_sprite.position).is_equal(Grid.grid_to_world(Vector2i(6, 5)))
+	# Body sprites trail head along previous body cells.
+	assert_that(s.body_sprites[0].position).is_equal(Grid.grid_to_world(Vector2i(5, 5)))
+	assert_that(s.body_sprites[1].position).is_equal(Grid.grid_to_world(Vector2i(4, 5)))
+
+
+func test_head_rotation_matches_current_direction() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(5, 5), Vector2i(4, 5)])
+	# RIGHT-facing sprite, RIGHT direction -> rotation 0.
+	s.move(InputHandlerScript.Direction.RIGHT)
+	assert_float(s.head_sprite.rotation).is_equal_approx(0.0, 0.0001)
+	# DOWN -> +PI/2
+	s.move(InputHandlerScript.Direction.DOWN)
+	assert_float(s.head_sprite.rotation).is_equal_approx(PI / 2.0, 0.0001)
+	# LEFT -> PI
+	s.move(InputHandlerScript.Direction.LEFT)
+	assert_float(absf(s.head_sprite.rotation)).is_equal_approx(PI, 0.0001)
+	# UP -> -PI/2
+	s.move(InputHandlerScript.Direction.UP)
+	assert_float(s.head_sprite.rotation).is_equal_approx(-PI / 2.0, 0.0001)
+
+
+func test_body_sprites_pool_grows_after_growth() -> void:
+	var s := _make_snake()
+	_set_body(s, [Vector2i(5, 5), Vector2i(4, 5), Vector2i(3, 5)])
+	var initial_count: int = s.body_sprites.size()
+	s.schedule_growth()
+	s.move(InputHandlerScript.Direction.RIGHT)
+	# Snake length 3 -> 4 after growth; body sprites should be 3.
+	assert_array(s.body_sprites).has_size(initial_count + 1)
+	# Each body sprite still mapped to its grid cell.
+	for i in range(s.body_sprites.size()):
+		assert_that(s.body_sprites[i].position).is_equal(Grid.grid_to_world(s.body[i + 1]))
+
+
 func test_three_consecutive_growths_extend_body_one_per_move() -> void:
 	var s := _make_snake()
 	_set_body(s, [Vector2i(5, 5), Vector2i(4, 5), Vector2i(3, 5)])
