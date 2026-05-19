@@ -197,11 +197,12 @@
         "dependencies": [
           "11"
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [],
         "complexity": 4,
         "recommendedSubtasks": 5,
-        "expansionPrompt": "Divide export process into: (1) Configure Windows Desktop export preset with all settings (name, icon, embed PCK, architecture), (2) Create builds/windows/ directory structure and export executable, (3) Test exported build on development machine with full game loop and persistence verification, (4) Verify user data directory location and highscore.save file creation in exported build, (5) Document export settings and test on clean Windows machine without Godot to ensure independence"
+        "expansionPrompt": "Divide export process into: (1) Configure Windows Desktop export preset with all settings (name, icon, embed PCK, architecture), (2) Create builds/windows/ directory structure and export executable, (3) Test exported build on development machine with full game loop and persistence verification, (4) Verify user data directory location and highscore.save file creation in exported build, (5) Document export settings and test on clean Windows machine without Godot to ensure independence",
+        "updatedAt": "2026-05-19T01:29:14.150Z"
       },
       {
         "id": "13",
@@ -250,9 +251,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-19T01:26:25.633Z",
+      "lastModified": "2026-05-19T01:29:14.151Z",
       "taskCount": 15,
-      "completedCount": 14,
+      "completedCount": 15,
       "tags": [
         "master"
       ]

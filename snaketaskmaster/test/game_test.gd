@@ -181,6 +181,35 @@ func test_on_food_eaten_plays_eat_sound() -> void:
 	assert_bool(eat.playing).is_true()
 
 
+func test_death_sound_node_present_with_stream() -> void:
+	var game := _make_game()
+	var death: AudioStreamPlayer = game.get_node("DeathSound")
+	assert_object(death).is_not_null()
+	assert_object(death).is_instanceof(AudioStreamPlayer)
+	assert_object(death.stream).is_not_null()
+	assert_float(death.volume_db).is_less_equal(0.0)
+	assert_bool(death.playing).is_false()
+
+
+func test_state_change_to_game_over_plays_death_sound() -> void:
+	var game := _make_game()
+	var sm: Node = game.get_node("GameStateMachine")
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	var death: AudioStreamPlayer = game.get_node("DeathSound")
+	assert_bool(death.playing).is_true()
+
+
+func test_state_change_to_playing_does_not_play_death_sound() -> void:
+	var game := _make_game()
+	# Force into GAME_OVER first, stop the sound, then transition back to PLAYING.
+	var sm: Node = game.get_node("GameStateMachine")
+	sm.transition_to(GameStateMachineScript.State.GAME_OVER)
+	var death: AudioStreamPlayer = game.get_node("DeathSound")
+	death.stop()
+	sm.transition_to(GameStateMachineScript.State.PLAYING)
+	assert_bool(death.playing).is_false()
+
+
 func test_food_eaten_signal_triggers_eat_sound() -> void:
 	# Wire a Food child BEFORE adding the Game to the tree so game.gd._ready()
 	# discovers it via get_node_or_null("Food") and connects the signal.

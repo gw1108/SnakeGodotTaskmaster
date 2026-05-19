@@ -7,6 +7,7 @@ const GameStateMachineScript := preload("res://scripts/game_state_machine.gd")
 @onready var state_machine: Node = $GameStateMachine
 @onready var game_tick: Node = $GameTick
 @onready var eat_sound: AudioStreamPlayer = $EatSound
+@onready var death_sound: AudioStreamPlayer = $DeathSound
 
 var score: int = 0
 
@@ -56,9 +57,11 @@ func restart() -> void:
 
 
 func _on_state_changed(new_state: int) -> void:
-	if hud == null:
-		return
 	if new_state == GameStateMachineScript.State.GAME_OVER:
-		hud.show_game_over(score)
+		if hud != null:
+			hud.show_game_over(score)
+		if death_sound != null and death_sound.stream != null:
+			death_sound.play()
 	elif new_state == GameStateMachineScript.State.PLAYING:
-		hud.hide_game_over()
+		if hud != null:
+			hud.hide_game_over()
