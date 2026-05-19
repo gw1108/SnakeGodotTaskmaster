@@ -241,3 +241,10 @@
 - Extended test/game_test.gd by 3 tests: DeathSound node existence + stream + volume_db ≤ 0 + not pre-playing; transition_to(GAME_OVER) flips death_sound.playing; transition GAME_OVER→PLAYING after death.stop() does NOT replay the sound (confirms only GAME_OVER triggers play). `godot --headless ... -a test/` → 134/134 across 10 suites.
 - Learning: When the task spec proposes wiring audio in a non-audio-owning script (here game_state_machine.gd doing `get_node('/root/Game/DeathSound').play()`), prefer the existing project pattern even if it diverges from pseudo-code. The state machine has no @onready refs, no Game-scene knowledge, and using `/root/Game/...` absolute paths breaks unit testability — the test suite mounts game.tscn at an arbitrary tree position, not /root. game.gd already owns the audio handles + the `state_changed` signal handler, so it's the natural home. The state machine remains a pure FSM, and the test for the new branch is a 2-line `transition_to(GAME_OVER); assert death.playing` because no path-juggling is required.
 
+
+---
+# Loop Complete: 2026-05-19T01:29:53.854Z
+- Total iterations: 15
+- Tasks completed: 15
+- Final status: max_iterations
+- Total duration: 2983995ms

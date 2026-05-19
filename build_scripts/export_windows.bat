@@ -1,16 +1,17 @@
 @echo off
 setlocal
 
-REM Exports the Godot project to HTML5/WebGL and zips it for itch.io upload.
+REM Exports the Godot project to a Windows standalone build and zips it.
 REM Requires:
 REM   - Godot 4.6 on PATH
-REM   - Web export templates installed (Editor > Manage Export Templates)
+REM   - Windows export templates installed (Editor > Manage Export Templates)
 
-set PROJECT_DIR=%~dp0snaketaskmaster
-set BUILD_DIR=%PROJECT_DIR%\build\web
-set PRESET=Web
+set PROJECT_DIR=%~dp0..\snaketaskmaster
+set BUILD_DIR=%PROJECT_DIR%\build\windows
+set PRESET=Windows Desktop
+set EXE_NAME=snake.exe
 
-echo === Godot Web Export ===
+echo === Godot Windows Export ===
 where godot >nul 2>nul
 if errorlevel 1 (
     echo ERROR: 'godot' not found on PATH.
@@ -29,7 +30,7 @@ if not defined VERSION (
     echo ERROR: config/version not found in project.godot
     exit /b 1
 )
-set ZIP_PATH=%PROJECT_DIR%\build\snake-web-v%VERSION%.zip
+set ZIP_PATH=%PROJECT_DIR%\build\snake-windows-v%VERSION%.zip
 echo Version: %VERSION%
 
 if exist "%BUILD_DIR%" rmdir /s /q "%BUILD_DIR%"
@@ -37,7 +38,7 @@ mkdir "%BUILD_DIR%" || exit /b 1
 
 echo Exporting "%PRESET%" preset...
 pushd "%PROJECT_DIR%"
-godot --headless --export-release "%PRESET%" "%BUILD_DIR%\index.html"
+godot --headless --export-release "%PRESET%" "%BUILD_DIR%\%EXE_NAME%"
 set EXPORT_ERR=%ERRORLEVEL%
 popd
 
@@ -49,8 +50,8 @@ if not %EXPORT_ERR%==0 (
     exit /b %EXPORT_ERR%
 )
 
-if not exist "%BUILD_DIR%\index.html" (
-    echo ERROR: Export reported success but index.html is missing.
+if not exist "%BUILD_DIR%\%EXE_NAME%" (
+    echo ERROR: Export reported success but %EXE_NAME% is missing.
     exit /b 1
 )
 
@@ -61,9 +62,9 @@ powershell -NoProfile -Command "Compress-Archive -Path '%BUILD_DIR%\*' -Destinat
 
 echo.
 echo === Done ===
-echo Web build:  %BUILD_DIR%
-echo itch.io zip: %ZIP_PATH%
+echo Windows build: %BUILD_DIR%
+echo itch.io zip:   %ZIP_PATH%
 echo.
-echo Upload the zip to itch.io and tick 'This file will be played in the browser'.
+echo Upload the zip to itch.io and tick 'Windows' under platforms.
 
 endlocal
