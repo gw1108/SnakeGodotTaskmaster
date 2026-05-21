@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/gameplay.gd" id="1_gameplay"]
 [ext_resource type="PackedScene" path="res://scenes/Arena.tscn" id="2_arena"]
 [ext_resource type="Script" path="res://scripts/snake.gd" id="3_snake"]
 [ext_resource type="Script" path="res://scripts/food.gd" id="4_food"]
 [ext_resource type="PackedScene" path="res://scenes/HUD.tscn" id="5_hud"]
+[ext_resource type="AudioStream" uid="uid://c48m6sgm3s07q" path="res://audio/eat_food.wav" id="6_eat_food"]
 
 [node name="Gameplay" type="Node2D"]
 script = ExtResource("1_gameplay")
@@ -26,3 +27,6 @@ autostart = true
 [node name="DeathTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
+
+[node name="EatFoodAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_eat_food")

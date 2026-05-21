@@ -68,3 +68,17 @@ func test_snake_died_starts_death_timer() -> void:
 func test_gameplay_root_is_node2d() -> void:
 	var gameplay: Gameplay = _make_gameplay()
 	assert_bool(gameplay is Node2D).is_true()
+
+
+func test_eat_food_audio_player_has_eat_food_stream() -> void:
+	var gameplay: Gameplay = _make_gameplay()
+	assert_object(gameplay.eat_food_audio_player).is_not_null()
+	assert_object(gameplay.eat_food_audio_player.stream).is_not_null()
+	assert_str(gameplay.eat_food_audio_player.stream.resource_path).is_equal("res://audio/eat_food.wav")
+
+
+func test_food_eaten_plays_eat_food_audio() -> void:
+	var gameplay: Gameplay = _make_gameplay()
+	assert_bool(gameplay.eat_food_audio_player.playing).is_false()
+	gameplay.snake.food_eaten.emit()
+	assert_bool(gameplay.eat_food_audio_player.playing).is_true()

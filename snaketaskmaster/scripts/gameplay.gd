@@ -9,6 +9,7 @@ const GAME_OVER_SCENE_PATH: String = "res://scenes/GameOver.tscn"
 @onready var hud: HUD = $HUD
 @onready var tick_timer: Timer = $TickTimer
 @onready var death_timer: Timer = $DeathTimer
+@onready var eat_food_audio_player: AudioStreamPlayer = $EatFoodAudioPlayer
 
 var score: int = 0
 
@@ -42,6 +43,7 @@ func _on_food_eaten() -> void:
 	score += 1
 	hud.update_score(score)
 	food.spawn(arena, snake.body)
+	eat_food_audio_player.play()
 
 
 func _on_snake_died() -> void:

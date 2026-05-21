@@ -6755,3 +6755,251 @@ Task 21 complete (committed as `20f4902`). The snake_test.gd already covered mos
 - food_test.gd already covered spawns-in-interior-bounds (=valid empty cell + no wall), never-on-snake-body, sprite world position, and the only-remaining-cell forced case.
 - Added test_spawn_randomness_visits_multiple_cells: spawn 50 times into 20x15 empty arena, assert seen-cells dictionary size > 1. Closes the spec randomness item.
 - food_test 7/7 pass; full suite 105/105 pass.
+
+## Iteration 19
+
+### LLM input
+```text
+@.taskmaster/progress.txt @CLAUDE.md
+
+Loop iteration 19 of 25
+
+TASK: Implement ONE task/subtask from the Taskmaster backlog.
+
+PROCESS:
+1. Run task-master next (or use MCP) to get the next available task/subtask.
+2. Read task details with task-master show <id>.
+3. Implement following codebase patterns.
+4. Write tests alongside implementation.
+5. Run type check (e.g., `npm run typecheck`, `tsc --noEmit`).
+6. Run tests (e.g., `npm test`, `npm run test`).
+7. Mark complete: task-master set-status --id=<id> --status=done
+8. Commit with message: feat(<scope>): <what was implemented>
+9. Append super-concise notes to progress file: task ID, what was done. If there was any mistakes or false assumptions, append them into a learning.
+
+IMPORTANT:
+- Complete ONLY ONE task per iteration.
+- Keep changes small and focused.
+- Do NOT start another task after completing one.
+- If all tasks are done, output <loop-complete>ALL_DONE</loop-complete>.
+- If blocked, output <loop-blocked>REASON</loop-blocked>.
+
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt"
+}
+```
+
+### Tool: unknown result
+```json
+"File content (784.2KB) exceeds maximum allowed size (256KB). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file."
+```
+
+### Tool: ToolSearch input
+```json
+{
+  "query": "select:mcp__task-master-ai__next_task,mcp__task-master-ai__get_task,mcp__task-master-ai__set_task_status",
+  "max_results": 5
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__next_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__get_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__set_task_status"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "powershell -NoProfile -Command \"Get-Content -Tail 50 'C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt'\"",
+  "description": "Read tail of progress file"
+}
+```
+
+### Tool: mcp__task-master-ai__next_task input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+"  }\r\n]\r\n```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"cd C:/GameDev/SnakeGodotTaskmaster && printf '\\\\n\\\\n## Iteration 18 - Task 21: Snake unit tests\\\\n- snake_test.gd already had most spec coverage (starting length, opposite-heading reject, perpendicular accept, body advance + tail pop, wall/self collision dies, food grows body, no-food maintains length, post-death noop, visuals).\\\\n- Added test_tick_applies_queued_direction_to_heading: queues UP, calls tick, asserts heading=UP and head moved to (5,6). Closes the missing \\\"queue_direction_changes_heading\\\" case from the spec.\\\\n- snake_test 17/17 pass; full suite 104/104 pass.\\\\n' >> .taskmaster/progress.txt\",\r\n  \"description\": \"Append progress notes\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"(Bash completed with no output)\"\r\n```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"cd C:/GameDev/SnakeGodotTaskmaster && git add snaketaskmaster/test/snake_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \\\"$(cat <<'EOF'\\ntest(snake): add queued direction applies to heading on tick\\n\\nAdds test_tick_applies_queued_direction_to_heading to snake_test.gd, asserting that after queue_direction(UP) a tick updates heading to UP and moves the head from (5,7) to (5,6). Closes out the spec coverage in Task 21. snake_test 17/17, full suite 104/104.\\n\\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\\nEOF\\n)\\\" 2>&1 | tail -5\",\r\n  \"description\": \"Commit task 21\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\\n[user/gewan/snake_v5 20f4902] test(snake): add queued direction applies to heading on tick\\n 3 files changed, 305 insertions(+), 4 deletions(-)\"\r\n```\r\n\r\n### Iteration 18 summary\r\n- Tool calls:\r\n  - Bash: 5\r\n  - Read: 4\r\n  - ToolSearch: 1\r\n  - mcp__task-master-ai__next_task: 1\r\n  - Edit: 1\r\n  - mcp__task-master-ai__set_task_status: 1\r\n- Tokens:\r\n  - input: 23\r\n  - output: 3,812\r\n  - cache write: 56,859\r\n  - cache read: 655,850\r\n  - total: 716,544\r\n- Final result:\r\n```text\r\nTask 21 complete (committed as `20f4902`). The snake_test.gd already covered most of the spec; I added `test_tick_applies_queued_direction_to_heading` which queues UP, ticks, and asserts the heading flips and the head moves to (5,6). snake_test 17/17 and full suite 104/104 pass.\r\n```\r\n\r\n---"
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"nextTask\": {\n      \"id\": 22,\n      \"title\": \"Write unit tests for Food\",\n      \"description\": \"Create test/food_test.gd covering spawn logic and empty cell validation\",\n      \"details\": \"1. Create res://test/food_test.gd extending GdUnitTestSuite\\n2. Test cases:\\n   - test_food_spawns_in_valid_empty_cell()\\n   - test_food_does_not_spawn_on_snake_body()\\n   - test_food_does_not_spawn_on_wall()\\n   - test_food_spawn_randomness() (run 50 times, verify food spawns in different cells)\\n3. Mock Arena: 5x5 grid, walls at perimeter\\n4. Mock Snake body: [(2,2), (1,2)]\\n5. Call food.spawn(arena, snake_body) and assert position_grid not in snake_body and not arena.is_wall(position_grid)\\n6. Run with gdUnit4 CLI\",\n      \"testStrategy\": \"Run test suite, verify food never spawns on snake or wall. Run randomness test 100 times to ensure no crashes and position varies.\",\n      \"priority\": \"medium\",\n      \"dependencies\": [\n        \"11\"\n      ],\n      \"status\": \"pending\",\n      \"subtasks\": []\n    },\n    \"isSubtask\": false,\n    \"nextSteps\": \"When ready to work on the task, use set-status to set the status to \\\"in progress\\\" Tasks can be updated to reflect a change in the direction of the task, or to reformulate the task per your prompt. Research can be used when updating the task to collect up-to-date information. It is best to update subtasks as you work on them, and to update the task for more high-level changes that may affect pending subtasks or the general direction of the task.\"\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\food.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\tclass_name Food\n2\textends Node2D\n3\t\n4\tconst FOOD_TEXTURE: Texture2D = preload(\"res://sprites/food.png\")\n5\t\n6\tvar position_grid: Vector2i = Vector2i.ZERO\n7\t\n8\tvar _sprite: Sprite2D\n9\t\n10\t\n11\tfunc _ready() -> void:\n12\t\tif _sprite == null:\n13\t\t\t_ensure_sprite()\n14\t\n15\t\n16\tfunc spawn(arena: Arena, snake_body: Array[Vector2i]) -> void:\n17\t\t_ensure_sprite()\n18\t\tvar valid_cells: Array[Vector2i] = []\n19\t\tfor x in range(1, arena.grid_width - 1):\n20\t\t\tfor y in range(1, arena.grid_height - 1):\n21\t\t\t\tvar cell := Vector2i(x, y)\n22\t\t\t\tif snake_body.has(cell):\n23\t\t\t\t\tcontinue\n24\t\t\t\tvalid_cells.append(cell)\n25\t\tif valid_cells.is_empty():\n26\t\t\treturn\n27\t\tposition_grid = valid_cells.pick_random()\n28\t\t_sprite.position = arena.grid_to_world(position_grid)\n29\t\n30\t\n31\tfunc get_grid_pos() -> Vector2i:\n32\t\treturn position_grid\n33\t\n34\t\n35\tfunc _ensure_sprite() -> void:\n36\t\tif _sprite != null:\n37\t\t\treturn\n38\t\t_sprite = Sprite2D.new()\n39\t\t_sprite.texture = FOOD_TEXTURE\n40\t\tadd_child(_sprite)\n41\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\food_test.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\textends GdUnitTestSuite\n2\t\n3\tconst FoodScript := preload(\"res://scripts/food.gd\")\n4\tconst ArenaScript := preload(\"res://scripts/arena.gd\")\n5\t\n6\t\n7\tfunc _make_arena(width: int = 20, height: int = 15) -> Arena:\n8\t\tvar a: Arena = auto_free(ArenaScript.new())\n9\t\ta.grid_width = width\n10\t\ta.grid_height = height\n11\t\tadd_child(a)\n12\t\treturn a\n13\t\n14\t\n15\tfunc _make_food() -> Food:\n16\t\tvar f: Food = auto_free(FoodScript.new())\n17\t\tadd_child(f)\n18\t\treturn f\n19\t\n20\t\n21\tfunc test_ready_creates_sprite_with_food_texture() -> void:\n22\t\tvar f := _make_food()\n23\t\tassert_object(f._sprite).is_not_null()\n24\t\tassert_object(f._sprite.texture).is_equal(FoodScript.FOOD_TEXTURE)\n25\t\n26\t\n27\tfunc test_get_grid_pos_returns_position_grid() -> void:\n28\t\tvar f := _make_food()\n29\t\tf.position_grid = Vector2i(7, 4)\n30\t\tassert_that(f.get_grid_pos()).is_equal(Vector2i(7, 4))\n31\t\n32\t\n33\tfunc test_spawn_places_food_inside_interior_bounds() -> void:\n34\t\tvar arena := _make_arena()\n35\t\tvar f := _make_food()\n36\t\tvar snake_body: Array[Vector2i] = []\n37\t\tfor _i in range(50):\n38\t\t\tf.spawn(arena, snake_body)\n39\t\t\tvar p := f.get_grid_pos()\n40\t\t\tassert_int(p.x).is_greater_equal(1)\n41\t\t\tassert_int(p.x).is_less_equal(arena.grid_width - 2)\n42\t\t\tassert_int(p.y).is_greater_equal(1)\n43\t\t\tassert_int(p.y).is_less_equal(arena.grid_height - 2)\n44\t\t\tassert_bool(arena.is_wall(p)).is_false()\n45\t\n46\t\n47\tfunc test_spawn_never_lands_on_snake_body() -> void:\n48\t\tvar arena := _make_arena(5, 5)\n49\t\tvar f := _make_food()\n50\t\tvar snake_body: Array[Vector2i] = [Vector2i(2, 2), Vector2i(1, 2)]\n51\t\tfor _i in range(100):\n52\t\t\tf.spawn(arena, snake_body)\n53\t\t\tassert_bool(snake_body.has(f.get_grid_pos())).is_false()\n54\t\n55\t\n56\tfunc test_spawn_updates_sprite_world_position() -> void:\n57\t\tvar arena := _make_arena()\n58\t\tvar f := _make_food()\n59\t\tf.spawn(arena, [] as Array[Vector2i])\n60\t\tassert_that(f._sprite.position).is_equal(arena.grid_to_world(f.get_grid_pos()))\n61\t\n62\t\n63\tfunc test_spawn_covers_only_remaining_cell_when_others_blocked() -> void:\n64\t\tvar arena := _make_arena(5, 5)\n65\t\tvar f := _make_food()\n66\t\t# Interior cells in a 5x5 grid: x in [1,3], y in [1,3] -> 9 cells.\n67\t\t# Block 8 of them so only (2, 2) remains.\n68\t\tvar snake_body: Array[Vector2i] = [\n69\t\t\tVector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1),\n70\t\t\tVector2i(1, 2),                 Vector2i(3, 2),\n71\t\t\tVector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3),\n72\t\t]\n73\t\tfor _i in range(20):\n74\t\t\tf.spawn(arena, snake_body)\n75\t\t\tassert_that(f.get_grid_pos()).is_equal(Vector2i(2, 2))\n76\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\arena.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\tclass_name Arena\n2\textends Node2D\n3\t\n4\tconst FLOOR_TILE_TEXTURE: Texture2D = preload(\"res://sprites/floor_tile.png\")\n5\tconst WALL_TILE_TEXTURE: Texture2D = preload(\"res://sprites/wall_tile.png\")\n6\t\n7\tconst FLOOR_SOURCE_ID := 0\n8\tconst WALL_SOURCE_ID := 1\n9\tconst ATLAS_COORD := Vector2i.ZERO\n10\t\n11\t@export var grid_width: int = 20\n12\t@export var grid_height: int = 15\n13\t@export var cell_size: int = 32\n14\t\n15\tvar _tile_map_layer: TileMapLayer\n16\t\n17\t\n18\tfunc _ready() -> void:\n19\t\t_build_tilemap()\n20\t\t_populate_tiles()\n21\t\n22\t\n23\tfunc is_wall(grid_pos: Vector2i) -> bool:\n24\t\tif grid_pos.x <= 0 or grid_pos.y <= 0:\n25\t\t\treturn true\n26\t\tif grid_pos.x >= grid_width - 1 or grid_pos.y >= grid_height - 1:\n27\t\t\treturn true\n28\t\treturn false\n29\t\n30\t\n31\tfunc grid_to_world(grid_pos: Vector2i) -> Vector2:\n32\t\treturn Vector2(\n33\t\t\t(grid_pos.x + 0.5) * cell_size,\n34\t\t\t(grid_pos.y + 0.5) * cell_size,\n35\t\t)\n36\t\n37\t\n38\tfunc world_to_grid(world_pos: Vector2) -> Vector2i:\n39\t\treturn Vector2i(\n40\t\t\tint(floor(world_pos.x / cell_size)),\n41\t\t\tint(floor(world_pos.y / cell_size)),\n42\t\t)\n43\t\n44\t\n45\tfunc _build_tilemap() -> void:\n46\t\t_tile_map_layer = TileMapLayer.new()\n47\t\t_tile_map_layer.name = \"TileMapLayer\"\n48\t\n49\t\tvar ts := TileSet.new()\n50\t\tts.tile_size = Vector2i(cell_size, cell_size)\n51\t\tts.add_source(_make_atlas_source(FLOOR_TILE_TEXTURE), FLOOR_SOURCE_ID)\n52\t\tts.add_source(_make_atlas_source(WALL_TILE_TEXTURE), WALL_SOURCE_ID)\n53\t\n54\t\t_tile_map_layer.tile_set = ts\n55\t\tadd_child(_tile_map_layer)\n56\t\n57\t\n58\tfunc _make_atlas_source(texture: Texture2D) -> TileSetAtlasSource:\n59\t\tvar source := TileSetAtlasSource.new()\n60\t\tsource.texture = texture\n61\t\tsource.texture_region_size = Vector2i(cell_size, cell_size)\n62\t\tsource.create_tile(ATLAS_COORD)\n63\t\treturn source\n64\t\n65\t\n66\tfunc _populate_tiles() -> void:\n67\t\tfor y in range(grid_height):\n68\t\t\tfor x in range(grid_width):\n69\t\t\t\tvar pos := Vector2i(x, y)\n70\t\t\t\tvar source_id := WALL_SOURCE_ID if is_wall(pos) else FLOOR_SOURCE_ID\n71\t\t\t\t_tile_map_layer.set_cell(pos, source_id, ATLAS_COORD)\n72\t"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\food_test.gd",
+  "old_string": "func test_spawn_covers_only_remaining_cell_when_others_blocked() -> void:",
+  "new_string": "func test_spawn_randomness_visits_multiple_cells() -> void:\n\tvar arena := _make_arena()\n\tvar f := _make_food()\n\tvar seen: Dictionary = {}\n\tfor _i in range(50):\n\t\tf.spawn(arena, [] as Array[Vector2i])\n\t\tseen[f.get_grid_pos()] = true\n\tassert_int(seen.size()).is_greater(1)\n\n\nfunc test_spawn_covers_only_remaining_cell_when_others_blocked() -> void:"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\food_test.gd has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/food_test.gd 2>&1 | tail -40",
+  "description": "Run food_test suite"
+}
+```
+
+### Tool: unknown result
+```json
+"Please note that tests that use UI interaction do not work correctly in headless mode.\r\nGodot 'InputEvents' are not transported by the Godot engine in headless mode and therefore\r\nhave no effect in the test!\r\n\u001b[0m\r\n\u001b[38;2;100;149;237mInstalling GdUnit4 session system hooks.\u001b[0m\r\n\u001b[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.\u001b[0m\r\n\u001b[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.\u001b[0m\r\n\u001b[38;2;0;206;209mRun Test Suite: \u001b[0m\u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_ready_creates_sprite_with_food_texture\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_ready_creates_sprite_with_food_texture\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 117ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_get_grid_pos_returns_position_grid\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_get_grid_pos_returns_position_grid\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 100ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_places_food_inside_interior_bounds\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_places_food_inside_interior_bounds\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 99ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_never_lands_on_snake_body\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_never_lands_on_snake_body\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 105ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_updates_sprite_world_position\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_updates_sprite_world_position\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 108ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_randomness_visits_multiple_cells\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_randomness_visits_multiple_cells\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 109ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_covers_only_remaining_cell_when_others_blocked\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/food_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_spawn_covers_only_remaining_cell_when_others_blocked\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 93ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mStatistics:\u001b[0m\u001b[38;2;250;235;215m 7 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 1s 642ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 7 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (7/7)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 1s 642ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_28/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_28/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/ 2>&1 | tail -8",
+  "description": "Run full test suite"
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 105 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (16/16)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (105/105)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 24s 432ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_29/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_29/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: mcp__task-master-ai__set_task_status input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster",
+  "id": "22",
+  "status": "done"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"message\": \"Successfully updated 1 task(s) to \\\"done\\\"\",\n    \"tasks\": [\n      {\n        \"success\": true,\n        \"oldStatus\": \"pending\",\n        \"newStatus\": \"done\",\n        \"taskId\": \"22\"\n      }\n    ]\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster && printf '\\n\\n## Iteration 19 - Task 22: Food unit tests\\n- food_test.gd already covered spawns-in-interior-bounds (=valid empty cell + no wall), never-on-snake-body, sprite world position, and the only-remaining-cell forced case.\\n- Added test_spawn_randomness_visits_multiple_cells: spawn 50 times into 20x15 empty arena, assert seen-cells dictionary size > 1. Closes the spec randomness item.\\n- food_test 7/7 pass; full suite 105/105 pass.\\n' >> .taskmaster/progress.txt",
+  "description": "Append progress notes"
+}
+```
+
+### Tool: unknown result
+```json
+"(Bash completed with no output)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster && git add snaketaskmaster/test/food_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \"$(cat <<'EOF'\ntest(food): add spawn randomness visits multiple cells\n\nAdds test_spawn_randomness_visits_multiple_cells which spawns food 50 times into a 20x15 empty arena and asserts the set of resulting cells has size > 1. Closes the randomness spec item in Task 22. food_test 7/7, full suite 105/105.\n\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\nEOF\n)\" 2>&1 | tail -5",
+  "description": "Commit task 22"
+}
+```
+
+### Tool: unknown result
+```json
+"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\n[user/gewan/snake_v5 2a8cf46] test(food): add spawn randomness visits multiple cells\n 3 files changed, 266 insertions(+), 4 deletions(-)"
+```
+
+### Iteration 19 summary
+- Tool calls:
+  - Bash: 5
+  - Read: 4
+  - ToolSearch: 1
+  - mcp__task-master-ai__next_task: 1
+  - Edit: 1
+  - mcp__task-master-ai__set_task_status: 1
+- Tokens:
+  - input: 23
+  - output: 3,038
+  - cache write: 50,328
+  - cache read: 397,570
+  - total: 450,959
+- Final result:
+```text
+Task 22 complete (commit `2a8cf46`). The food_test.gd suite already covered the spec's empty-cell, no-snake, and no-wall items via `test_spawn_places_food_inside_interior_bounds` and `test_spawn_never_lands_on_snake_body`; I added `test_spawn_randomness_visits_multiple_cells` to close the spec's randomness requirement by asserting >1 distinct cell across 50 spawns. food_test 7/7 and full suite 105/105 pass.
+```
+
+---
+
+
+## Iteration 20 - Task 16: Wire eat-food sound effect
+- Added [ext_resource] for audio/eat_food.wav (uid c48m6sgm3s07q) and EatFoodAudioPlayer (AudioStreamPlayer) under Gameplay scene.
+- Wired @onready var eat_food_audio_player and call .play() in _on_food_eaten().
+- Added gameplay_test.gd: test_eat_food_audio_player_has_eat_food_stream + test_food_eaten_plays_eat_food_audio (asserts .playing flips true after signal emit).
+- gameplay_test 11/11; full suite 107/107 pass.
