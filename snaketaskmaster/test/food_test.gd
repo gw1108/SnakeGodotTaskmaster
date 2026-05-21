@@ -60,6 +60,16 @@ func test_spawn_updates_sprite_world_position() -> void:
 	assert_that(f._sprite.position).is_equal(arena.grid_to_world(f.get_grid_pos()))
 
 
+func test_spawn_randomness_visits_multiple_cells() -> void:
+	var arena := _make_arena()
+	var f := _make_food()
+	var seen: Dictionary = {}
+	for _i in range(50):
+		f.spawn(arena, [] as Array[Vector2i])
+		seen[f.get_grid_pos()] = true
+	assert_int(seen.size()).is_greater(1)
+
+
 func test_spawn_covers_only_remaining_cell_when_others_blocked() -> void:
 	var arena := _make_arena(5, 5)
 	var f := _make_food()

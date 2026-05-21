@@ -6504,3 +6504,254 @@ Task 20 complete (committed as `06adcbd`). The arena_test.gd file already covere
 - snake_test.gd already had most spec coverage (starting length, opposite-heading reject, perpendicular accept, body advance + tail pop, wall/self collision dies, food grows body, no-food maintains length, post-death noop, visuals).
 - Added test_tick_applies_queued_direction_to_heading: queues UP, calls tick, asserts heading=UP and head moved to (5,6). Closes the missing "queue_direction_changes_heading" case from the spec.
 - snake_test 17/17 pass; full suite 104/104 pass.
+
+## Iteration 18
+
+### LLM input
+```text
+@.taskmaster/progress.txt @CLAUDE.md
+
+Loop iteration 18 of 25
+
+TASK: Implement ONE task/subtask from the Taskmaster backlog.
+
+PROCESS:
+1. Run task-master next (or use MCP) to get the next available task/subtask.
+2. Read task details with task-master show <id>.
+3. Implement following codebase patterns.
+4. Write tests alongside implementation.
+5. Run type check (e.g., `npm run typecheck`, `tsc --noEmit`).
+6. Run tests (e.g., `npm test`, `npm run test`).
+7. Mark complete: task-master set-status --id=<id> --status=done
+8. Commit with message: feat(<scope>): <what was implemented>
+9. Append super-concise notes to progress file: task ID, what was done. If there was any mistakes or false assumptions, append them into a learning.
+
+IMPORTANT:
+- Complete ONLY ONE task per iteration.
+- Keep changes small and focused.
+- Do NOT start another task after completing one.
+- If all tasks are done, output <loop-complete>ALL_DONE</loop-complete>.
+- If blocked, output <loop-blocked>REASON</loop-blocked>.
+
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt"
+}
+```
+
+### Tool: unknown result
+```json
+"File content (757.2KB) exceeds maximum allowed size (256KB). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file."
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "wc -l C:/GameDev/SnakeGodotTaskmaster/.taskmaster/progress.txt",
+  "description": "Count lines in progress file"
+}
+```
+
+### Tool: unknown result
+```json
+"6500 C:/GameDev/SnakeGodotTaskmaster/.taskmaster/progress.txt"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt",
+  "offset": 6400,
+  "limit": 100
+}
+```
+
+### Tool: unknown result
+```json
+"6400\t  \"timeout\": 120000\n6401\t}\n6402\t```\n6403\t\n6404\t### Tool: unknown result\n6405\t```json\n6406\t\"\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n\\u001b[38;2;30;144;255mOverall Summary:\\u001b[0m\\u001b[38;2;255;255;255m 11 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test suites: (1/1)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test cases : (11/11)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mTotal execution time: 2s 610ms\\u001b[0m\\r\\n\\u001b[38;2;255;255;255m \\u001b[0m\\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_24/results.xml\\u001b[0m\\r\\n\\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_24/index.html\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExit code: 0\\u001b[0m\\r\\nFinallize .. done\"\n6407\t```\n6408\t\n6409\t### Tool: Bash input\n6410\t```json\n6411\t{\n6412\t  \"command\": \"cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/ 2>&1 | tail -10\",\n6413\t  \"description\": \"Run full test suite\",\n6414\t  \"timeout\": 300000\n6415\t}\n6416\t```\n6417\t\n6418\t### Tool: unknown result\n6419\t```json\n6420\t\"\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n\\u001b[38;2;30;144;255mOverall Summary:\\u001b[0m\\u001b[38;2;255;255;255m 103 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test suites: (16/16)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test cases : (103/103)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mTotal execution time: 23s 331ms\\u001b[0m\\r\\n\\u001b[38;2;255;255;255m \\u001b[0m\\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_25/results.xml\\u001b[0m\\r\\n\\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_25/index.html\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExit code: 0\\u001b[0m\\r\\nFinallize .. done\"\n6421\t```\n6422\t\n6423\t### Tool: mcp__task-master-ai__set_task_status input\n6424\t```json\n6425\t{\n6426\t  \"id\": \"20\",\n6427\t  \"status\": \"done\",\n6428\t  \"projectRoot\": \"C:\\\\GameDev\\\\SnakeGodotTaskmaster\"\n6429\t}\n6430\t```\n6431\t\n6432\t### Tool: unknown result\n6433\t```json\n6434\t[\n6435\t  {\n6436\t    \"type\": \"text\",\n6437\t    \"text\": \"{\\n  \\\"data\\\": {\\n    \\\"message\\\": \\\"Successfully updated 1 task(s) to \\\\\\\"done\\\\\\\"\\\",\\n    \\\"tasks\\\": [\\n      {\\n        \\\"success\\\": true,\\n        \\\"oldStatus\\\": \\\"pending\\\",\\n        \\\"newStatus\\\": \\\"done\\\",\\n        \\\"taskId\\\": \\\"20\\\"\\n      }\\n    ]\\n  },\\n  \\\"version\\\": {\\n    \\\"version\\\": \\\"1.0.0-rc.2\\\",\\n    \\\"name\\\": \\\"task-master-ai\\\"\\n  },\\n  \\\"tag\\\": \\\"master\\\"\\n}\"\n6438\t  }\n6439\t]\n6440\t```\n6441\t\n6442\t### Tool: Bash input\n6443\t```json\n6444\t{\n6445\t  \"command\": \"printf '\\\\n\\\\n## Iteration 17 - Task 20: Arena unit tests\\\\n- snaketaskmaster/test/arena_test.gd already covered most cases (dimensions, perimeter, interior, out-of-bounds, grid_to_world, world_to_grid, round-trip, tilemap population, tileset cell_size).\\\\n- Added one missing test from the spec: `test_custom_grid_size_export_vars` — assigns custom `grid_width/height/cell_size` on a fresh Arena and verifies `is_wall` perimeter math and `grid_to_world`/`world_to_grid` honor the new cell_size.\\\\n- arena_test 11/11 pass; full suite 103/103 pass.\\\\n' >> .taskmaster/progress.txt\",\n6446\t  \"description\": \"Append progress notes\"\n6447\t}\n6448\t```\n6449\t\n6450\t### Tool: unknown result\n6451\t```json\n6452\t\"Exit code 1\\n/usr/bin/bash: line 1: .taskmaster/progress.txt: No such file or directory\"\n6453\t```\n6454\t\n6455\t### Tool: Bash input\n6456\t```json\n6457\t{\n6458\t  \"command\": \"cd C:/GameDev/SnakeGodotTaskmaster && printf '\\\\n\\\\n## Iteration 17 - Task 20: Arena unit tests\\\\n- snaketaskmaster/test/arena_test.gd already covered most cases (dimensions, perimeter, interior, out-of-bounds, grid_to_world, world_to_grid, round-trip, tilemap population, tileset cell_size).\\\\n- Added one missing test from the spec: `test_custom_grid_size_export_vars` — assigns custom `grid_width/height/cell_size` on a fresh Arena and verifies `is_wall` perimeter math and `grid_to_world`/`world_to_grid` honor the new cell_size.\\\\n- arena_test 11/11 pass; full suite 103/103 pass.\\\\n' >> .taskmaster/progress.txt\",\n6459\t  \"description\": \"Append progress notes\"\n6460\t}\n6461\t```\n6462\t\n6463\t### Tool: unknown result\n6464\t```json\n6465\t\"(Bash completed with no output)\"\n6466\t```\n6467\t\n6468\t### Tool: Bash input\n6469\t```json\n6470\t{\n6471\t  \"command\": \"cd C:/GameDev/SnakeGodotTaskmaster && git add snaketaskmaster/test/arena_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \\\"$(cat <<'EOF'\\ntest(arena): add custom grid size export vars test\\n\\nAdds test_custom_grid_size_export_vars to arena_test.gd, asserting that overriding grid_width/grid_height/cell_size on a fresh Arena propagates through is_wall (custom perimeter) and grid_to_world/world_to_grid (cell-size-aware conversions). Closes out the test coverage listed in Task 20. arena_test 11/11, full suite 103/103.\\n\\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\\nEOF\\n)\\\" 2>&1 | tail -5\",\n6472\t  \"description\": \"Commit task 20\"\n6473\t}\n6474\t```\n6475\t\n6476\t### Tool: unknown result\n6477\t```json\n6478\t\"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\\n[user/gewan/snake_v5 06adcbd] test(arena): add custom grid size export vars test\\n 3 files changed, 424 insertions(+), 4 deletions(-)\"\n6479\t```\n6480\t\n6481\t### Iteration 17 summary\n6482\t- Tool calls:\n6483\t  - Bash: 9\n6484\t  - Read: 3\n6485\t  - ToolSearch: 1\n6486\t  - mcp__task-master-ai__next_task: 1\n6487\t  - Edit: 1\n6488\t  - mcp__task-master-ai__set_task_status: 1\n6489\t- Tokens:\n6490\t  - input: 31\n6491\t  - output: 4,608\n6492\t  - cache write: 58,447\n6493\t  - cache read: 836,828\n6494\t  - total: 899,914\n6495\t- Final result:\n6496\t```text\n6497\tTask 20 complete (committed as `06adcbd`). The arena_test.gd file already covered nearly all of the spec; I added the missing `test_custom_grid_size_export_vars` which mutates the exported `grid_width`/`grid_height`/`cell_size` on a fresh Arena and verifies `is_wall` and the world↔grid conversions honor the new values. arena_test 11/11 and full suite 103/103 pass.\n6498\t```\n6499\t"
+```
+
+### Tool: ToolSearch input
+```json
+{
+  "query": "select:mcp__task-master-ai__next_task,mcp__task-master-ai__get_task,mcp__task-master-ai__set_task_status",
+  "max_results": 3
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__next_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__get_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__set_task_status"
+  }
+]
+```
+
+### Tool: mcp__task-master-ai__next_task input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"nextTask\": {\n      \"id\": 21,\n      \"title\": \"Write unit tests for Snake\",\n      \"description\": \"Create test/snake_test.gd covering movement, collision, growth, and death logic\",\n      \"details\": \"1. Create res://test/snake_test.gd extending GdUnitTestSuite\\n2. Test cases:\\n   - test_snake_starts_with_length_3()\\n   - test_queue_direction_changes_heading()\\n   - test_queue_direction_rejects_opposite_heading()\\n   - test_tick_advances_body_by_one_cell()\\n   - test_tick_detects_wall_collision_and_emits_died()\\n   - test_tick_detects_self_collision_and_emits_died()\\n   - test_tick_detects_food_and_emits_food_eaten()\\n   - test_eating_food_grows_body_by_one()\\n   - test_not_eating_food_maintains_body_length()\\n3. Mock Arena with a simple stub: is_wall returns true for test boundaries\\n4. Use await_signal_on() for testing died and food_eaten signals\\n5. Run with gdUnit4 CLI\",\n      \"testStrategy\": \"Run test suite, verify all test_* methods pass. Ensure edge cases covered: opposite direction input ignored, collision with wall/body triggers died, growth only happens on food.\",\n      \"priority\": \"medium\",\n      \"dependencies\": [\n        \"9\"\n      ],\n      \"status\": \"pending\",\n      \"subtasks\": []\n    },\n    \"isSubtask\": false,\n    \"nextSteps\": \"When ready to work on the task, use set-status to set the status to \\\"in progress\\\" Tasks can be updated to reflect a change in the direction of the task, or to reformulate the task per your prompt. Research can be used when updating the task to collect up-to-date information. It is best to update subtasks as you work on them, and to update the task for more high-level changes that may affect pending subtasks or the general direction of the task.\"\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\snake_test.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\textends GdUnitTestSuite\n2\t\n3\tconst SnakeScript := preload(\"res://scripts/snake.gd\")\n4\tconst ArenaScript := preload(\"res://scripts/arena.gd\")\n5\t\n6\tconst FOOD_OFFSCREEN := Vector2i(-1000, -1000)\n7\t\n8\t\n9\tfunc _make_snake() -> Snake:\n10\t\tvar s: Snake = auto_free(SnakeScript.new())\n11\t\tadd_child(s)\n12\t\treturn s\n13\t\n14\t\n15\tfunc _make_arena() -> Arena:\n16\t\tvar a: Arena = auto_free(ArenaScript.new())\n17\t\tadd_child(a)\n18\t\treturn a\n19\t\n20\t\n21\tfunc test_starts_with_starting_length() -> void:\n22\t\tvar s := _make_snake()\n23\t\tassert_int(s.body.size()).is_equal(s.starting_length)\n24\t\tassert_int(s.starting_length).is_equal(3)\n25\t\n26\t\n27\tfunc test_starts_with_head_first_and_heading_right() -> void:\n28\t\tvar s := _make_snake()\n29\t\tassert_that(s.body[0]).is_equal(Vector2i(5, 7))\n30\t\tassert_that(s.body[1]).is_equal(Vector2i(4, 7))\n31\t\tassert_that(s.body[2]).is_equal(Vector2i(3, 7))\n32\t\tassert_that(s.heading).is_equal(Vector2i.RIGHT)\n33\t\tassert_bool(s.is_alive).is_true()\n34\t\n35\t\n36\tfunc test_queue_direction_rejects_opposite_heading() -> void:\n37\t\tvar s := _make_snake()\n38\t\ts.queue_direction(Vector2i.LEFT)\n39\t\tassert_that(s.queued_direction).is_equal(Vector2i.RIGHT)\n40\t\n41\t\n42\tfunc test_queue_direction_accepts_perpendicular() -> void:\n43\t\tvar s := _make_snake()\n44\t\ts.queue_direction(Vector2i.UP)\n45\t\tassert_that(s.queued_direction).is_equal(Vector2i.UP)\n46\t\n47\t\n48\tfunc test_tick_advances_body_and_pops_tail() -> void:\n49\t\tvar s := _make_snake()\n50\t\tvar a := _make_arena()\n51\t\ts.tick(a, FOOD_OFFSCREEN)\n52\t\tassert_int(s.body.size()).is_equal(3)\n53\t\tassert_that(s.body[0]).is_equal(Vector2i(6, 7))\n54\t\tassert_that(s.body[1]).is_equal(Vector2i(5, 7))\n55\t\tassert_that(s.body[2]).is_equal(Vector2i(4, 7))\n56\t\n57\t\n58\tfunc test_tick_into_wall_emits_died() -> void:\n59\t\tvar s := _make_snake()\n60\t\tvar a := _make_arena()\n61\t\ts.body = [Vector2i(a.grid_width - 2, 7), Vector2i(a.grid_width - 3, 7), Vector2i(a.grid_width - 4, 7)] as Array[Vector2i]\n62\t\ts.heading = Vector2i.RIGHT\n63\t\ts.queued_direction = Vector2i.RIGHT\n64\t\tvar died_monitor := monitor_signals(s)\n65\t\ts.tick(a, FOOD_OFFSCREEN)\n66\t\tassert_bool(s.is_alive).is_false()\n67\t\tawait assert_signal(died_monitor).is_emitted(\"died\")\n68\t\n69\t\n70\tfunc test_tick_into_self_emits_died() -> void:\n71\t\tvar s := _make_snake()\n72\t\tvar a := _make_arena()\n73\t\ts.body = [Vector2i(5, 7), Vector2i(4, 7), Vector2i(4, 8), Vector2i(5, 8)] as Array[Vector2i]\n74\t\ts.heading = Vector2i.DOWN\n75\t\ts.queued_direction = Vector2i.DOWN\n76\t\tvar monitor := monitor_signals(s)\n77\t\ts.tick(a, FOOD_OFFSCREEN)\n78\t\tassert_bool(s.is_alive).is_false()\n79\t\tawait assert_signal(monitor).is_emitted(\"died\")\n80\t\n81\t\n82\tfunc test_eating_food_grows_body_and_emits_food_eaten() -> void:\n83\t\tvar s := _make_snake()\n84\t\tvar a := _make_arena()\n85\t\tvar food_pos := Vector2i(6, 7)\n86\t\tvar monitor := monitor_signals(s)\n87\t\ts.tick(a, food_pos)\n88\t\tassert_int(s.body.size()).is_equal(4)\n89\t\tassert_that(s.body[0]).is_equal(food_pos)\n90\t\tassert_that(s.body[3]).is_equal(Vector2i(3, 7))\n91\t\tawait assert_signal(monitor).is_emitted(\"food_eaten\")\n92\t\n93\t\n94\tfunc test_tick_after_death_is_noop() -> void:\n95\t\tvar s := _make_snake()\n96\t\tvar a := _make_arena()\n97\t\ts.is_alive = false\n98\t\tvar before := s.body.duplicate()\n99\t\ts.tick(a, FOOD_OFFSCREEN)\n100\t\tassert_that(s.body).is_equal(before)\n101\t\n102\t\n103\tfunc test_update_visuals_creates_sprite_per_body_segment() -> void:\n104\t\tvar s := _make_snake()\n105\t\tvar a := _make_arena()\n106\t\ts.update_visuals(a)\n107\t\tassert_int(s._sprites.size()).is_equal(s.body.size())\n108\t\n109\t\n110\tfunc test_update_visuals_uses_head_texture_for_first_segment_and_body_for_rest() -> void:\n111\t\tvar s := _make_snake()\n112\t\tvar a := _make_arena()\n113\t\ts.update_visuals(a)\n114\t\tassert_object(s._sprites[0].texture).is_equal(SnakeScript.HEAD_TEXTURE)\n115\t\tassert_object(s._sprites[1].texture).is_equal(SnakeScript.BODY_TEXTURE)\n116\t\tassert_object(s._sprites[2].texture).is_equal(SnakeScript.BODY_TEXTURE)\n117\t\n118\t\n119\tfunc test_update_visuals_positions_sprites_at_arena_world_coords() -> void:\n120\t\tvar s := _make_snake()\n121\t\tvar a := _make_arena()\n122\t\ts.update_visuals(a)\n123\t\tfor i in s.body.size():\n124\t\t\tassert_that(s._sprites[i].position).is_equal(a.grid_to_world(s.body[i]))\n125\t\n126\t\n127\tfunc test_update_visuals_rotates_head_to_match_heading() -> void:\n128\t\tvar s := _make_snake()\n129\t\tvar a := _make_arena()\n130\t\ts.heading = Vector2i.DOWN\n131\t\ts.update_visuals(a)\n132\t\tassert_float(s._sprites[0].rotation).is_equal_approx(PI / 2.0, 0.0001)\n133\t\n134\t\ts.heading = Vector2i.LEFT\n135\t\ts.update_visuals(a)\n136\t\tassert_float(s._sprites[0].rotation).is_equal_approx(PI, 0.0001)\n137\t\n138\t\ts.heading = Vector2i.UP\n139\t\ts.update_visuals(a)\n140\t\tassert_float(s._sprites[0].rotation).is_equal_approx(-PI / 2.0, 0.0001)\n141\t\n142\t\ts.heading = Vector2i.RIGHT\n143\t\ts.update_visuals(a)\n144\t\tassert_float(s._sprites[0].rotation).is_equal_approx(0.0, 0.0001)\n145\t\n146\t\n147\tfunc test_update_visuals_pools_sprites_on_growth_and_shrink() -> void:\n148\t\tvar s := _make_snake()\n149\t\tvar a := _make_arena()\n150\t\ts.update_visuals(a)\n151\t\tassert_int(s._sprites.size()).is_equal(3)\n152\t\ts.body.append(Vector2i(2, 7))\n153\t\ts.update_visuals(a)\n154\t\tassert_int(s._sprites.size()).is_equal(4)\n155\t\ts.body.pop_back()\n156\t\ts.body.pop_back()\n157\t\ts.update_visuals(a)\n158\t\tassert_int(s._sprites.size()).is_equal(2)\n159\t\n160\t\n161\tfunc test_tick_updates_visuals_after_move() -> void:\n162\t\tvar s := _make_snake()\n163\t\tvar a := _make_arena()\n164\t\ts.tick(a, FOOD_OFFSCREEN)\n165\t\tassert_int(s._sprites.size()).is_equal(3)\n166\t\tassert_that(s._sprites[0].position).is_equal(a.grid_to_world(Vector2i(6, 7)))\n167\t\n168\t\n169\tfunc test_heading_to_angle_maps_all_cardinals() -> void:\n170\t\tassert_float(SnakeScript._heading_to_angle(Vector2i.RIGHT)).is_equal_approx(0.0, 0.0001)\n171\t\tassert_float(SnakeScript._heading_to_angle(Vector2i.DOWN)).is_equal_approx(PI / 2.0, 0.0001)\n172\t\tassert_float(SnakeScript._heading_to_angle(Vector2i.LEFT)).is_equal_approx(PI, 0.0001)\n173\t\tassert_float(SnakeScript._heading_to_angle(Vector2i.UP)).is_equal_approx(-PI / 2.0, 0.0001)\n174\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\snake.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\tclass_name Snake\n2\textends Node2D\n3\t\n4\tsignal food_eaten\n5\tsignal died\n6\t\n7\tconst HEAD_TEXTURE: Texture2D = preload(\"res://sprites/player_head.png\")\n8\tconst BODY_TEXTURE: Texture2D = preload(\"res://sprites/player_body.png\")\n9\t\n10\t@export var starting_length: int = 3\n11\t@export var starting_head: Vector2i = Vector2i(5, 7)\n12\t\n13\tvar body: Array[Vector2i] = []\n14\tvar heading: Vector2i = Vector2i.RIGHT\n15\tvar queued_direction: Vector2i = Vector2i.RIGHT\n16\tvar is_alive: bool = true\n17\t\n18\tvar _sprites: Array[Sprite2D] = []\n19\t\n20\t\n21\tfunc _ready() -> void:\n22\t\treset()\n23\t\n24\t\n25\tfunc reset() -> void:\n26\t\tbody.clear()\n27\t\tfor i in starting_length:\n28\t\t\tbody.append(Vector2i(starting_head.x - i, starting_head.y))\n29\t\theading = Vector2i.RIGHT\n30\t\tqueued_direction = Vector2i.RIGHT\n31\t\tis_alive = true\n32\t\n33\t\n34\tfunc queue_direction(dir: Vector2i) -> void:\n35\t\tif dir == -heading:\n36\t\t\treturn\n37\t\tqueued_direction = dir\n38\t\n39\t\n40\tfunc tick(arena: Arena, food_pos: Vector2i) -> void:\n41\t\tif not is_alive:\n42\t\t\treturn\n43\t\theading = queued_direction\n44\t\tvar new_head: Vector2i = body[0] + heading\n45\t\tif arena.is_wall(new_head) or body.has(new_head):\n46\t\t\tis_alive = false\n47\t\t\tdied.emit()\n48\t\t\treturn\n49\t\tbody.push_front(new_head)\n50\t\tif new_head == food_pos:\n51\t\t\tfood_eaten.emit()\n52\t\telse:\n53\t\t\tbody.pop_back()\n54\t\tupdate_visuals(arena)\n55\t\n56\t\n57\tfunc update_visuals(arena: Arena) -> void:\n58\t\twhile _sprites.size() < body.size():\n59\t\t\tvar sprite := Sprite2D.new()\n60\t\t\tadd_child(sprite)\n61\t\t\t_sprites.append(sprite)\n62\t\twhile _sprites.size() > body.size():\n63\t\t\tvar extra: Sprite2D = _sprites.pop_back()\n64\t\t\tremove_child(extra)\n65\t\t\textra.queue_free()\n66\t\tfor i in body.size():\n67\t\t\tvar sprite := _sprites[i]\n68\t\t\tsprite.texture = HEAD_TEXTURE if i == 0 else BODY_TEXTURE\n69\t\t\tsprite.position = arena.grid_to_world(body[i])\n70\t\t\tsprite.rotation = _heading_to_angle(heading) if i == 0 else 0.0\n71\t\n72\t\n73\tstatic func _heading_to_angle(h: Vector2i) -> float:\n74\t\tif h == Vector2i.RIGHT:\n75\t\t\treturn 0.0\n76\t\tif h == Vector2i.DOWN:\n77\t\t\treturn PI / 2.0\n78\t\tif h == Vector2i.LEFT:\n79\t\t\treturn PI\n80\t\treturn -PI / 2.0\n81\t"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\snake_test.gd",
+  "old_string": "func test_queue_direction_accepts_perpendicular() -> void:\n\tvar s := _make_snake()\n\ts.queue_direction(Vector2i.UP)\n\tassert_that(s.queued_direction).is_equal(Vector2i.UP)",
+  "new_string": "func test_queue_direction_accepts_perpendicular() -> void:\n\tvar s := _make_snake()\n\ts.queue_direction(Vector2i.UP)\n\tassert_that(s.queued_direction).is_equal(Vector2i.UP)\n\n\nfunc test_tick_applies_queued_direction_to_heading() -> void:\n\tvar s := _make_snake()\n\tvar a := _make_arena()\n\ts.queue_direction(Vector2i.UP)\n\ts.tick(a, FOOD_OFFSCREEN)\n\tassert_that(s.heading).is_equal(Vector2i.UP)\n\tassert_that(s.body[0]).is_equal(Vector2i(5, 6))"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\snake_test.gd has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/snake_test.gd 2>&1 | tail -10",
+  "description": "Run snake tests",
+  "timeout": 120000
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 17 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (17/17)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 3s 921ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_26/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_26/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/ 2>&1 | tail -10",
+  "description": "Run full test suite",
+  "timeout": 300000
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 104 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (16/16)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (104/104)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 24s 323ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_27/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_27/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: mcp__task-master-ai__set_task_status input
+```json
+{
+  "id": "21",
+  "status": "done",
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"message\": \"Successfully updated 1 task(s) to \\\"done\\\"\",\n    \"tasks\": [\n      {\n        \"success\": true,\n        \"oldStatus\": \"pending\",\n        \"newStatus\": \"done\",\n        \"taskId\": \"21\"\n      }\n    ]\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster && printf '\\n\\n## Iteration 18 - Task 21: Snake unit tests\\n- snake_test.gd already had most spec coverage (starting length, opposite-heading reject, perpendicular accept, body advance + tail pop, wall/self collision dies, food grows body, no-food maintains length, post-death noop, visuals).\\n- Added test_tick_applies_queued_direction_to_heading: queues UP, calls tick, asserts heading=UP and head moved to (5,6). Closes the missing \"queue_direction_changes_heading\" case from the spec.\\n- snake_test 17/17 pass; full suite 104/104 pass.\\n' >> .taskmaster/progress.txt",
+  "description": "Append progress notes"
+}
+```
+
+### Tool: unknown result
+```json
+"(Bash completed with no output)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster && git add snaketaskmaster/test/snake_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \"$(cat <<'EOF'\ntest(snake): add queued direction applies to heading on tick\n\nAdds test_tick_applies_queued_direction_to_heading to snake_test.gd, asserting that after queue_direction(UP) a tick updates heading to UP and moves the head from (5,7) to (5,6). Closes out the spec coverage in Task 21. snake_test 17/17, full suite 104/104.\n\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\nEOF\n)\" 2>&1 | tail -5",
+  "description": "Commit task 21"
+}
+```
+
+### Tool: unknown result
+```json
+"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\n[user/gewan/snake_v5 20f4902] test(snake): add queued direction applies to heading on tick\n 3 files changed, 305 insertions(+), 4 deletions(-)"
+```
+
+### Iteration 18 summary
+- Tool calls:
+  - Bash: 5
+  - Read: 4
+  - ToolSearch: 1
+  - mcp__task-master-ai__next_task: 1
+  - Edit: 1
+  - mcp__task-master-ai__set_task_status: 1
+- Tokens:
+  - input: 23
+  - output: 3,812
+  - cache write: 56,859
+  - cache read: 655,850
+  - total: 716,544
+- Final result:
+```text
+Task 21 complete (committed as `20f4902`). The snake_test.gd already covered most of the spec; I added `test_tick_applies_queued_direction_to_heading` which queues UP, ticks, and asserts the heading flips and the head moves to (5,6). snake_test 17/17 and full suite 104/104 pass.
+```
+
+---
+
+
+## Iteration 19 - Task 22: Food unit tests
+- food_test.gd already covered spawns-in-interior-bounds (=valid empty cell + no wall), never-on-snake-body, sprite world position, and the only-remaining-cell forced case.
+- Added test_spawn_randomness_visits_multiple_cells: spawn 50 times into 20x15 empty arena, assert seen-cells dictionary size > 1. Closes the spec randomness item.
+- food_test 7/7 pass; full suite 105/105 pass.
