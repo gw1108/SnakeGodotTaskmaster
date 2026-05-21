@@ -49,3 +49,17 @@ func test_reset_returns_score_to_zero() -> void:
 func test_hud_root_is_canvas_layer() -> void:
 	var hud: HUD = _make_hud()
 	assert_bool(hud is CanvasLayer).is_true()
+
+
+@warning_ignore("unused_parameter")
+func test_update_score_formats_label_for_value(value: int, expected_text: String, test_parameters := [
+	[0, "Score: 0"],
+	[1, "Score: 1"],
+	[10, "Score: 10"],
+	[999, "Score: 999"],
+]) -> void:
+	var hud: HUD = _make_hud()
+	hud.update_score(value)
+	var label: Label = hud.get_node("ScoreLabel")
+	assert_int(hud.score).is_equal(value)
+	assert_str(label.text).is_equal(expected_text)

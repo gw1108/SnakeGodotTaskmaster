@@ -7336,3 +7336,335 @@ Task 16 complete (commit `f858468`). Added `EatFoodAudioPlayer` (AudioStreamPlay
 - @onready var death_audio_player; call .play() in _on_snake_died() before death_timer.start() — existing 0.5s DeathTimer handles transition delay.
 - gameplay_test additions: test_death_audio_player_has_death_stream + test_snake_died_plays_death_audio.
 - gameplay_test 13/13; full suite 109/109 pass.
+
+## Iteration 21
+
+### LLM input
+```text
+@.taskmaster/progress.txt @CLAUDE.md
+
+Loop iteration 21 of 25
+
+TASK: Implement ONE task/subtask from the Taskmaster backlog.
+
+PROCESS:
+1. Run task-master next (or use MCP) to get the next available task/subtask.
+2. Read task details with task-master show <id>.
+3. Implement following codebase patterns.
+4. Write tests alongside implementation.
+5. Run type check (e.g., `npm run typecheck`, `tsc --noEmit`).
+6. Run tests (e.g., `npm test`, `npm run test`).
+7. Mark complete: task-master set-status --id=<id> --status=done
+8. Commit with message: feat(<scope>): <what was implemented>
+9. Append super-concise notes to progress file: task ID, what was done. If there was any mistakes or false assumptions, append them into a learning.
+
+IMPORTANT:
+- Complete ONLY ONE task per iteration.
+- Keep changes small and focused.
+- Do NOT start another task after completing one.
+- If all tasks are done, output <loop-complete>ALL_DONE</loop-complete>.
+- If blocked, output <loop-blocked>REASON</loop-blocked>.
+
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt"
+}
+```
+
+### Tool: unknown result
+```json
+"File content (835.8KB) exceeds maximum allowed size (256KB). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file."
+```
+
+### Tool: ToolSearch input
+```json
+{
+  "query": "select:mcp__task-master-ai__next_task,mcp__task-master-ai__get_task,mcp__task-master-ai__set_task_status",
+  "max_results": 5
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__next_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__get_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__set_task_status"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "powershell -Command \"Get-Content 'C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt' -Tail 80\"",
+  "description": "Read tail of progress file"
+}
+```
+
+### Tool: unknown result
+```json
+"```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/ 2>&1 | tail -8\",\r\n  \"description\": \"Run full test suite\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"\\u001b[38;2;30;144;255mOverall Summary:\\u001b[0m\\u001b[38;2;255;255;255m 107 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test suites: (16/16)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test cases : (107/107)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mTotal execution time: 25s 206ms\\u001b[0m\\r\\n\\u001b[38;2;255;255;255m \\u001b[0m\\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_31/results.xml\\u001b[0m\\r\\n\\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_31/index.html\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExit code: 0\\u001b[0m\\r\\nFinallize .. done\"\r\n```\r\n\r\n### Tool: mcp__task-master-ai__set_task_status input\r\n```json\r\n{\r\n  \"projectRoot\": \"C:\\\\GameDev\\\\SnakeGodotTaskmaster\",\r\n  \"id\": \"16\",\r\n  \"status\": \"done\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n[\r\n  {\r\n    \"type\": \"text\",\r\n    \"text\": \"{\\n  \\\"data\\\": {\\n    \\\"message\\\": \\\"Successfully updated 1 task(s) to \\\\\\\"done\\\\\\\"\\\",\\n    \\\"tasks\\\": [\\n      {\\n        \\\"success\\\": true,\\n        \\\"oldStatus\\\": \\\"pending\\\",\\n        \\\"newStatus\\\": \\\"done\\\",\\n        \\\"taskId\\\": \\\"16\\\"\\n      }\\n    ]\\n  },\\n  \\\"version\\\": {\\n    \\\"version\\\": \\\"1.0.0-rc.2\\\",\\n    \\\"name\\\": \\\"task-master-ai\\\"\\n  },\\n  \\\"tag\\\": \\\"master\\\"\\n}\"\r\n  }\r\n]\r\n```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"cd /c/GameDev/SnakeGodotTaskmaster && printf '\\\\n\\\\n## Iteration 20 - Task 16: Wire eat-food sound effect\\\\n- Added [ext_resource] for audio/eat_food.wav (uid c48m6sgm3s07q) and EatFoodAudioPlayer (AudioStreamPlayer) under Gameplay scene.\\\\n- Wired @onready var eat_food_audio_player and call .play() in _on_food_eaten().\\\\n- Added gameplay_test.gd: test_eat_food_audio_player_has_eat_food_stream + test_food_eaten_plays_eat_food_audio (asserts .playing flips true after signal emit).\\\\n- gameplay_test 11/11; full suite 107/107 pass.\\\\n' >> .taskmaster/progress.txt\",\r\n  \"description\": \"Append progress notes\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"(Bash completed with no output)\"\r\n```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"git add snaketaskmaster/scenes/Gameplay.tscn snaketaskmaster/scripts/gameplay.gd snaketaskmaster/test/gameplay_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \\\"$(cat <<'EOF'\\nfeat(audio): wire eat-food sound effect on food_eaten\\n\\nAdds EatFoodAudioPlayer (AudioStreamPlayer) to Gameplay.tscn with eat_food.wav, and calls .play() inside _on_food_eaten() so the SFX fires when the snake consumes food. Includes gameplay_test coverage for stream wiring and the playing-state flip on signal emit. Suite 107/107.\\n\\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\\nEOF\\n)\\\" 2>&1 | tail -5\",\r\n  \"description\": \"Commit task 16\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\\n[user/gewan/snake_v5 f858468] feat(audio): wire eat-food sound effect on food_eaten\\n 5 files changed, 274 insertions(+), 5 deletions(-)\"\r\n```\r\n\r\n### Iteration 20 summary\r\n- Tool calls:\r\n  - Bash: 6\r\n  - Read: 5\r\n  - Edit: 5\r\n  - ToolSearch: 1\r\n  - mcp__task-master-ai__next_task: 1\r\n  - mcp__task-master-ai__set_task_status: 1\r\n- Tokens:\r\n  - input: 34\r\n  - output: 4,776\r\n  - cache write: 54,721\r\n  - cache read: 956,135\r\n  - total: 1,015,666\r\n- Final result:\r\n```text\r\nTask 16 complete (commit `f858468`). Added `EatFoodAudioPlayer` (AudioStreamPlayer with `audio/eat_food.wav`) to `Gameplay.tscn`, wired `.play()` in `_on_food_eaten()`, and added two regression tests (stream-wiring + playing-state flip on `food_eaten` emit). Full suite 107/107 pass.\r\n```\r\n\r\n---"
+```
+
+### Tool: mcp__task-master-ai__next_task input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"nextTask\": {\n      \"id\": 17,\n      \"title\": \"Wire death sound effect\",\n      \"description\": \"Play death.wav when snake dies (hook to died signal), before transitioning to Game Over\",\n      \"details\": \"1. In Gameplay.tscn or gameplay.gd, add AudioStreamPlayer child node:\\n   - Name: DeathAudioPlayer\\n   - Stream: res://audio/death.wav\\n   - Autoplay: false\\n   - Bus: Master (or SFX bus)\\n2. In gameplay.gd _on_snake_died():\\n   - $DeathAudioPlayer.play()\\n   - await $DeathAudioPlayer.finished (or fixed timer)\\n   - get_tree().change_scene_to_file(\\\"res://scenes/GameOver.tscn\\\")\\n3. Ensure death sound plays fully before scene transition (0.5s delay or await finished)\\n4. Volume: default or adjust\",\n      \"testStrategy\": \"Manual test: Run Gameplay, steer snake into wall or body, verify death.wav plays, then GameOver screen appears after sound finishes. Verify sound does not cut off early.\",\n      \"priority\": \"medium\",\n      \"dependencies\": [\n        \"7\",\n        \"15\"\n      ],\n      \"status\": \"pending\",\n      \"subtasks\": []\n    },\n    \"isSubtask\": false,\n    \"nextSteps\": \"When ready to work on the task, use set-status to set the status to \\\"in progress\\\" Tasks can be updated to reflect a change in the direction of the task, or to reformulate the task per your prompt. Research can be used when updating the task to collect up-to-date information. It is best to update subtasks as you work on them, and to update the task for more high-level changes that may affect pending subtasks or the general direction of the task.\"\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\gameplay.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\tclass_name Gameplay\n2\textends Node2D\n3\t\n4\tconst GAME_OVER_SCENE_PATH: String = \"res://scenes/GameOver.tscn\"\n5\t\n6\t@onready var arena: Arena = $Arena\n7\t@onready var snake: Snake = $Snake\n8\t@onready var food: Food = $Food\n9\t@onready var hud: HUD = $HUD\n10\t@onready var tick_timer: Timer = $TickTimer\n11\t@onready var death_timer: Timer = $DeathTimer\n12\t@onready var eat_food_audio_player: AudioStreamPlayer = $EatFoodAudioPlayer\n13\t\n14\tvar score: int = 0\n15\t\n16\t\n17\tfunc _ready() -> void:\n18\t\tsnake.food_eaten.connect(_on_food_eaten)\n19\t\tsnake.died.connect(_on_snake_died)\n20\t\tfood.spawn(arena, snake.body)\n21\t\tsnake.update_visuals(arena)\n22\t\thud.reset()\n23\t\ttick_timer.timeout.connect(_on_tick)\n24\t\tdeath_timer.timeout.connect(_on_death_timeout)\n25\t\n26\t\n27\tfunc _input(event: InputEvent) -> void:\n28\t\tif event.is_action_pressed(\"move_up\"):\n29\t\t\tsnake.queue_direction(Vector2i.UP)\n30\t\telif event.is_action_pressed(\"move_down\"):\n31\t\t\tsnake.queue_direction(Vector2i.DOWN)\n32\t\telif event.is_action_pressed(\"move_left\"):\n33\t\t\tsnake.queue_direction(Vector2i.LEFT)\n34\t\telif event.is_action_pressed(\"move_right\"):\n35\t\t\tsnake.queue_direction(Vector2i.RIGHT)\n36\t\n37\t\n38\tfunc _on_tick() -> void:\n39\t\tsnake.tick(arena, food.get_grid_pos())\n40\t\n41\t\n42\tfunc _on_food_eaten() -> void:\n43\t\tscore += 1\n44\t\thud.update_score(score)\n45\t\tfood.spawn(arena, snake.body)\n46\t\teat_food_audio_player.play()\n47\t\n48\t\n49\tfunc _on_snake_died() -> void:\n50\t\ttick_timer.stop()\n51\t\tGameState.set_score(score)\n52\t\tdeath_timer.start()\n53\t\n54\t\n55\tfunc _on_death_timeout() -> void:\n56\t\tif ResourceLoader.exists(GAME_OVER_SCENE_PATH):\n57\t\t\tget_tree().change_scene_to_file(GAME_OVER_SCENE_PATH)\n58\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scenes\\Gameplay.tscn"
+}
+```
+
+### Tool: unknown result
+```json
+"1\t[gd_scene load_steps=7 format=3]\n2\t\n3\t[ext_resource type=\"Script\" path=\"res://scripts/gameplay.gd\" id=\"1_gameplay\"]\n4\t[ext_resource type=\"PackedScene\" path=\"res://scenes/Arena.tscn\" id=\"2_arena\"]\n5\t[ext_resource type=\"Script\" path=\"res://scripts/snake.gd\" id=\"3_snake\"]\n6\t[ext_resource type=\"Script\" path=\"res://scripts/food.gd\" id=\"4_food\"]\n7\t[ext_resource type=\"PackedScene\" path=\"res://scenes/HUD.tscn\" id=\"5_hud\"]\n8\t[ext_resource type=\"AudioStream\" uid=\"uid://c48m6sgm3s07q\" path=\"res://audio/eat_food.wav\" id=\"6_eat_food\"]\n9\t\n10\t[node name=\"Gameplay\" type=\"Node2D\"]\n11\tscript = ExtResource(\"1_gameplay\")\n12\t\n13\t[node name=\"Arena\" parent=\".\" instance=ExtResource(\"2_arena\")]\n14\t\n15\t[node name=\"Snake\" type=\"Node2D\" parent=\".\"]\n16\tscript = ExtResource(\"3_snake\")\n17\t\n18\t[node name=\"Food\" type=\"Node2D\" parent=\".\"]\n19\tscript = ExtResource(\"4_food\")\n20\t\n21\t[node name=\"HUD\" parent=\".\" instance=ExtResource(\"5_hud\")]\n22\t\n23\t[node name=\"TickTimer\" type=\"Timer\" parent=\".\"]\n24\twait_time = 0.15\n25\tautostart = true\n26\t\n27\t[node name=\"DeathTimer\" type=\"Timer\" parent=\".\"]\n28\twait_time = 0.5\n29\tone_shot = true\n30\t\n31\t[node name=\"EatFoodAudioPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\n32\tstream = ExtResource(\"6_eat_food\")\n33\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\gameplay_test.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\textends GdUnitTestSuite\n2\t\n3\tconst GAMEPLAY_SCENE_PATH := \"res://scenes/Gameplay.tscn\"\n4\t\n5\t\n6\tfunc _make_gameplay() -> Gameplay:\n7\t\tvar gameplay: Gameplay = auto_free(load(GAMEPLAY_SCENE_PATH).instantiate())\n8\t\tadd_child(gameplay)\n9\t\treturn gameplay\n10\t\n11\t\n12\tfunc test_initial_score_is_zero() -> void:\n13\t\tvar gameplay: Gameplay = _make_gameplay()\n14\t\tassert_int(gameplay.score).is_equal(0)\n15\t\n16\t\n17\tfunc test_initial_hud_displays_zero() -> void:\n18\t\tvar gameplay: Gameplay = _make_gameplay()\n19\t\tvar label: Label = gameplay.hud.get_node(\"ScoreLabel\")\n20\t\tassert_str(label.text).is_equal(\"Score: 0\")\n21\t\n22\t\n23\tfunc test_food_spawns_in_valid_cell_on_ready() -> void:\n24\t\tvar gameplay: Gameplay = _make_gameplay()\n25\t\tvar pos: Vector2i = gameplay.food.get_grid_pos()\n26\t\tassert_bool(gameplay.arena.is_wall(pos)).is_false()\n27\t\tassert_bool(gameplay.snake.body.has(pos)).is_false()\n28\t\n29\t\n30\tfunc test_food_eaten_signal_increments_score_and_updates_hud() -> void:\n31\t\tvar gameplay: Gameplay = _make_gameplay()\n32\t\tgameplay.snake.food_eaten.emit()\n33\t\tvar label: Label = gameplay.hud.get_node(\"ScoreLabel\")\n34\t\tassert_int(gameplay.score).is_equal(1)\n35\t\tassert_int(gameplay.hud.score).is_equal(1)\n36\t\tassert_str(label.text).is_equal(\"Score: 1\")\n37\t\n38\t\n39\tfunc test_food_eaten_respawns_food_in_valid_cell() -> void:\n40\t\tvar gameplay: Gameplay = _make_gameplay()\n41\t\tgameplay.snake.food_eaten.emit()\n42\t\tvar pos: Vector2i = gameplay.food.get_grid_pos()\n43\t\tassert_bool(gameplay.arena.is_wall(pos)).is_false()\n44\t\tassert_bool(gameplay.snake.body.has(pos)).is_false()\n45\t\n46\t\n47\tfunc test_multiple_food_eaten_accumulates_score() -> void:\n48\t\tvar gameplay: Gameplay = _make_gameplay()\n49\t\tgameplay.snake.food_eaten.emit()\n50\t\tgameplay.snake.food_eaten.emit()\n51\t\tgameplay.snake.food_eaten.emit()\n52\t\tassert_int(gameplay.score).is_equal(3)\n53\t\tassert_int(gameplay.hud.score).is_equal(3)\n54\t\n55\t\n56\tfunc test_snake_died_stops_tick_timer() -> void:\n57\t\tvar gameplay: Gameplay = _make_gameplay()\n58\t\tgameplay.snake.died.emit()\n59\t\tassert_bool(gameplay.tick_timer.is_stopped()).is_true()\n60\t\n61\t\n62\tfunc test_snake_died_starts_death_timer() -> void:\n63\t\tvar gameplay: Gameplay = _make_gameplay()\n64\t\tgameplay.snake.died.emit()\n65\t\tassert_bool(gameplay.death_timer.is_stopped()).is_false()\n66\t\n67\t\n68\tfunc test_gameplay_root_is_node2d() -> void:\n69\t\tvar gameplay: Gameplay = _make_gameplay()\n70\t\tassert_bool(gameplay is Node2D).is_true()\n71\t\n72\t\n73\tfunc test_eat_food_audio_player_has_eat_food_stream() -> void:\n74\t\tvar gameplay: Gameplay = _make_gameplay()\n75\t\tassert_object(gameplay.eat_food_audio_player).is_not_null()\n76\t\tassert_object(gameplay.eat_food_audio_player.stream).is_not_null()\n77\t\tassert_str(gameplay.eat_food_audio_player.stream.resource_path).is_equal(\"res://audio/eat_food.wav\")\n78\t\n79\t\n80\tfunc test_food_eaten_plays_eat_food_audio() -> void:\n81\t\tvar gameplay: Gameplay = _make_gameplay()\n82\t\tassert_bool(gameplay.eat_food_audio_player.playing).is_false()\n83\t\tgameplay.snake.food_eaten.emit()\n84\t\tassert_bool(gameplay.eat_food_audio_player.playing).is_true()\n85\t"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "powershell -Command \"Get-ChildItem 'C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\audio' -Filter death*\"",
+  "description": "List death audio files"
+}
+```
+
+### Tool: unknown result
+```json
+"    Directory: C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\audio\r\n\r\n\r\nMode                 LastWriteTime         Length Name                                                                 \r\n----                 -------------         ------ ----                                                                 \r\n-a----         5/20/2026  11:36 PM          19888 death.wav                                                            \r\n-a----         5/20/2026  11:36 PM            479 death.wav.import"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\audio\\death.wav.import"
+}
+```
+
+### Tool: unknown result
+```json
+"1\t[remap]\n2\t\n3\timporter=\"wav\"\n4\ttype=\"AudioStreamWAV\"\n5\tuid=\"uid://btyypjejwlug1\"\n6\tpath=\"res://.godot/imported/death.wav-081f95a37f237b6f3ceb7246d5521f75.sample\"\n7\t\n8\t[deps]\n9\t\n10\tsource_file=\"res://audio/death.wav\"\n11\tdest_files=[\"res://.godot/imported/death.wav-081f95a37f237b6f3ceb7246d5521f75.sample\"]\n12\t\n13\t[params]\n14\t\n15\tforce/8_bit=false\n16\tforce/mono=false\n17\tforce/max_rate=false\n18\tforce/max_rate_hz=44100\n19\tedit/trim=false\n20\tedit/normalize=false\n21\tedit/loop_mode=0\n22\tedit/loop_begin=0\n23\tedit/loop_end=-1\n24\tcompress/mode=2\n25\t"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scenes\\Gameplay.tscn",
+  "old_string": "[gd_scene load_steps=7 format=3]\n\n[ext_resource type=\"Script\" path=\"res://scripts/gameplay.gd\" id=\"1_gameplay\"]\n[ext_resource type=\"PackedScene\" path=\"res://scenes/Arena.tscn\" id=\"2_arena\"]\n[ext_resource type=\"Script\" path=\"res://scripts/snake.gd\" id=\"3_snake\"]\n[ext_resource type=\"Script\" path=\"res://scripts/food.gd\" id=\"4_food\"]\n[ext_resource type=\"PackedScene\" path=\"res://scenes/HUD.tscn\" id=\"5_hud\"]\n[ext_resource type=\"AudioStream\" uid=\"uid://c48m6sgm3s07q\" path=\"res://audio/eat_food.wav\" id=\"6_eat_food\"]",
+  "new_string": "[gd_scene load_steps=8 format=3]\n\n[ext_resource type=\"Script\" path=\"res://scripts/gameplay.gd\" id=\"1_gameplay\"]\n[ext_resource type=\"PackedScene\" path=\"res://scenes/Arena.tscn\" id=\"2_arena\"]\n[ext_resource type=\"Script\" path=\"res://scripts/snake.gd\" id=\"3_snake\"]\n[ext_resource type=\"Script\" path=\"res://scripts/food.gd\" id=\"4_food\"]\n[ext_resource type=\"PackedScene\" path=\"res://scenes/HUD.tscn\" id=\"5_hud\"]\n[ext_resource type=\"AudioStream\" uid=\"uid://c48m6sgm3s07q\" path=\"res://audio/eat_food.wav\" id=\"6_eat_food\"]\n[ext_resource type=\"AudioStream\" uid=\"uid://btyypjejwlug1\" path=\"res://audio/death.wav\" id=\"7_death\"]"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scenes\\Gameplay.tscn has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scenes\\Gameplay.tscn",
+  "old_string": "[node name=\"EatFoodAudioPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"6_eat_food\")",
+  "new_string": "[node name=\"EatFoodAudioPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"6_eat_food\")\n\n[node name=\"DeathAudioPlayer\" type=\"AudioStreamPlayer\" parent=\".\"]\nstream = ExtResource(\"7_death\")"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scenes\\Gameplay.tscn has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\gameplay.gd",
+  "old_string": "@onready var eat_food_audio_player: AudioStreamPlayer = $EatFoodAudioPlayer",
+  "new_string": "@onready var eat_food_audio_player: AudioStreamPlayer = $EatFoodAudioPlayer\n@onready var death_audio_player: AudioStreamPlayer = $DeathAudioPlayer"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\gameplay.gd has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\gameplay.gd",
+  "old_string": "func _on_snake_died() -> void:\n\ttick_timer.stop()\n\tGameState.set_score(score)\n\tdeath_timer.start()",
+  "new_string": "func _on_snake_died() -> void:\n\ttick_timer.stop()\n\tGameState.set_score(score)\n\tdeath_audio_player.play()\n\tdeath_timer.start()"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\gameplay.gd has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\gameplay_test.gd",
+  "old_string": "func test_food_eaten_plays_eat_food_audio() -> void:\n\tvar gameplay: Gameplay = _make_gameplay()\n\tassert_bool(gameplay.eat_food_audio_player.playing).is_false()\n\tgameplay.snake.food_eaten.emit()\n\tassert_bool(gameplay.eat_food_audio_player.playing).is_true()",
+  "new_string": "func test_food_eaten_plays_eat_food_audio() -> void:\n\tvar gameplay: Gameplay = _make_gameplay()\n\tassert_bool(gameplay.eat_food_audio_player.playing).is_false()\n\tgameplay.snake.food_eaten.emit()\n\tassert_bool(gameplay.eat_food_audio_player.playing).is_true()\n\n\nfunc test_death_audio_player_has_death_stream() -> void:\n\tvar gameplay: Gameplay = _make_gameplay()\n\tassert_object(gameplay.death_audio_player).is_not_null()\n\tassert_object(gameplay.death_audio_player.stream).is_not_null()\n\tassert_str(gameplay.death_audio_player.stream.resource_path).is_equal(\"res://audio/death.wav\")\n\n\nfunc test_snake_died_plays_death_audio() -> void:\n\tvar gameplay: Gameplay = _make_gameplay()\n\tassert_bool(gameplay.death_audio_player.playing).is_false()\n\tgameplay.snake.died.emit()\n\tassert_bool(gameplay.death_audio_player.playing).is_true()"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\gameplay_test.gd has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd /c/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/gameplay_test.gd 2>&1 | tail -15",
+  "description": "Run gameplay tests"
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/gameplay_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_snake_died_plays_death_audio\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/gameplay_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_snake_died_plays_death_audio\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 101ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mStatistics:\u001b[0m\u001b[38;2;250;235;215m 13 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 3s 233ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 13 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (13/13)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 3s 233ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_32/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_32/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/ 2>&1 | tail -8",
+  "description": "Run full test suite"
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 109 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (16/16)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (109/109)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 25s 271ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_33/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_33/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: mcp__task-master-ai__set_task_status input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster",
+  "id": "17",
+  "status": "done"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"message\": \"Successfully updated 1 task(s) to \\\"done\\\"\",\n    \"tasks\": [\n      {\n        \"success\": true,\n        \"oldStatus\": \"pending\",\n        \"newStatus\": \"done\",\n        \"taskId\": \"17\"\n      }\n    ]\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd /c/GameDev/SnakeGodotTaskmaster && printf '\\n\\n## Iteration 21 - Task 17: Wire death sound effect\\n- Added [ext_resource] for audio/death.wav (uid btyypjejwlug1) and DeathAudioPlayer (AudioStreamPlayer) under Gameplay scene.\\n- @onready var death_audio_player; call .play() in _on_snake_died() before death_timer.start() — existing 0.5s DeathTimer handles transition delay.\\n- gameplay_test additions: test_death_audio_player_has_death_stream + test_snake_died_plays_death_audio.\\n- gameplay_test 13/13; full suite 109/109 pass.\\n' >> .taskmaster/progress.txt",
+  "description": "Append progress notes"
+}
+```
+
+### Tool: unknown result
+```json
+"(Bash completed with no output)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "git add snaketaskmaster/scenes/Gameplay.tscn snaketaskmaster/scripts/gameplay.gd snaketaskmaster/test/gameplay_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \"$(cat <<'EOF'\nfeat(audio): wire death sound effect on snake died\n\nAdds DeathAudioPlayer (AudioStreamPlayer) to Gameplay.tscn with death.wav, and calls .play() in _on_snake_died() before death_timer.start(). The existing 0.5s DeathTimer continues to gate the GameOver transition. Includes gameplay_test coverage for stream wiring and the playing-state flip on died signal. Suite 109/109.\n\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\nEOF\n)\" 2>&1 | tail -5",
+  "description": "Commit task 17"
+}
+```
+
+### Tool: unknown result
+```json
+"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\n[user/gewan/snake_v5 77a822c] feat(audio): wire death sound effect on snake died\n 5 files changed, 359 insertions(+), 5 deletions(-)"
+```
+
+### Iteration 21 summary
+- Tool calls:
+  - Bash: 6
+  - Read: 5
+  - Edit: 5
+  - ToolSearch: 1
+  - mcp__task-master-ai__next_task: 1
+  - mcp__task-master-ai__set_task_status: 1
+- Tokens:
+  - input: 30
+  - output: 5,078
+  - cache write: 53,013
+  - cache read: 769,737
+  - total: 827,858
+- Final result:
+```text
+Task 17 complete (commit `77a822c`). Added `DeathAudioPlayer` (AudioStreamPlayer with `audio/death.wav`) to `Gameplay.tscn`, wired `.play()` in `_on_snake_died()` ahead of the existing 0.5s `DeathTimer` (which still gates the GameOver transition), and added two regression tests. Full suite 109/109 pass.
+```
+
+---
+
+
+## Iteration 22 - Task 23: HUD unit tests
+- hud_test.gd already had 6 tests (init score/label, update_score, overwrites previous, reset, root is CanvasLayer).
+- Added parameterized test_update_score_formats_label_for_value covering the values listed in task 23 test strategy (0, 1, 10, 999) using gdUnit4 test_parameters block + @warning_ignore("unused_parameter").
+- hud_test 10/10 pass; full suite 113/113 pass.
