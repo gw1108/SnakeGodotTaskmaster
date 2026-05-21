@@ -154,8 +154,9 @@
         "testStrategy": "Unit tests (hud_test.gd): Instantiate HUD, call update_score(5), verify ScoreLabel.text == \"Score: 5\". Call reset(), verify text == \"Score: 0\". Visual: Add HUD to test scene, manually call update_score() with various values, verify label updates.",
         "priority": "medium",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:40:39.727Z"
       },
       {
         "id": "13",
@@ -342,9 +343,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-21T06:37:41.147Z",
+      "lastModified": "2026-05-21T06:40:39.727Z",
       "taskCount": 25,
-      "completedCount": 11,
+      "completedCount": 12,
       "tags": [
         "master"
       ]
