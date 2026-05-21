@@ -182,6 +182,21 @@ The `Web` preset is defined in `snaketaskmaster/export_presets.cfg` and writes t
 
 ---
 
+## Windows Desktop Export
+
+The `Windows Desktop` preset is defined in `snaketaskmaster/export_presets.cfg` and writes to `snaketaskmaster/build/windows/snake.exe`. PCK is embedded (`binary_format/embed_pck=true`), so the export produces a single self-contained `.exe`. `build/` is gitignored and `*.exe` is independently gitignored.
+
+- **Export templates are required** (same caveat as the Web preset). Install via Editor → Manage Export Templates.
+- **The output directory must exist before exporting.** The CLI export errors with "The given export path doesn't exist" if `build/windows/` is missing. Create it first:
+  ```powershell
+  New-Item -ItemType Directory -Force snaketaskmaster\build\windows
+  godot --headless --path snaketaskmaster --export-release "Windows Desktop" "build/windows/snake.exe"
+  ```
+- **A post-export editor-process crash (SIGSEGV) is harmless** in this configuration — the `.exe` is fully written before the crash. Verify `snake.exe` exists and is ~100 MB before assuming the export failed. The bash wrapper reports `EXIT: 0` despite the backtrace.
+- **Manual verification:** double-click `snake.exe` and confirm the title screen appears, controls respond, audio plays, and the full gameplay loop runs to game-over. No Godot install is required to run the embedded build.
+
+---
+
 ## Workflow Orchestration
 
 ### 1. Subagent Strategy (Parallelize Intelligently)
