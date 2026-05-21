@@ -24,6 +24,12 @@
 ### Learnings
 - In Godot 4, the per-texture "Filter Off (Nearest)" pixel-art setting is NOT in the .import file — it's the project-wide `rendering/textures/canvas_textures/default_texture_filter` setting (0=Nearest, 1=Linear default). Per-sprite override is via CanvasItem.texture_filter.
 
+## Iteration 3 - Task 3: Import and configure wall tile sprite
+- Copied source/sprites/wall_tile.png to snaketaskmaster/sprites/wall_tile.png
+- Ran `godot --headless --import` — generated wall_tile.png.import with pixel-art defaults (compress/mode=0, mipmaps/generate=false)
+- Created test/wall_tile_import_test.gd with 3 tests: texture loads, .import params correct, dimensions match floor_tile
+- All tests pass (3/3)
+
 ## Iteration 1
 
 ### LLM input
@@ -459,6 +465,365 @@ Task 1 complete.
 **Summary**: Added the `[input]` section to `snaketaskmaster/project.godot` with all 6 actions (move_up/down/left/right bound to WASD+arrows, start to Enter, restart to R). Added `test/input_map_test.gd` with 7 gdUnit4 tests — all pass headless. Committed as `4a42d22`.
 
 Learning logged in progress.txt: Godot project must be imported (`--import`) before headless gdUnit4 runs, otherwise the `GdUnitTestCIRunner` global class isn't registered.
+```
+
+---
+
+## Iteration 2
+
+### LLM input
+```text
+@.taskmaster/progress.txt @CLAUDE.md
+
+Loop iteration 2 of 25
+
+TASK: Implement ONE task/subtask from the Taskmaster backlog.
+
+PROCESS:
+1. Run task-master next (or use MCP) to get the next available task/subtask.
+2. Read task details with task-master show <id>.
+3. Implement following codebase patterns.
+4. Write tests alongside implementation.
+5. Run type check (e.g., `npm run typecheck`, `tsc --noEmit`).
+6. Run tests (e.g., `npm test`, `npm run test`).
+7. Mark complete: task-master set-status --id=<id> --status=done
+8. Commit with message: feat(<scope>): <what was implemented>
+9. Append super-concise notes to progress file: task ID, what was done. If there was any mistakes or false assumptions, append them into a learning.
+
+IMPORTANT:
+- Complete ONLY ONE task per iteration.
+- Keep changes small and focused.
+- Do NOT start another task after completing one.
+- If all tasks are done, output <loop-complete>ALL_DONE</loop-complete>.
+- If blocked, output <loop-blocked>REASON</loop-blocked>.
+
+```
+
+### Tool: ToolSearch input
+```json
+{
+  "query": "select:mcp__task-master-ai__next_task,mcp__task-master-ai__get_task,mcp__task-master-ai__set_task_status",
+  "max_results": 5
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__next_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__get_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__set_task_status"
+  }
+]
+```
+
+### Tool: mcp__task-master-ai__next_task input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"nextTask\": {\n      \"id\": 2,\n      \"title\": \"Import and configure floor tile sprite\",\n      \"description\": \"Import source/sprites/floor_tile.png with pixel-art import settings (filter off, mipmaps off)\",\n      \"details\": \"1. Create directory structure: res://sprites/\\n2. Copy source/sprites/floor_tile.png to res://sprites/\\n3. Select the imported .png in FileSystem dock\\n4. In Import tab, set:\\n   - Filter: Off (Nearest neighbor)\\n   - Mipmaps: Off\\n   - Compress Mode: Lossless or VRAM Compressed\\n5. Click Reimport\\n6. Verify texture appears crisp at integer scales (2x, 3x, 4x)\",\n      \"testStrategy\": \"Visual verification: Create a test scene with a Sprite2D node, assign floor_tile.png, scale to 2x/3x/4x. Verify no blurring occurs. Check import settings in the Import dock.\",\n      \"priority\": \"high\",\n      \"dependencies\": [],\n      \"status\": \"pending\",\n      \"subtasks\": []\n    },\n    \"isSubtask\": false,\n    \"nextSteps\": \"When ready to work on the task, use set-status to set the status to \\\"in progress\\\" Tasks can be updated to reflect a change in the direction of the task, or to reformulate the task per your prompt. Research can be used when updating the task to collect up-to-date information. It is best to update subtasks as you work on them, and to update the task for more high-level changes that may affect pending subtasks or the general direction of the task.\"\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: mcp__task-master-ai__set_task_status input
+```json
+{
+  "id": "2",
+  "status": "in-progress",
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"message\": \"Successfully updated 1 task(s) to \\\"in-progress\\\"\",\n    \"tasks\": [\n      {\n        \"success\": true,\n        \"oldStatus\": \"pending\",\n        \"newStatus\": \"in-progress\",\n        \"taskId\": \"2\"\n      }\n    ]\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Glob input
+```json
+{
+  "pattern": "source/**/*.png"
+}
+```
+
+### Tool: Glob input
+```json
+{
+  "pattern": "snaketaskmaster/sprites/**"
+}
+```
+
+### Tool: unknown result
+```json
+"source\\sprites\\player_head.png\nsource\\sprites\\player_body.png\nsource\\sprites\\food.png\nsource\\sprites\\floor_tile.png\nsource\\sprites\\wall_tile.png"
+```
+
+### Tool: unknown result
+```json
+"No files found"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "mkdir -p C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/sprites && cp C:/GameDev/SnakeGodotTaskmaster/source/sprites/floor_tile.png C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/sprites/floor_tile.png && ls C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/sprites/",
+  "description": "Create sprites dir and copy floor_tile.png"
+}
+```
+
+### Tool: unknown result
+```json
+"floor_tile.png"
+```
+
+### Tool: Glob input
+```json
+{
+  "pattern": "snaketaskmaster/addons/gdUnit4/src/core/assets/*.import"
+}
+```
+
+### Tool: unknown result
+```json
+"snaketaskmaster\\addons\\gdUnit4\\src\\core\\assets\\touch-button.png.import"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\icon.svg.import"
+}
+```
+
+### Tool: unknown result
+```json
+"1\t[remap]\n2\t\n3\timporter=\"texture\"\n4\ttype=\"CompressedTexture2D\"\n5\tuid=\"uid://bljssruq6apmn\"\n6\tpath=\"res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex\"\n7\tmetadata={\n8\t\"vram_texture\": false\n9\t}\n10\t\n11\t[deps]\n12\t\n13\tsource_file=\"res://icon.svg\"\n14\tdest_files=[\"res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex\"]\n15\t\n16\t[params]\n17\t\n18\tcompress/mode=0\n19\tcompress/high_quality=false\n20\tcompress/lossy_quality=0.7\n21\tcompress/uastc_level=0\n22\tcompress/rdo_quality_loss=0.0\n23\tcompress/hdr_compression=1\n24\tcompress/normal_map=0\n25\tcompress/channel_pack=0\n26\tmipmaps/generate=false\n27\tmipmaps/limit=-1\n28\troughness/mode=0\n29\troughness/src_normal=\"\"\n30\tprocess/channel_remap/red=0\n31\tprocess/channel_remap/green=1\n32\tprocess/channel_remap/blue=2\n33\tprocess/channel_remap/alpha=3\n34\tprocess/fix_alpha_border=true\n35\tprocess/premult_alpha=false\n36\tprocess/normal_map_invert_y=false\n37\tprocess/hdr_as_srgb=false\n38\tprocess/hdr_clamp_exposure=false\n39\tprocess/size_limit=0\n40\tdetect_3d/compress_to=1\n41\tsvg/scale=1.0\n42\teditor/scale_with_editor_scale=false\n43\teditor/convert_colors_with_editor_theme=false\n44\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\addons\\gdUnit4\\src\\core\\assets\\touch-button.png.import"
+}
+```
+
+### Tool: unknown result
+```json
+"1\t[remap]\n2\t\n3\timporter=\"texture\"\n4\ttype=\"CompressedTexture2D\"\n5\tuid=\"uid://c1d32j0uem7lf\"\n6\tpath=\"res://.godot/imported/touch-button.png-2fff40c8520d8e97a57db1b2b043f641.ctex\"\n7\tmetadata={\n8\t\"vram_texture\": false\n9\t}\n10\t\n11\t[deps]\n12\t\n13\tsource_file=\"res://addons/gdUnit4/src/core/assets/touch-button.png\"\n14\tdest_files=[\"res://.godot/imported/touch-button.png-2fff40c8520d8e97a57db1b2b043f641.ctex\"]\n15\t\n16\t[params]\n17\t\n18\tcompress/mode=0\n19\tcompress/high_quality=false\n20\tcompress/lossy_quality=0.7\n21\tcompress/uastc_level=0\n22\tcompress/rdo_quality_loss=0.0\n23\tcompress/hdr_compression=1\n24\tcompress/normal_map=0\n25\tcompress/channel_pack=0\n26\tmipmaps/generate=false\n27\tmipmaps/limit=-1\n28\troughness/mode=0\n29\troughness/src_normal=\"\"\n30\tprocess/channel_remap/red=0\n31\tprocess/channel_remap/green=1\n32\tprocess/channel_remap/blue=2\n33\tprocess/channel_remap/alpha=3\n34\tprocess/fix_alpha_border=true\n35\tprocess/premult_alpha=false\n36\tprocess/normal_map_invert_y=false\n37\tprocess/hdr_as_srgb=false\n38\tprocess/hdr_clamp_exposure=false\n39\tprocess/size_limit=0\n40\tdetect_3d/compress_to=1\n41\t"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . --import 2>&1 | tail -20",
+  "description": "Trigger import to generate .import for floor_tile.png",
+  "timeout": 180000
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[92m[ DONE ]\u001b[39m \u001b[1m_update_scan_actions\u001b[22m\r\n\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mreimport\u001b[22m | Started (Re)Importing Assets (2 steps)\u001b[39m\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mreimport\u001b[22m | Preparing files to reimport...\u001b[39m\u001b[0m\r\n[  33% ] \u001b[90m\u001b[1mreimport\u001b[22m | Preparing files to reimport...\u001b[39m\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mreimport\u001b[22m | Executing pre-reimport operations...\u001b[39m\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mreimport\u001b[22m | logo.png\u001b[39m\u001b[0m\r\n[  33% ] \u001b[90m\u001b[1mreimport\u001b[22m | floor_tile.png\u001b[39m\u001b[0m\r\n[  66% ] \u001b[90m\u001b[1mreimport\u001b[22m | Finalizing Asset Import...\u001b[39m\u001b[0m\r\n\u001b[92m[ DONE ]\u001b[39m \u001b[1mreimport\u001b[22m\r\n\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mreimport\u001b[22m | Started (Re)Importing Assets (2 steps)\u001b[39m\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mreimport\u001b[22m | Executing post-reimport operations...\u001b[39m\u001b[0m\r\n\u001b[92m[ DONE ]\u001b[39m \u001b[1mreimport\u001b[22m\r\n\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | Started Loading editor (5 steps)\u001b[39m\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | Loading editor layout...\u001b[39m\u001b[0m\r\n[  16% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | Loading docks...\u001b[39m\u001b[0m\r\n\u001b[92m[ DONE ]\u001b[39m \u001b[1mloading_editor_layout\u001b[22m\r\n\u001b[0m"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\sprites\\floor_tile.png.import"
+}
+```
+
+### Tool: unknown result
+```json
+"1\t[remap]\n2\t\n3\timporter=\"texture\"\n4\ttype=\"CompressedTexture2D\"\n5\tuid=\"uid://2d5mlahxpggx\"\n6\tpath=\"res://.godot/imported/floor_tile.png-4a2ce42427d32819681edb6ca618136b.ctex\"\n7\tmetadata={\n8\t\"vram_texture\": false\n9\t}\n10\t\n11\t[deps]\n12\t\n13\tsource_file=\"res://sprites/floor_tile.png\"\n14\tdest_files=[\"res://.godot/imported/floor_tile.png-4a2ce42427d32819681edb6ca618136b.ctex\"]\n15\t\n16\t[params]\n17\t\n18\tcompress/mode=0\n19\tcompress/high_quality=false\n20\tcompress/lossy_quality=0.7\n21\tcompress/uastc_level=0\n22\tcompress/rdo_quality_loss=0.0\n23\tcompress/hdr_compression=1\n24\tcompress/normal_map=0\n25\tcompress/channel_pack=0\n26\tmipmaps/generate=false\n27\tmipmaps/limit=-1\n28\troughness/mode=0\n29\troughness/src_normal=\"\"\n30\tprocess/channel_remap/red=0\n31\tprocess/channel_remap/green=1\n32\tprocess/channel_remap/blue=2\n33\tprocess/channel_remap/alpha=3\n34\tprocess/fix_alpha_border=true\n35\tprocess/premult_alpha=false\n36\tprocess/normal_map_invert_y=false\n37\tprocess/hdr_as_srgb=false\n38\tprocess/hdr_clamp_exposure=false\n39\tprocess/size_limit=0\n40\tdetect_3d/compress_to=1\n41\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\project.godot"
+}
+```
+
+### Tool: unknown result
+```json
+"1\t; Engine configuration file.\n2\t; It's best edited using the editor UI and not directly,\n3\t; since the parameters that go here are not all obvious.\n4\t;\n5\t; Format:\n6\t;   [section] ; section goes between []\n7\t;   param=value ; assign values to parameters\n8\t\n9\tconfig_version=5\n10\t\n11\t[application]\n12\t\n13\tconfig/name=\"snaketaskmaster\"\n14\tconfig/version=\"0.1.0\"\n15\trun/main_scene=\"res://Main.tscn\"\n16\tconfig/features=PackedStringArray(\"4.6\", \"GL Compatibility\")\n17\tconfig/icon=\"res://icon.svg\"\n18\t\n19\t[display]\n20\t\n21\twindow/size/viewport_width=640\n22\twindow/size/viewport_height=480\n23\twindow/stretch/mode=\"viewport\"\n24\t\n25\t[editor_plugins]\n26\t\n27\tenabled=PackedStringArray(\"res://addons/gdUnit4/plugin.cfg\")\n28\t\n29\t[input]\n30\t\n31\tmove_up={\n32\t\"deadzone\": 0.5,\n33\t\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":87,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n34\t, Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":4194320,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n35\t]\n36\t}\n37\tmove_down={\n38\t\"deadzone\": 0.5,\n39\t\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":83,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n40\t, Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":4194322,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n41\t]\n42\t}\n43\tmove_left={\n44\t\"deadzone\": 0.5,\n45\t\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":65,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n46\t, Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":4194319,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n47\t]\n48\t}\n49\tmove_right={\n50\t\"deadzone\": 0.5,\n51\t\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":68,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n52\t, Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":4194321,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n53\t]\n54\t}\n55\tstart={\n56\t\"deadzone\": 0.5,\n57\t\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":4194309,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n58\t]\n59\t}\n60\trestart={\n61\t\"deadzone\": 0.5,\n62\t\"events\": [Object(InputEventKey,\"resource_local_to_scene\":false,\"resource_name\":\"\",\"device\":-1,\"window_id\":0,\"alt_pressed\":false,\"shift_pressed\":false,\"ctrl_pressed\":false,\"meta_pressed\":false,\"pressed\":false,\"keycode\":82,\"physical_keycode\":0,\"key_label\":0,\"unicode\":0,\"location\":0,\"echo\":false,\"script\":null)\n63\t]\n64\t}\n65\t\n66\t[physics]\n67\t\n68\t3d/physics_engine=\"Jolt Physics\"\n69\t\n70\t[rendering]\n71\t\n72\trendering_device/driver.windows=\"d3d12\"\n73\trenderer/rendering_method=\"gl_compatibility\"\n74\trenderer/rendering_method.mobile=\"gl_compatibility\"\n75\t2d/snap/snap_2d_transforms_to_pixel=true\n76\t2d/snap/snap_2d_vertices_to_pixel=true\n77\t"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\project.godot",
+  "old_string": "2d/snap/snap_2d_transforms_to_pixel=true\n2d/snap/snap_2d_vertices_to_pixel=true",
+  "new_string": "2d/snap/snap_2d_transforms_to_pixel=true\n2d/snap/snap_2d_vertices_to_pixel=true\ntextures/canvas_textures/default_texture_filter=0"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\project.godot has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Write input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\floor_tile_import_test.gd",
+  "content": "extends GdUnitTestSuite\n\nconst FLOOR_TILE_PATH := \"res://sprites/floor_tile.png\"\nconst FLOOR_TILE_IMPORT_PATH := \"res://sprites/floor_tile.png.import\"\n\nfunc test_floor_tile_texture_loads() -> void:\n\tvar tex := load(FLOOR_TILE_PATH) as Texture2D\n\tassert_object(tex).is_not_null()\n\tassert_int(tex.get_width()).is_greater(0)\n\tassert_int(tex.get_height()).is_greater(0)\n\nfunc test_floor_tile_import_uses_pixel_art_settings() -> void:\n\tvar cfg := ConfigFile.new()\n\tvar err := cfg.load(FLOOR_TILE_IMPORT_PATH)\n\tassert_int(err).is_equal(OK)\n\t# Lossless compression (0) keeps pixel art crisp.\n\tassert_that(cfg.get_value(\"params\", \"compress/mode\")).is_equal(0)\n\t# Mipmaps off — pixel art renders at integer scales without filtering.\n\tassert_that(cfg.get_value(\"params\", \"mipmaps/generate\")).is_equal(false)\n\nfunc test_project_default_texture_filter_is_nearest() -> void:\n\t# 0 = Nearest neighbor (pixel art); see ProjectSettings docs.\n\tvar filter: int = ProjectSettings.get_setting(\n\t\t\"rendering/textures/canvas_textures/default_texture_filter\", -1)\n\tassert_int(filter).is_equal(0)\n"
+}
+```
+
+### Tool: unknown result
+```json
+"File created successfully at: C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\floor_tile_import_test.gd (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/floor_tile_import_test.gd 2>&1 | tail -60",
+  "description": "Run floor tile import tests headless",
+  "timeout": 120000
+}
+```
+
+### Tool: unknown result
+```json
+"Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org\r\n\r\n\u001b[2J\u001b[H\u001b[38;2;233;150;122m\r\n--------------------------------------------------------------------------------------------------\r\nGdUnit4 Comandline Tool\r\n--------------------------------------------------------------------------------------------------\u001b[0m\r\n\u001b[38;2;218;165;32m\r\nHeadless mode is ignored by option '--ignoreHeadlessMode'\"\r\n\r\nPlease note that tests that use UI interaction do not work correctly in headless mode.\r\nGodot 'InputEvents' are not transported by the Godot engine in headless mode and therefore\r\nhave no effect in the test!\r\n\u001b[0m\r\n\u001b[38;2;100;149;237mInstalling GdUnit4 session system hooks.\u001b[0m\r\n\u001b[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.\u001b[0m\r\n\u001b[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.\u001b[0m\r\n\u001b[38;2;0;206;209mRun Test Suite: \u001b[0m\u001b[38;2;250;235;215mres://test/floor_tile_import_test.gd\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/floor_tile_import_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_floor_tile_texture_loads\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/floor_tile_import_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_floor_tile_texture_loads\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 109ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/floor_tile_import_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_floor_tile_import_uses_pixel_art_settings\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/floor_tile_import_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_floor_tile_import_uses_pixel_art_settings\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 78ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/floor_tile_import_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_project_default_texture_filter_is_nearest\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/floor_tile_import_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_project_default_texture_filter_is_nearest\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 78ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mStatistics:\u001b[0m\u001b[38;2;250;235;215m 3 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 636ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 3 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (3/3)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 636ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_2/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_2/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: mcp__task-master-ai__set_task_status input
+```json
+{
+  "id": "2",
+  "status": "done",
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"message\": \"Successfully updated 1 task(s) to \\\"done\\\"\",\n    \"tasks\": [\n      {\n        \"success\": true,\n        \"oldStatus\": \"in-progress\",\n        \"newStatus\": \"done\",\n        \"taskId\": \"2\"\n      }\n    ]\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt",
+  "old_string": "## Iteration 1 - Task 1: Configure project input map\n- Added [input] section to snaketaskmaster/project.godot with 6 actions: move_up/down/left/right (WASD+arrows), start (Enter), restart (R)\n- Created test/input_map_test.gd with 7 tests verifying action presence and key bindings\n- All tests pass (headless gdUnit4 run)\n\n### Learnings\n- Godot project must be imported (`godot --headless --path . --import`) before running gdUnit4 headless, otherwise GdUnitTestCIRunner global class is not registered and the cmd tool fails to parse.",
+  "new_string": "## Iteration 1 - Task 1: Configure project input map\n- Added [input] section to snaketaskmaster/project.godot with 6 actions: move_up/down/left/right (WASD+arrows), start (Enter), restart (R)\n- Created test/input_map_test.gd with 7 tests verifying action presence and key bindings\n- All tests pass (headless gdUnit4 run)\n\n### Learnings\n- Godot project must be imported (`godot --headless --path . --import`) before running gdUnit4 headless, otherwise GdUnitTestCIRunner global class is not registered and the cmd tool fails to parse.\n\n## Iteration 2 - Task 2: Import and configure floor tile sprite\n- Copied source/sprites/floor_tile.png to snaketaskmaster/sprites/floor_tile.png\n- Ran `godot --headless --import` to generate floor_tile.png.import (defaults already: compress/mode=0 Lossless, mipmaps/generate=false)\n- Added project setting `rendering/textures/canvas_textures/default_texture_filter=0` (Nearest) for pixel-art rendering\n- Created test/floor_tile_import_test.gd with 3 tests: texture loads, .import params correct, project filter is Nearest\n- All tests pass\n\n### Learnings\n- In Godot 4, the per-texture \"Filter Off (Nearest)\" pixel-art setting is NOT in the .import file — it's the project-wide `rendering/textures/canvas_textures/default_texture_filter` setting (0=Nearest, 1=Linear default). Per-sprite override is via CanvasItem.texture_filter."
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster && git add .taskmaster/tasks/tasks.json snaketaskmaster/project.godot snaketaskmaster/sprites/floor_tile.png snaketaskmaster/sprites/floor_tile.png.import snaketaskmaster/test/floor_tile_import_test.gd snaketaskmaster/test/floor_tile_import_test.gd.uid && git commit -m \"$(cat <<'EOF'\nfeat(sprites): import floor_tile.png with pixel-art settings\n\nCopy source/sprites/floor_tile.png into res://sprites/. Godot defaults\nthe .import file to lossless compression + mipmaps off, which is what\nwe want. Add project-wide default_texture_filter=0 (Nearest) so pixel\nart renders crisp at integer scales. Add regression test covering\ntexture load, .import params, and the project filter setting.\n\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\nEOF\n)\"",
+  "description": "Commit floor tile import changes"
+}
+```
+
+### Tool: unknown result
+```json
+"Exit code 128\nfatal: pathspec 'snaketaskmaster/test/floor_tile_import_test.gd.uid' did not match any files"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "ls C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/test/",
+  "description": "Check whether .uid was generated"
+}
+```
+
+### Tool: unknown result
+```json
+"floor_tile_import_test.gd\ninput_map_test.gd\ninput_map_test.gd.uid\nverify_gdunit4_works_test.gd\nverify_gdunit4_works_test.gd.uid"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . --import 2>&1 | tail -5 && ls test/floor_tile_import_test.gd.uid 2>&1",
+  "description": "Re-import to generate .uid for new test file",
+  "timeout": 180000
+}
+```
+
+### Tool: unknown result
+```json
+"[   0% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | Started Loading editor (5 steps)\u001b[39m\u001b[0m\r\n[   0% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | Loading editor layout...\u001b[39m\u001b[0m\r\n[  16% ] \u001b[90m\u001b[1mloading_editor_layout\u001b[22m | Loading docks...\u001b[39m\u001b[0m\r\n\u001b[92m[ DONE ]\u001b[39m \u001b[1mloading_editor_layout\u001b[22m\r\n\u001b[0m\r\ntest/floor_tile_import_test.gd.uid"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster && git add .taskmaster/progress.txt .taskmaster/tasks/tasks.json snaketaskmaster/project.godot snaketaskmaster/sprites/floor_tile.png snaketaskmaster/sprites/floor_tile.png.import snaketaskmaster/test/floor_tile_import_test.gd snaketaskmaster/test/floor_tile_import_test.gd.uid && git commit -m \"$(cat <<'EOF'\nfeat(sprites): import floor_tile.png with pixel-art settings\n\nCopy source/sprites/floor_tile.png into res://sprites/. Godot defaults\nthe .import file to lossless compression + mipmaps off. Add project-\nwide default_texture_filter=0 (Nearest) so pixel art renders crisp at\ninteger scales. Add regression test covering texture load, .import\nparams, and the project filter setting.\n\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\nEOF\n)\"",
+  "description": "Commit floor tile sprite import"
+}
+```
+
+### Tool: unknown result
+```json
+"warning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\n[user/gewan/snake_v5 69f1363] feat(sprites): import floor_tile.png with pixel-art settings\n 7 files changed, 539 insertions(+), 4 deletions(-)\n create mode 100644 .taskmaster/progress.txt\n create mode 100644 snaketaskmaster/sprites/floor_tile.png\n create mode 100644 snaketaskmaster/sprites/floor_tile.png.import\n create mode 100644 snaketaskmaster/test/floor_tile_import_test.gd\n create mode 100644 snaketaskmaster/test/floor_tile_import_test.gd.uid"
+```
+
+### Iteration 2 summary
+- Tool calls:
+  - Bash: 7
+  - Read: 4
+  - Glob: 3
+  - mcp__task-master-ai__set_task_status: 2
+  - Edit: 2
+  - ToolSearch: 1
+  - mcp__task-master-ai__next_task: 1
+  - Write: 1
+- Tokens:
+  - input: 32
+  - output: 6,785
+  - cache write: 96,515
+  - cache read: 1,199,028
+  - total: 1,302,360
+- Final result:
+```text
+Task 2 complete.
+
+**Summary**: Copied `source/sprites/floor_tile.png` to `snaketaskmaster/sprites/`. Godot's default `.import` already produces pixel-art-friendly settings (`compress/mode=0` lossless, `mipmaps/generate=false`). Added `rendering/textures/canvas_textures/default_texture_filter=0` (Nearest) to `project.godot` so pixel art renders crisp at integer scales. Added `test/floor_tile_import_test.gd` (3 tests, all pass headless). Committed as `69f1363`.
+
+Learning logged: in Godot 4 the "Filter Off" pixel-art setting is project-wide (`rendering/textures/canvas_textures/default_texture_filter`), not per-texture in the `.import` file.
 ```
 
 ---
