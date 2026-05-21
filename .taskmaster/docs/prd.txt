@@ -1,0 +1,158 @@
+# Snake — Product Requirements Document
+
+## 1. Overview
+
+A simple 2D top-down Snake game built in Godot 4. The player steers a
+growing snake around a bordered arena, eating food to extend its length.
+Colliding with the perimeter wall or the snake's own body ends the run.
+Single player, keyboard only, constant move speed.
+
+## 2. Target Platform
+
+- Engine: Godot 4 (project already initialized at `snaketaskmaster/`).
+- Build targets: Desktop (Windows primary) and HTML5 web export.
+- Input: Keyboard only (Arrow keys + WASD).
+
+## 3. Core Gameplay
+
+- Top-down 2D view on a fixed grid.
+- The snake occupies whole grid cells and moves one cell per tick at a
+  constant tick rate (no speed-up as it grows).
+- The snake's head continuously moves in the current heading. The player
+  changes heading with Arrow keys or WASD (absolute directions: Up, Down,
+  Left, Right).
+- The snake cannot immediately reverse into itself (a direction input
+  opposite to current heading is ignored).
+- One food item exists on the board at any time, spawned in a random
+  empty cell (not on snake, not on wall).
+- Eating food: snake grows by one segment, score increases by 1, and a
+  new food item spawns.
+- Death conditions:
+  - Head enters a perimeter wall cell.
+  - Head enters any cell occupied by the snake's body.
+- On death, the game transitions to the Game Over screen.
+
+## 4. Play Field
+
+- Rectangular grid arena (suggested 20 wide x 15 tall cells; tune in
+  tuning pass).
+- Perimeter is a single ring of wall tiles. Interior is floor tiles.
+- No internal maze walls in v1.
+
+## 5. Game Flow
+
+1. **Title screen** — Game name, "Press Enter / Click to Start" prompt.
+2. **Gameplay** — HUD shows the current score (food eaten). Snake starts
+   at a fixed position with a starting length of 3 segments, heading right.
+3. **Game Over screen** — Shows final score and a "Press R to Restart"
+   prompt that returns to gameplay (skips title).
+
+## 6. Audio
+
+- Play `eat_food.wav` when the snake eats a food item.
+- Play `death.wav` when the snake dies (before transitioning to Game Over).
+
+## 7. Visual Assets (already provided)
+
+Located under `source/sprites/`:
+
+- `player_head.png` — Snake head sprite.
+- `player_body.png` — Snake body segment sprite.
+- `food.png` — Food item sprite.
+- `floor_tile.png` — Interior floor tile.
+- `wall_tile.png` — Perimeter wall tile.
+
+Located under `source/audio/`:
+
+- `eat_food.wav` — Food eaten SFX.
+- `death.wav` — Death SFX.
+
+---
+
+## 8. Features / Tasks
+
+Each task is tagged [art], [code], or [audio]. Tasks requiring more than
+one discipline are split so each entry carries a single tag.
+
+### Project setup
+
+- **[code] Configure project input map.** Add input actions
+  `move_up`, `move_down`, `move_left`, `move_right` (mapped to
+  Arrow keys + WASD), `start` (Enter), and `restart` (R).
+
+### Play field
+
+- **[art] Import and configure floor tile.** Import
+  `source/sprites/floor_tile.png` as the interior tile asset (set up
+  import flags: filter off for pixel art, mipmaps off).
+- **[art] Import and configure wall tile.** Import
+  `source/sprites/wall_tile.png` as the perimeter wall asset with the
+  same pixel-art import settings.
+- **[code] Implement Arena scene.** Build a grid-based arena scene that
+  renders the floor across the interior and a single-cell-thick wall
+  border around the perimeter using the imported tiles. Expose grid
+  width/height as export vars.
+
+### Snake
+
+- **[art] Import snake head sprite.** Import
+  `source/sprites/player_head.png` with pixel-art import settings.
+- **[art] Import snake body sprite.** Import
+  `source/sprites/player_body.png` with pixel-art import settings.
+- **[code] Implement Snake logic.** Snake represented as an ordered list
+  of grid cells with a current heading. On each game tick:
+  1. Read latest queued direction input (reject opposite of current
+     heading).
+  2. Compute new head cell.
+  3. If new head is wall or body: trigger death.
+  4. If new head is food: grow (don't drop tail), emit `food_eaten`
+     signal.
+  5. Otherwise: advance (drop tail).
+  Starting state: length 3, heading right, near arena center.
+- **[code] Render snake using head + body sprites.** Draw the first cell
+  with `player_head.png` (rotated to match heading) and remaining cells
+  with `player_body.png`.
+
+### Food
+
+- **[art] Import food sprite.** Import `source/sprites/food.png` with
+  pixel-art import settings.
+- **[code] Implement food spawning.** On game start and after each food
+  eaten, spawn a single food item in a uniformly random empty cell
+  (not occupied by snake or wall). Render using `food.png`.
+
+### HUD
+
+- **[code] Implement in-game HUD.** Display current score (count of food
+  eaten this run) in a corner of the screen. Updates on `food_eaten`.
+
+### Game flow
+
+- **[code] Implement Title screen.** Scene with the game title and a
+  "Press Enter to Start" prompt. Transitions to the Gameplay scene on
+  the `start` action.
+- **[code] Implement Game Over screen.** Scene shown after death, with
+  final score and a "Press R to Restart" prompt. The `restart` action
+  transitions back to a fresh Gameplay scene (not the Title screen).
+- **[code] Implement scene transitions.** Title -> Gameplay -> Game Over
+  -> Gameplay loop. Reset all gameplay state on each new Gameplay scene.
+
+### Audio
+
+- **[audio] Wire eat-food SFX.** Play `source/audio/eat_food.wav` when
+  the snake eats food (hook to the `food_eaten` signal).
+- **[audio] Wire death SFX.** Play `source/audio/death.wav` when the
+  snake dies, before the Game Over scene transition.
+
+---
+
+## 9. Out of Scope (v1)
+
+- Multiplayer / second snake.
+- Persisted high score / save data.
+- Internal maze walls or multiple levels.
+- Speed scaling with length.
+- Turn-relative controls.
+- Mobile / touch / gamepad input.
+- Music (only SFX in v1).
+- Settings / options menu.

@@ -16,15 +16,15 @@ run/main_scene="res://scenes/TitleScreen.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameState="*res://scripts/game_state.gd"
+
 [display]
 
 window/size/viewport_width=640
 window/size/viewport_height=480
 window/stretch/mode="viewport"
-
-[autoload]
-
-GameState="*res://scripts/game_state.gd"
 
 [editor_plugins]
 
@@ -73,9 +73,9 @@ restart={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
-textures/canvas_textures/default_texture_filter=0
