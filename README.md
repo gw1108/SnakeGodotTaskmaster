@@ -18,7 +18,7 @@ Run in snaketaskmaster folder (godot project folder)
 ```
 godot --headless --path . --import
 ```
-Set the default canvas texture filter? Something like default_texture_filter.
+Set the default canvas texture filter? Something like default_texture_filter. For pixel art: Filter Off project wide setting.
 
 ### MCPs
 
