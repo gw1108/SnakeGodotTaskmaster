@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "claude-godot-tools": {
+      "source": {
+        "source": "github",
+        "repo": "minami110/claude-godot-tools"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "gdscript-lsp@claude-godot-tools": true
+  }
+}
