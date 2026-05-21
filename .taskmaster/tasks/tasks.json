@@ -57,8 +57,9 @@
         "testStrategy": "Visual: Place multiple Sprite2D nodes with player_body.png in a line to simulate snake body. Verify consistent appearance and pixel clarity.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:21:43.377Z"
       },
       {
         "id": "6",
@@ -335,9 +336,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-21T06:20:10.255Z",
+      "lastModified": "2026-05-21T06:21:43.378Z",
       "taskCount": 25,
-      "completedCount": 4,
+      "completedCount": 5,
       "tags": [
         "master"
       ]
