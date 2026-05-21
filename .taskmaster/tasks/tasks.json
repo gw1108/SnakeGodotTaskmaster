@@ -21,8 +21,9 @@
         "testStrategy": "Visual verification: Create a test scene with a Sprite2D node, assign floor_tile.png, scale to 2x/3x/4x. Verify no blurring occurs. Check import settings in the Import dock.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:16:32.598Z"
       },
       {
         "id": "3",
@@ -332,9 +333,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-21T06:14:30.406Z",
+      "lastModified": "2026-05-21T06:16:32.598Z",
       "taskCount": 25,
-      "completedCount": 1,
+      "completedCount": 2,
       "tags": [
         "master"
       ]
