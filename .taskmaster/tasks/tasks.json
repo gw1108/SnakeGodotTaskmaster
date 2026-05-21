@@ -81,8 +81,9 @@
         "testStrategy": "Create test scene with AudioStreamPlayer, assign each .wav, call play() in _ready(). Verify both sounds play correctly without distortion or looping.",
         "priority": "medium",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:37:41.146Z"
       },
       {
         "id": "8",
@@ -341,9 +342,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-21T06:34:47.406Z",
+      "lastModified": "2026-05-21T06:37:41.147Z",
       "taskCount": 25,
-      "completedCount": 10,
+      "completedCount": 11,
       "tags": [
         "master"
       ]
