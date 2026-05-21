@@ -7668,3 +7668,264 @@ Task 17 complete (commit `77a822c`). Added `DeathAudioPlayer` (AudioStreamPlayer
 - hud_test.gd already had 6 tests (init score/label, update_score, overwrites previous, reset, root is CanvasLayer).
 - Added parameterized test_update_score_formats_label_for_value covering the values listed in task 23 test strategy (0, 1, 10, 999) using gdUnit4 test_parameters block + @warning_ignore("unused_parameter").
 - hud_test 10/10 pass; full suite 113/113 pass.
+
+## Iteration 22
+
+### LLM input
+```text
+@.taskmaster/progress.txt @CLAUDE.md
+
+Loop iteration 22 of 25
+
+TASK: Implement ONE task/subtask from the Taskmaster backlog.
+
+PROCESS:
+1. Run task-master next (or use MCP) to get the next available task/subtask.
+2. Read task details with task-master show <id>.
+3. Implement following codebase patterns.
+4. Write tests alongside implementation.
+5. Run type check (e.g., `npm run typecheck`, `tsc --noEmit`).
+6. Run tests (e.g., `npm test`, `npm run test`).
+7. Mark complete: task-master set-status --id=<id> --status=done
+8. Commit with message: feat(<scope>): <what was implemented>
+9. Append super-concise notes to progress file: task ID, what was done. If there was any mistakes or false assumptions, append them into a learning.
+
+IMPORTANT:
+- Complete ONLY ONE task per iteration.
+- Keep changes small and focused.
+- Do NOT start another task after completing one.
+- If all tasks are done, output <loop-complete>ALL_DONE</loop-complete>.
+- If blocked, output <loop-blocked>REASON</loop-blocked>.
+
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt"
+}
+```
+
+### Tool: unknown result
+```json
+"File content (864KB) exceeds maximum allowed size (256KB). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file."
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "powershell -c \"Get-Content C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt -Tail 100\"",
+  "description": "Read last 100 lines of progress file"
+}
+```
+
+### Tool: unknown result
+```json
+"  \"new_string\": \"func test_food_eaten_plays_eat_food_audio() -> void:\\n\\tvar gameplay: Gameplay = _make_gameplay()\\n\\tassert_bool(gameplay.eat_food_audio_player.playing).is_false()\\n\\tgameplay.snake.food_eaten.emit()\\n\\tassert_bool(gameplay.eat_food_audio_player.playing).is_true()\\n\\n\\nfunc test_death_audio_player_has_death_stream() -> void:\\n\\tvar gameplay: Gameplay = _make_gameplay()\\n\\tassert_object(gameplay.death_audio_player).is_not_null()\\n\\tassert_object(gameplay.death_audio_player.stream).is_not_null()\\n\\tassert_str(gameplay.death_audio_player.stream.resource_path).is_equal(\\\"res://audio/death.wav\\\")\\n\\n\\nfunc test_snake_died_plays_death_audio() -> void:\\n\\tvar gameplay: Gameplay = _make_gameplay()\\n\\tassert_bool(gameplay.death_audio_player.playing).is_false()\\n\\tgameplay.snake.died.emit()\\n\\tassert_bool(gameplay.death_audio_player.playing).is_true()\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"The file C:\\\\GameDev\\\\SnakeGodotTaskmaster\\\\snaketaskmaster\\\\test\\\\gameplay_test.gd has been updated successfully. (file state is current in your context �?\" no need to Read it back)\"\r\n```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"cd /c/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/gameplay_test.gd 2>&1 | tail -15\",\r\n  \"description\": \"Run gameplay tests\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n  \\u001b[38;2;250;235;215mres://test/gameplay_test.gd\\u001b[0m\\u001b[38;2;250;235;215m > \\u001b[0m\\u001b[38;2;250;235;215mtest_snake_died_plays_death_audio\\u001b[0m\\u001b[38;2;34;139;34m STARTED\\u001b[0m\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n  \\u001b[38;2;250;235;215mres://test/gameplay_test.gd\\u001b[0m\\u001b[38;2;250;235;215m > \\u001b[0m\\u001b[38;2;250;235;215mtest_snake_died_plays_death_audio\\u001b[0m\\u001b[38;2;34;139;34m PASSED\\u001b[0m\\u001b[38;2;100;149;237m 101ms\\u001b[0m\\r\\n\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n\\u001b[38;2;30;144;255mStatistics:\\u001b[0m\\u001b[38;2;250;235;215m 13 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\\u001b[0m\\u001b[38;2;34;139;34m PASSED\\u001b[0m\\u001b[38;2;100;149;237m 3s 233ms\\u001b[0m\\r\\n\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n\\u001b[38;2;250;235;215m\\u001b[0m\\r\\n\\u001b[38;2;30;144;255mOverall Summary:\\u001b[0m\\u001b[38;2;255;255;255m 13 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test suites: (1/1)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test cases : (13/13)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mTotal execution time: 3s 233ms\\u001b[0m\\r\\n\\u001b[38;2;255;255;255m \\u001b[0m\\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_32/results.xml\\u001b[0m\\r\\n\\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_32/index.html\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExit code: 0\\u001b[0m\\r\\nFinallize .. done\"\r\n```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/ 2>&1 | tail -8\",\r\n  \"description\": \"Run full test suite\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"\\u001b[38;2;30;144;255mOverall Summary:\\u001b[0m\\u001b[38;2;255;255;255m 109 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test suites: (16/16)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExecuted test cases : (109/109)\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mTotal execution time: 25s 271ms\\u001b[0m\\r\\n\\u001b[38;2;255;255;255m \\u001b[0m\\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_33/results.xml\\u001b[0m\\r\\n\\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_33/index.html\\u001b[0m\\r\\n\\u001b[38;2;233;150;122mExit code: 0\\u001b[0m\\r\\nFinallize .. done\"\r\n```\r\n\r\n### Tool: mcp__task-master-ai__set_task_status input\r\n```json\r\n{\r\n  \"projectRoot\": \"C:\\\\GameDev\\\\SnakeGodotTaskmaster\",\r\n  \"id\": \"17\",\r\n  \"status\": \"done\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n[\r\n  {\r\n    \"type\": \"text\",\r\n    \"text\": \"{\\n  \\\"data\\\": {\\n    \\\"message\\\": \\\"Successfully updated 1 task(s) to \\\\\\\"done\\\\\\\"\\\",\\n    \\\"tasks\\\": [\\n      {\\n        \\\"success\\\": true,\\n        \\\"oldStatus\\\": \\\"pending\\\",\\n        \\\"newStatus\\\": \\\"done\\\",\\n        \\\"taskId\\\": \\\"17\\\"\\n      }\\n    ]\\n  },\\n  \\\"version\\\": {\\n    \\\"version\\\": \\\"1.0.0-rc.2\\\",\\n    \\\"name\\\": \\\"task-master-ai\\\"\\n  },\\n  \\\"tag\\\": \\\"master\\\"\\n}\"\r\n  }\r\n]\r\n```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"cd /c/GameDev/SnakeGodotTaskmaster && printf '\\\\n\\\\n## Iteration 21 - Task 17: Wire death sound effect\\\\n- Added [ext_resource] for audio/death.wav (uid btyypjejwlug1) and DeathAudioPlayer (AudioStreamPlayer) under Gameplay scene.\\\\n- @onready var death_audio_player; call .play() in _on_snake_died() before death_timer.start() �?\" existing 0.5s DeathTimer handles transition delay.\\\\n- gameplay_test additions: test_death_audio_player_has_death_stream + test_snake_died_plays_death_audio.\\\\n- gameplay_test 13/13; full suite 109/109 pass.\\\\n' >> .taskmaster/progress.txt\",\r\n  \"description\": \"Append progress notes\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"(Bash completed with no output)\"\r\n```\r\n\r\n### Tool: Bash input\r\n```json\r\n{\r\n  \"command\": \"git add snaketaskmaster/scenes/Gameplay.tscn snaketaskmaster/scripts/gameplay.gd snaketaskmaster/test/gameplay_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \\\"$(cat <<'EOF'\\nfeat(audio): wire death sound effect on snake died\\n\\nAdds DeathAudioPlayer (AudioStreamPlayer) to Gameplay.tscn with death.wav, and calls .play() in _on_snake_died() before death_timer.start(). The existing 0.5s DeathTimer continues to gate the GameOver transition. Includes gameplay_test coverage for stream wiring and the playing-state flip on died signal. Suite 109/109.\\n\\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\\nEOF\\n)\\\" 2>&1 | tail -5\",\r\n  \"description\": \"Commit task 17\"\r\n}\r\n```\r\n\r\n### Tool: unknown result\r\n```json\r\n\"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\\n[user/gewan/snake_v5 77a822c] feat(audio): wire death sound effect on snake died\\n 5 files changed, 359 insertions(+), 5 deletions(-)\"\r\n```\r\n\r\n### Iteration 21 summary\r\n- Tool calls:\r\n  - Bash: 6\r\n  - Read: 5\r\n  - Edit: 5\r\n  - ToolSearch: 1\r\n  - mcp__task-master-ai__next_task: 1\r\n  - mcp__task-master-ai__set_task_status: 1\r\n- Tokens:\r\n  - input: 30\r\n  - output: 5,078\r\n  - cache write: 53,013\r\n  - cache read: 769,737\r\n  - total: 827,858\r\n- Final result:\r\n```text\r\nTask 17 complete (commit `77a822c`). Added `DeathAudioPlayer` (AudioStreamPlayer with `audio/death.wav`) to `Gameplay.tscn`, wired `.play()` in `_on_snake_died()` ahead of the existing 0.5s `DeathTimer` (which still gates the GameOver transition), and added two regression tests. Full suite 109/109 pass.\r\n```\r\n\r\n---"
+```
+
+### Tool: ToolSearch input
+```json
+{
+  "query": "select:mcp__task-master-ai__next_task,mcp__task-master-ai__get_task,mcp__task-master-ai__set_task_status",
+  "max_results": 5
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__next_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__get_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__set_task_status"
+  }
+]
+```
+
+### Tool: mcp__task-master-ai__next_task input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"nextTask\": {\n      \"id\": 23,\n      \"title\": \"Write unit tests for HUD\",\n      \"description\": \"Create test/hud_test.gd covering score display updates and reset\",\n      \"details\": \"1. Create res://test/hud_test.gd extending GdUnitTestSuite\\n2. Test cases:\\n   - test_hud_initializes_with_score_zero()\\n   - test_update_score_changes_label_text()\\n   - test_reset_sets_score_to_zero()\\n3. Instantiate HUD with auto_free()\\n4. Access $ScoreLabel node and assert text content\\n5. Use assert_str() for text assertions\\n6. Run with gdUnit4 CLI\",\n      \"testStrategy\": \"Run test suite, verify label text updates correctly when update_score() is called with various values (0, 1, 10, 999). Verify reset() restores \\\"Score: 0\\\".\",\n      \"priority\": \"low\",\n      \"dependencies\": [\n        \"12\"\n      ],\n      \"status\": \"pending\",\n      \"subtasks\": []\n    },\n    \"isSubtask\": false,\n    \"nextSteps\": \"When ready to work on the task, use set-status to set the status to \\\"in progress\\\" Tasks can be updated to reflect a change in the direction of the task, or to reformulate the task per your prompt. Research can be used when updating the task to collect up-to-date information. It is best to update subtasks as you work on them, and to update the task for more high-level changes that may affect pending subtasks or the general direction of the task.\"\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "ls C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/test/",
+  "description": "List test directory"
+}
+```
+
+### Tool: unknown result
+```json
+"arena_test.gd\narena_test.gd.uid\naudio_import_test.gd\naudio_import_test.gd.uid\nfloor_tile_import_test.gd\nfloor_tile_import_test.gd.uid\nfood_import_test.gd\nfood_import_test.gd.uid\nfood_test.gd\nfood_test.gd.uid\ngame_over_test.gd\ngame_over_test.gd.uid\ngame_state_test.gd\ngame_state_test.gd.uid\ngameplay_test.gd\ngameplay_test.gd.uid\nhud_test.gd\nhud_test.gd.uid\ninput_map_test.gd\ninput_map_test.gd.uid\nplayer_body_import_test.gd\nplayer_body_import_test.gd.uid\nplayer_head_import_test.gd\nplayer_head_import_test.gd.uid\nsnake_test.gd\nsnake_test.gd.uid\ntitle_screen_test.gd\ntitle_screen_test.gd.uid\nverify_gdunit4_works_test.gd\nverify_gdunit4_works_test.gd.uid\nwall_tile_import_test.gd\nwall_tile_import_test.gd.uid"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\hud_test.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\textends GdUnitTestSuite\n2\t\n3\tconst HUD_SCENE_PATH := \"res://scenes/HUD.tscn\"\n4\t\n5\t\n6\tfunc _make_hud() -> HUD:\n7\t\tvar hud: HUD = auto_free(load(HUD_SCENE_PATH).instantiate())\n8\t\tadd_child(hud)\n9\t\treturn hud\n10\t\n11\t\n12\tfunc test_initial_score_is_zero() -> void:\n13\t\tvar hud: HUD = _make_hud()\n14\t\tassert_int(hud.score).is_equal(0)\n15\t\n16\t\n17\tfunc test_initial_label_shows_zero() -> void:\n18\t\tvar hud: HUD = _make_hud()\n19\t\tvar label: Label = hud.get_node(\"ScoreLabel\")\n20\t\tassert_str(label.text).is_equal(\"Score: 0\")\n21\t\n22\t\n23\tfunc test_update_score_sets_score_and_label() -> void:\n24\t\tvar hud: HUD = _make_hud()\n25\t\thud.update_score(5)\n26\t\tvar label: Label = hud.get_node(\"ScoreLabel\")\n27\t\tassert_int(hud.score).is_equal(5)\n28\t\tassert_str(label.text).is_equal(\"Score: 5\")\n29\t\n30\t\n31\tfunc test_update_score_overwrites_previous_value() -> void:\n32\t\tvar hud: HUD = _make_hud()\n33\t\thud.update_score(3)\n34\t\thud.update_score(42)\n35\t\tvar label: Label = hud.get_node(\"ScoreLabel\")\n36\t\tassert_int(hud.score).is_equal(42)\n37\t\tassert_str(label.text).is_equal(\"Score: 42\")\n38\t\n39\t\n40\tfunc test_reset_returns_score_to_zero() -> void:\n41\t\tvar hud: HUD = _make_hud()\n42\t\thud.update_score(17)\n43\t\thud.reset()\n44\t\tvar label: Label = hud.get_node(\"ScoreLabel\")\n45\t\tassert_int(hud.score).is_equal(0)\n46\t\tassert_str(label.text).is_equal(\"Score: 0\")\n47\t\n48\t\n49\tfunc test_hud_root_is_canvas_layer() -> void:\n50\t\tvar hud: HUD = _make_hud()\n51\t\tassert_bool(hud is CanvasLayer).is_true()\n52\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\hud.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\tclass_name HUD\n2\textends CanvasLayer\n3\t\n4\t@onready var _score_label: Label = $ScoreLabel\n5\t\n6\tvar score: int = 0\n7\t\n8\t\n9\tfunc update_score(new_score: int) -> void:\n10\t\tscore = new_score\n11\t\t_score_label.text = \"Score: \" + str(score)\n12\t\n13\t\n14\tfunc reset() -> void:\n15\t\tupdate_score(0)\n16\t"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd /c/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/hud_test.gd 2>&1 | tail -15",
+  "description": "Run HUD tests"
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/hud_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_hud_root_is_canvas_layer\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/hud_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_hud_root_is_canvas_layer\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 118ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mStatistics:\u001b[0m\u001b[38;2;250;235;215m 6 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 1s 453ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 6 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (6/6)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 1s 453ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_34/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_34/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\hud_test.gd",
+  "old_string": "func test_hud_root_is_canvas_layer() -> void:\n\tvar hud: HUD = _make_hud()\n\tassert_bool(hud is CanvasLayer).is_true()",
+  "new_string": "func test_hud_root_is_canvas_layer() -> void:\n\tvar hud: HUD = _make_hud()\n\tassert_bool(hud is CanvasLayer).is_true()\n\n\n@warning_ignore(\"unused_parameter\")\nfunc test_update_score_formats_label_for_value(value: int, expected_text: String, test_parameters := [\n\t[0, \"Score: 0\"],\n\t[1, \"Score: 1\"],\n\t[10, \"Score: 10\"],\n\t[999, \"Score: 999\"],\n]) -> void:\n\tvar hud: HUD = _make_hud()\n\thud.update_score(value)\n\tvar label: Label = hud.get_node(\"ScoreLabel\")\n\tassert_int(hud.score).is_equal(value)\n\tassert_str(label.text).is_equal(expected_text)"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\hud_test.gd has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/hud_test.gd 2>&1 | tail -10",
+  "description": "Re-run HUD tests with parameterized test"
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (10/10)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 2s 567ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_35/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_35/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/ 2>&1 | tail -8",
+  "description": "Run full test suite"
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 113 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (16/16)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (113/113)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 26s 614ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_36/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_36/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: mcp__task-master-ai__set_task_status input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster",
+  "id": "23",
+  "status": "done"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"message\": \"Successfully updated 1 task(s) to \\\"done\\\"\",\n    \"tasks\": [\n      {\n        \"success\": true,\n        \"oldStatus\": \"pending\",\n        \"newStatus\": \"done\",\n        \"taskId\": \"23\"\n      }\n    ]\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "printf '\\n\\n## Iteration 22 - Task 23: HUD unit tests\\n- hud_test.gd already had 6 tests (init score/label, update_score, overwrites previous, reset, root is CanvasLayer).\\n- Added parameterized test_update_score_formats_label_for_value covering the values listed in task 23 test strategy (0, 1, 10, 999) using gdUnit4 test_parameters block + @warning_ignore(\"unused_parameter\").\\n- hud_test 10/10 pass; full suite 113/113 pass.\\n' >> /c/GameDev/SnakeGodotTaskmaster/.taskmaster/progress.txt",
+  "description": "Append progress notes"
+}
+```
+
+### Tool: unknown result
+```json
+"(Bash completed with no output)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd /c/GameDev/SnakeGodotTaskmaster && git add snaketaskmaster/test/hud_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \"$(cat <<'EOF'\ntest(hud): parameterize score formatting for 0, 1, 10, 999\n\nAdds a parameterized test_update_score_formats_label_for_value to satisfy task 23's test strategy values. Existing tests already covered init, update, overwrite, reset, and root type; this fills the gap on the strategy-specified inputs. Suite 113/113.\n\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\nEOF\n)\" 2>&1 | tail -5",
+  "description": "Commit task 23"
+}
+```
+
+### Tool: unknown result
+```json
+"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\n[user/gewan/snake_v5 2a7660c] test(hud): parameterize score formatting for 0, 1, 10, 999\n 3 files changed, 351 insertions(+), 4 deletions(-)"
+```
+
+### Iteration 22 summary
+- Tool calls:
+  - Bash: 7
+  - Read: 3
+  - ToolSearch: 1
+  - mcp__task-master-ai__next_task: 1
+  - Edit: 1
+  - mcp__task-master-ai__set_task_status: 1
+- Tokens:
+  - input: 24
+  - output: 3,827
+  - cache write: 54,762
+  - cache read: 698,876
+  - total: 757,489
+- Final result:
+```text
+Task 23 complete (commit `2a7660c`). Added a parameterized `test_update_score_formats_label_for_value` to `hud_test.gd` covering the strategy-specified values (0, 1, 10, 999) — the existing 6 tests already covered init, update, overwrite, reset, and root type. HUD suite 10/10, full suite 113/113.
+```
+
+---
+
+## Task 19 - Tune gameplay parameters
+- Settled defaults: grid 20x15, cell 32, viewport 640x480 (constraint: viewport = grid*cell), tick 0.15s, death timer 0.5s, starting_head (5,7), starting_length 3.
+- No code changes - existing values already matched constraints and play well; the missing piece was documentation.
+- Added 'Gameplay Tuning (final values)' section to CLAUDE.md with rationale + the viewport=grid*cell constraint future agents must preserve.
+- Suite 113/113.
