@@ -11,6 +11,20 @@ func test_default_grid_dimensions() -> void:
 	assert_int(arena.cell_size).is_equal(32)
 
 
+func test_custom_grid_size_export_vars() -> void:
+	var arena: Arena = auto_free(ArenaScript.new())
+	arena.grid_width = 30
+	arena.grid_height = 25
+	arena.cell_size = 16
+	# is_wall reflects the customized perimeter
+	assert_bool(arena.is_wall(Vector2i(29, 0))).is_true()
+	assert_bool(arena.is_wall(Vector2i(0, 24))).is_true()
+	assert_bool(arena.is_wall(Vector2i(28, 23))).is_false()
+	# Conversions honor the customized cell_size
+	assert_that(arena.grid_to_world(Vector2i(0, 0))).is_equal(Vector2(8, 8))
+	assert_that(arena.world_to_grid(Vector2(16, 16))).is_equal(Vector2i(1, 1))
+
+
 func test_is_wall_returns_true_for_corners() -> void:
 	var arena: Arena = auto_free(ArenaScript.new())
 	assert_bool(arena.is_wall(Vector2i(0, 0))).is_true()
