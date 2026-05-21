@@ -51,4 +51,5 @@ func _on_snake_died() -> void:
 
 func _on_death_timeout() -> void:
 	if ResourceLoader.exists(GAME_OVER_SCENE_PATH):
+		GameOver.pending_score = score
 		get_tree().change_scene_to_file(GAME_OVER_SCENE_PATH)
