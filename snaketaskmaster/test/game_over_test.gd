@@ -4,8 +4,12 @@ const GAME_OVER_SCENE_PATH := "res://scenes/GameOver.tscn"
 
 
 func before_test() -> void:
-	# Tests below set or read pending_score; isolate them from each other.
-	GameOver.pending_score = 0
+	# Tests below read GameState.current_score; isolate them from each other.
+	GameState.set_score(0)
+
+
+func after_test() -> void:
+	GameState.set_score(0)
 
 
 func _make_game_over() -> GameOver:
@@ -53,25 +57,19 @@ func test_restart_prompt_label_font_size() -> void:
 	assert_int(label.get_theme_font_size("font_size")).is_equal(18)
 
 
-func test_initial_final_score_is_zero_when_no_pending() -> void:
+func test_initial_final_score_is_zero_when_state_empty() -> void:
 	var game_over: GameOver = _make_game_over()
 	assert_int(game_over.final_score).is_equal(0)
 	var label: Label = game_over.get_node("VBoxContainer/ScoreLabel")
 	assert_str(label.text).is_equal("Score: 0")
 
 
-func test_pending_score_applied_on_ready() -> void:
-	GameOver.pending_score = 7
+func test_game_state_score_applied_on_ready() -> void:
+	GameState.set_score(7)
 	var game_over: GameOver = _make_game_over()
 	assert_int(game_over.final_score).is_equal(7)
 	var label: Label = game_over.get_node("VBoxContainer/ScoreLabel")
 	assert_str(label.text).is_equal("Score: 7")
-
-
-func test_pending_score_consumed_after_ready() -> void:
-	GameOver.pending_score = 5
-	var _go: GameOver = _make_game_over()
-	assert_int(GameOver.pending_score).is_equal(0)
 
 
 func test_set_score_updates_label() -> void:
