@@ -6213,3 +6213,294 @@ Task 18 complete (committed as `3b29659`). Added `scripts/game_state.gd` as an a
 - snaketaskmaster/test/arena_test.gd already covered most cases (dimensions, perimeter, interior, out-of-bounds, grid_to_world, world_to_grid, round-trip, tilemap population, tileset cell_size).
 - Added one missing test from the spec: `test_custom_grid_size_export_vars` — assigns custom `grid_width/height/cell_size` on a fresh Arena and verifies `is_wall` perimeter math and `grid_to_world`/`world_to_grid` honor the new cell_size.
 - arena_test 11/11 pass; full suite 103/103 pass.
+
+## Iteration 17
+
+### LLM input
+```text
+@.taskmaster/progress.txt @CLAUDE.md
+
+Loop iteration 17 of 25
+
+TASK: Implement ONE task/subtask from the Taskmaster backlog.
+
+PROCESS:
+1. Run task-master next (or use MCP) to get the next available task/subtask.
+2. Read task details with task-master show <id>.
+3. Implement following codebase patterns.
+4. Write tests alongside implementation.
+5. Run type check (e.g., `npm run typecheck`, `tsc --noEmit`).
+6. Run tests (e.g., `npm test`, `npm run test`).
+7. Mark complete: task-master set-status --id=<id> --status=done
+8. Commit with message: feat(<scope>): <what was implemented>
+9. Append super-concise notes to progress file: task ID, what was done. If there was any mistakes or false assumptions, append them into a learning.
+
+IMPORTANT:
+- Complete ONLY ONE task per iteration.
+- Keep changes small and focused.
+- Do NOT start another task after completing one.
+- If all tasks are done, output <loop-complete>ALL_DONE</loop-complete>.
+- If blocked, output <loop-blocked>REASON</loop-blocked>.
+
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\.taskmaster\\progress.txt"
+}
+```
+
+### Tool: unknown result
+```json
+"File content (724.2KB) exceeds maximum allowed size (256KB). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file."
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "tail -n 60 .taskmaster/progress.txt",
+  "description": "Read last 60 lines of progress file"
+}
+```
+
+### Tool: unknown result
+```json
+"  \"replace_all\": false,\n  \"file_path\": \"C:\\\\GameDev\\\\SnakeGodotTaskmaster\\\\.taskmaster\\\\progress.txt\",\n  \"old_string\": \"---\\n\\n## Iteration 15 - Task 14: Game Over screen scene\",\n  \"new_string\": \"---\\n\\n## Iteration 16 - Task 18: Scene transition flow via GameState autoload\\n- Added scripts/game_state.gd (extends Node) as autoload with `current_score: int`, `set_score(score)`, `get_score()`. Registered in project.godot under `[autoload]` as `GameState=\\\"*res://scripts/game_state.gd\\\"`.\\n- Refactored cross-scene score handoff to use GameState instead of the `GameOver.pending_score` static slot:\\n  - scripts/gameplay.gd: `_on_snake_died` now calls `GameState.set_score(score)` before starting the death timer; removed the `GameOver.pending_score = score` write from `_on_death_timeout`.\\n  - scripts/game_over.gd: dropped the `pending_score` static var; `_ready` now reads `GameState.get_score()` and feeds it into `set_score(...)`.\\n- Updated test/game_over_test.gd to seed/clear GameState in `before_test`/`after_test` instead of `pending_score`; renamed the relevant tests (`test_game_state_score_applied_on_ready`, etc.) and dropped the obsolete `pending_score_consumed_after_ready` test (no longer applicable — autoload retains state across scene changes by design, and gameplay overwrites it on each death).\\n- Added test/game_state_test.gd (4 tests): default zero, set→get round trip, set overwrites previous, `current_score` field reflects setter. Uses the live autoload (no instantiation) since GameState is a singleton.\\n- main_scene was already `res://scenes/TitleScreen.tscn` from iter 14; Gameplay state already resets per instantiation (no persistent global state besides the score handoff).\\n- Ran `godot --headless --path . --import` then full suite: game_state 4/4, game_over 12/12, full suite 102/102 pass.\\n\\n---\\n\\n## Iteration 15 - Task 14: Game Over screen scene\"\n}\n```\n\n### Tool: unknown result\n```json\n\"The file C:\\\\GameDev\\\\SnakeGodotTaskmaster\\\\.taskmaster\\\\progress.txt has been updated successfully. (file state is current in your context — no need to Read it back)\"\n```\n\n### Tool: Bash input\n```json\n{\n  \"command\": \"cd C:/GameDev/SnakeGodotTaskmaster && git add snaketaskmaster/scripts/game_state.gd snaketaskmaster/scripts/game_state.gd.uid snaketaskmaster/scripts/game_over.gd snaketaskmaster/scripts/gameplay.gd snaketaskmaster/project.godot snaketaskmaster/test/game_over_test.gd snaketaskmaster/test/game_state_test.gd snaketaskmaster/test/game_state_test.gd.uid .taskmaster/progress.txt .taskmaster/tasks/tasks.json 2>&1; git status --short 2>&1\",\n  \"description\": \"Stage task 18 files\"\n}\n```\n\n### Tool: unknown result\n```json\n\"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\\nM  .taskmaster/progress.txt\\nM  .taskmaster/tasks/tasks.json\\nM  snaketaskmaster/project.godot\\nM  snaketaskmaster/scripts/game_over.gd\\nA  snaketaskmaster/scripts/game_state.gd\\nA  snaketaskmaster/scripts/game_state.gd.uid\\nM  snaketaskmaster/scripts/gameplay.gd\\nM  snaketaskmaster/test/game_over_test.gd\\nA  snaketaskmaster/test/game_state_test.gd\\nA  snaketaskmaster/test/game_state_test.gd.uid\\n?? .taskmaster/docs/\\n?? snaketaskmaster/scripts/arena.gd.uid\\n?? snaketaskmaster/scripts/food.gd.uid\\n?? snaketaskmaster/scripts/gameplay.gd.uid\\n?? snaketaskmaster/scripts/hud.gd.uid\\n?? snaketaskmaster/scripts/snake.gd.uid\\n?? snaketaskmaster/scripts/title_screen.gd.uid\\n?? snaketaskmaster/test/arena_test.gd.uid\\n?? snaketaskmaster/test/audio_import_test.gd.uid\\n?? snaketaskmaster/test/food_import_test.gd.uid\\n?? snaketaskmaster/test/food_test.gd.uid\\n?? snaketaskmaster/test/gameplay_test.gd.uid\\n?? snaketaskmaster/test/hud_test.gd.uid\\n?? snaketaskmaster/test/player_body_import_test.gd.uid\\n?? snaketaskmaster/test/player_head_import_test.gd.uid\\n?? snaketaskmaster/test/snake_test.gd.uid\\n?? snaketaskmaster/test/title_screen_test.gd.uid\"\n```\n\n### Tool: Bash input\n```json\n{\n  \"command\": \"cd C:/GameDev/SnakeGodotTaskmaster && git commit -m \\\"$(cat <<'EOF'\\nfeat(state): add GameState autoload for cross-scene score handoff\\n\\nIntroduces scripts/game_state.gd as an autoload singleton (registered in project.godot under [autoload] as GameState) exposing current_score with set_score/get_score. Refactors the Gameplay→GameOver score handoff from the previous static GameOver.pending_score slot to GameState: gameplay.gd._on_snake_died now writes via GameState.set_score, and game_over.gd._ready reads via GameState.get_score on entry. The autoload approach is more robust than a script-level static — it survives scene reloads cleanly without relying on the next scene's _ready clearing the slot. Adds test/game_state_test.gd (4 tests) and updates game_over_test.gd to seed/clear GameState per test. Full suite 102/102 passing.\\n\\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\\nEOF\\n)\\\" 2>&1 | tail -10\",\n  \"description\": \"Commit task 18\"\n}\n```\n\n### Tool: unknown result\n```json\n\"[user/gewan/snake_v5 3b29659] feat(state): add GameState autoload for cross-scene score handoff\\n 10 files changed, 507 insertions(+), 22 deletions(-)\\n create mode 100644 snaketaskmaster/scripts/game_state.gd\\n create mode 100644 snaketaskmaster/scripts/game_state.gd.uid\\n create mode 100644 snaketaskmaster/test/game_state_test.gd\\n create mode 100644 snaketaskmaster/test/game_state_test.gd.uid\"\n```\n\n### Iteration 16 summary\n- Tool calls:\n  - Read: 6\n  - Bash: 5\n  - Write: 4\n  - Edit: 3\n  - mcp__task-master-ai__set_task_status: 2\n  - Grep: 2\n  - ToolSearch: 1\n  - mcp__task-master-ai__next_task: 1\n- Tokens:\n  - input: 44\n  - output: 8,518\n  - cache write: 75,212\n  - cache read: 1,401,943\n  - total: 1,485,717\n- Final result:\n```text\nTask 18 complete (committed as `3b29659`). Added `scripts/game_state.gd` as an autoload (`GameState`) with `current_score`/`set_score`/`get_score`, registered it in `project.godot`, and refactored the Gameplay→GameOver score handoff off the prior `GameOver.pending_score` static onto the autoload (`gameplay.gd:_on_snake_died` writes it, `game_over.gd:_ready` reads it). 4 new GameState tests, updated game_over_test seeding, full suite 102/102 pass.\n```\n\n---"
+```
+
+### Tool: ToolSearch input
+```json
+{
+  "query": "select:mcp__task-master-ai__next_task,mcp__task-master-ai__get_task,mcp__task-master-ai__set_task_status",
+  "max_results": 5
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__next_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__get_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__set_task_status"
+  }
+]
+```
+
+### Tool: mcp__task-master-ai__next_task input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"nextTask\": {\n      \"id\": 20,\n      \"title\": \"Write unit tests for Arena\",\n      \"description\": \"Create test/arena_test.gd covering grid generation, wall detection, and coordinate conversions\",\n      \"details\": \"1. Create res://test/arena_test.gd extending GdUnitTestSuite\\n2. Test cases:\\n   - test_arena_initializes_with_correct_dimensions()\\n   - test_is_wall_returns_true_for_perimeter()\\n   - test_is_wall_returns_false_for_interior()\\n   - test_grid_to_world_conversion()\\n   - test_world_to_grid_conversion()\\n   - test_custom_grid_size_export_vars()\\n3. Use auto_free() for instantiated Arena nodes\\n4. Use assert_bool(), assert_int(), assert_vector() for assertions\\n5. Run with: godot --headless --path snaketaskmaster -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/arena_test.gd\",\n      \"testStrategy\": \"Run test suite, verify all assertions pass. Check test coverage: perimeter cells (all 4 edges + corners) return is_wall=true, interior cells return false. Verify coordinate conversions are bidirectional (grid→world→grid == original).\",\n      \"priority\": \"medium\",\n      \"dependencies\": [\n        \"8\"\n      ],\n      \"status\": \"pending\",\n      \"subtasks\": []\n    },\n    \"isSubtask\": false,\n    \"nextSteps\": \"When ready to work on the task, use set-status to set the status to \\\"in progress\\\" Tasks can be updated to reflect a change in the direction of the task, or to reformulate the task per your prompt. Research can be used when updating the task to collect up-to-date information. It is best to update subtasks as you work on them, and to update the task for more high-level changes that may affect pending subtasks or the general direction of the task.\"\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "ls snaketaskmaster/test/arena_test.gd snaketaskmaster/scripts/arena.gd 2>&1",
+  "description": "Check if arena_test.gd exists"
+}
+```
+
+### Tool: unknown result
+```json
+"snaketaskmaster/scripts/arena.gd\nsnaketaskmaster/test/arena_test.gd"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\arena.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\tclass_name Arena\n2\textends Node2D\n3\t\n4\tconst FLOOR_TILE_TEXTURE: Texture2D = preload(\"res://sprites/floor_tile.png\")\n5\tconst WALL_TILE_TEXTURE: Texture2D = preload(\"res://sprites/wall_tile.png\")\n6\t\n7\tconst FLOOR_SOURCE_ID := 0\n8\tconst WALL_SOURCE_ID := 1\n9\tconst ATLAS_COORD := Vector2i.ZERO\n10\t\n11\t@export var grid_width: int = 20\n12\t@export var grid_height: int = 15\n13\t@export var cell_size: int = 32\n14\t\n15\tvar _tile_map_layer: TileMapLayer\n16\t\n17\t\n18\tfunc _ready() -> void:\n19\t\t_build_tilemap()\n20\t\t_populate_tiles()\n21\t\n22\t\n23\tfunc is_wall(grid_pos: Vector2i) -> bool:\n24\t\tif grid_pos.x <= 0 or grid_pos.y <= 0:\n25\t\t\treturn true\n26\t\tif grid_pos.x >= grid_width - 1 or grid_pos.y >= grid_height - 1:\n27\t\t\treturn true\n28\t\treturn false\n29\t\n30\t\n31\tfunc grid_to_world(grid_pos: Vector2i) -> Vector2:\n32\t\treturn Vector2(\n33\t\t\t(grid_pos.x + 0.5) * cell_size,\n34\t\t\t(grid_pos.y + 0.5) * cell_size,\n35\t\t)\n36\t\n37\t\n38\tfunc world_to_grid(world_pos: Vector2) -> Vector2i:\n39\t\treturn Vector2i(\n40\t\t\tint(floor(world_pos.x / cell_size)),\n41\t\t\tint(floor(world_pos.y / cell_size)),\n42\t\t)\n43\t\n44\t\n45\tfunc _build_tilemap() -> void:\n46\t\t_tile_map_layer = TileMapLayer.new()\n47\t\t_tile_map_layer.name = \"TileMapLayer\"\n48\t\n49\t\tvar ts := TileSet.new()\n50\t\tts.tile_size = Vector2i(cell_size, cell_size)\n51\t\tts.add_source(_make_atlas_source(FLOOR_TILE_TEXTURE), FLOOR_SOURCE_ID)\n52\t\tts.add_source(_make_atlas_source(WALL_TILE_TEXTURE), WALL_SOURCE_ID)\n53\t\n54\t\t_tile_map_layer.tile_set = ts\n55\t\tadd_child(_tile_map_layer)\n56\t\n57\t\n58\tfunc _make_atlas_source(texture: Texture2D) -> TileSetAtlasSource:\n59\t\tvar source := TileSetAtlasSource.new()\n60\t\tsource.texture = texture\n61\t\tsource.texture_region_size = Vector2i(cell_size, cell_size)\n62\t\tsource.create_tile(ATLAS_COORD)\n63\t\treturn source\n64\t\n65\t\n66\tfunc _populate_tiles() -> void:\n67\t\tfor y in range(grid_height):\n68\t\t\tfor x in range(grid_width):\n69\t\t\t\tvar pos := Vector2i(x, y)\n70\t\t\t\tvar source_id := WALL_SOURCE_ID if is_wall(pos) else FLOOR_SOURCE_ID\n71\t\t\t\t_tile_map_layer.set_cell(pos, source_id, ATLAS_COORD)\n72\t"
+```
+
+### Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\arena_test.gd"
+}
+```
+
+### Tool: unknown result
+```json
+"1\textends GdUnitTestSuite\n2\t\n3\tconst ArenaScript := preload(\"res://scripts/arena.gd\")\n4\tconst ARENA_SCENE_PATH := \"res://scenes/Arena.tscn\"\n5\t\n6\t\n7\tfunc test_default_grid_dimensions() -> void:\n8\t\tvar arena: Arena = auto_free(ArenaScript.new())\n9\t\tassert_int(arena.grid_width).is_equal(20)\n10\t\tassert_int(arena.grid_height).is_equal(15)\n11\t\tassert_int(arena.cell_size).is_equal(32)\n12\t\n13\t\n14\tfunc test_is_wall_returns_true_for_corners() -> void:\n15\t\tvar arena: Arena = auto_free(ArenaScript.new())\n16\t\tassert_bool(arena.is_wall(Vector2i(0, 0))).is_true()\n17\t\tassert_bool(arena.is_wall(Vector2i(arena.grid_width - 1, 0))).is_true()\n18\t\tassert_bool(arena.is_wall(Vector2i(0, arena.grid_height - 1))).is_true()\n19\t\tassert_bool(arena.is_wall(Vector2i(arena.grid_width - 1, arena.grid_height - 1))).is_true()\n20\t\n21\t\n22\tfunc test_is_wall_returns_true_for_perimeter_edges() -> void:\n23\t\tvar arena: Arena = auto_free(ArenaScript.new())\n24\t\t# Top and bottom rows\n25\t\tassert_bool(arena.is_wall(Vector2i(5, 0))).is_true()\n26\t\tassert_bool(arena.is_wall(Vector2i(5, arena.grid_height - 1))).is_true()\n27\t\t# Left and right columns\n28\t\tassert_bool(arena.is_wall(Vector2i(0, 5))).is_true()\n29\t\tassert_bool(arena.is_wall(Vector2i(arena.grid_width - 1, 5))).is_true()\n30\t\n31\t\n32\tfunc test_is_wall_returns_false_for_interior() -> void:\n33\t\tvar arena: Arena = auto_free(ArenaScript.new())\n34\t\tassert_bool(arena.is_wall(Vector2i(1, 1))).is_false()\n35\t\tassert_bool(arena.is_wall(Vector2i(10, 7))).is_false()\n36\t\tassert_bool(arena.is_wall(Vector2i(arena.grid_width - 2, arena.grid_height - 2))).is_false()\n37\t\n38\t\n39\tfunc test_is_wall_treats_out_of_bounds_as_wall() -> void:\n40\t\tvar arena: Arena = auto_free(ArenaScript.new())\n41\t\tassert_bool(arena.is_wall(Vector2i(-1, 5))).is_true()\n42\t\tassert_bool(arena.is_wall(Vector2i(5, -1))).is_true()\n43\t\tassert_bool(arena.is_wall(Vector2i(arena.grid_width, 5))).is_true()\n44\t\tassert_bool(arena.is_wall(Vector2i(5, arena.grid_height))).is_true()\n45\t\n46\t\n47\tfunc test_grid_to_world_returns_cell_center() -> void:\n48\t\tvar arena: Arena = auto_free(ArenaScript.new())\n49\t\t# cell_size = 32 → cell (0,0) center is (16, 16)\n50\t\tassert_that(arena.grid_to_world(Vector2i(0, 0))).is_equal(Vector2(16, 16))\n51\t\tassert_that(arena.grid_to_world(Vector2i(1, 2))).is_equal(Vector2(48, 80))\n52\t\n53\t\n54\tfunc test_world_to_grid_floors_to_cell() -> void:\n55\t\tvar arena: Arena = auto_free(ArenaScript.new())\n56\t\tassert_that(arena.world_to_grid(Vector2(0, 0))).is_equal(Vector2i(0, 0))\n57\t\tassert_that(arena.world_to_grid(Vector2(31.9, 31.9))).is_equal(Vector2i(0, 0))\n58\t\tassert_that(arena.world_to_grid(Vector2(32, 32))).is_equal(Vector2i(1, 1))\n59\t\tassert_that(arena.world_to_grid(Vector2(48, 80))).is_equal(Vector2i(1, 2))\n60\t\n61\t\n62\tfunc test_grid_world_grid_round_trip() -> void:\n63\t\tvar arena: Arena = auto_free(ArenaScript.new())\n64\t\tfor pos in [Vector2i(0, 0), Vector2i(5, 7), Vector2i(19, 14)]:\n65\t\t\tassert_that(arena.world_to_grid(arena.grid_to_world(pos))).is_equal(pos)\n66\t\n67\t\n68\tfunc test_ready_populates_tilemap_with_perimeter_walls() -> void:\n69\t\tvar arena: Arena = auto_free(load(ARENA_SCENE_PATH).instantiate())\n70\t\tadd_child(arena)\n71\t\tvar layer: TileMapLayer = arena.get_node(\"TileMapLayer\")\n72\t\t# Perimeter cells use the wall source\n73\t\tassert_int(layer.get_cell_source_id(Vector2i(0, 0))).is_equal(Arena.WALL_SOURCE_ID)\n74\t\tassert_int(layer.get_cell_source_id(Vector2i(arena.grid_width - 1, arena.grid_height - 1))) \\\n75\t\t\t.is_equal(Arena.WALL_SOURCE_ID)\n76\t\t# Interior cells use the floor source\n77\t\tassert_int(layer.get_cell_source_id(Vector2i(1, 1))).is_equal(Arena.FLOOR_SOURCE_ID)\n78\t\tassert_int(layer.get_cell_source_id(Vector2i(10, 7))).is_equal(Arena.FLOOR_SOURCE_ID)\n79\t\n80\t\n81\tfunc test_ready_sets_tileset_cell_size() -> void:\n82\t\tvar arena: Arena = auto_free(load(ARENA_SCENE_PATH).instantiate())\n83\t\tadd_child(arena)\n84\t\tvar layer: TileMapLayer = arena.get_node(\"TileMapLayer\")\n85\t\tassert_that(layer.tile_set.tile_size).is_equal(Vector2i(arena.cell_size, arena.cell_size))\n86\t"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/arena_test.gd 2>&1 | tail -50",
+  "description": "Run arena tests",
+  "timeout": 120000
+}
+```
+
+### Tool: unknown result
+```json
+"Please note that tests that use UI interaction do not work correctly in headless mode.\r\nGodot 'InputEvents' are not transported by the Godot engine in headless mode and therefore\r\nhave no effect in the test!\r\n\u001b[0m\r\n\u001b[38;2;100;149;237mInstalling GdUnit4 session system hooks.\u001b[0m\r\n\u001b[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.\u001b[0m\r\n\u001b[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.\u001b[0m\r\n\u001b[38;2;0;206;209mRun Test Suite: \u001b[0m\u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_default_grid_dimensions\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_default_grid_dimensions\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 109ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_is_wall_returns_true_for_corners\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_is_wall_returns_true_for_corners\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 115ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_is_wall_returns_true_for_perimeter_edges\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_is_wall_returns_true_for_perimeter_edges\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 115ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_is_wall_returns_false_for_interior\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_is_wall_returns_false_for_interior\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 102ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_is_wall_treats_out_of_bounds_as_wall\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_is_wall_treats_out_of_bounds_as_wall\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 101ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_grid_to_world_returns_cell_center\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_grid_to_world_returns_cell_center\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 100ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_world_to_grid_floors_to_cell\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_world_to_grid_floors_to_cell\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 76ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_grid_world_grid_round_trip\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_grid_world_grid_round_trip\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 115ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_ready_populates_tilemap_with_perimeter_walls\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_ready_populates_tilemap_with_perimeter_walls\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 41ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_ready_sets_tileset_cell_size\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\r\n  \u001b[38;2;250;235;215mres://test/arena_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_ready_sets_tileset_cell_size\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 111ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mStatistics:\u001b[0m\u001b[38;2;250;235;215m 10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 2s 271ms\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 10 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (10/10)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 2s 271ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_23/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_23/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: Edit input
+```json
+{
+  "replace_all": false,
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\arena_test.gd",
+  "old_string": "func test_default_grid_dimensions() -> void:\n\tvar arena: Arena = auto_free(ArenaScript.new())\n\tassert_int(arena.grid_width).is_equal(20)\n\tassert_int(arena.grid_height).is_equal(15)\n\tassert_int(arena.cell_size).is_equal(32)",
+  "new_string": "func test_default_grid_dimensions() -> void:\n\tvar arena: Arena = auto_free(ArenaScript.new())\n\tassert_int(arena.grid_width).is_equal(20)\n\tassert_int(arena.grid_height).is_equal(15)\n\tassert_int(arena.cell_size).is_equal(32)\n\n\nfunc test_custom_grid_size_export_vars() -> void:\n\tvar arena: Arena = auto_free(ArenaScript.new())\n\tarena.grid_width = 30\n\tarena.grid_height = 25\n\tarena.cell_size = 16\n\t# is_wall reflects the customized perimeter\n\tassert_bool(arena.is_wall(Vector2i(29, 0))).is_true()\n\tassert_bool(arena.is_wall(Vector2i(0, 24))).is_true()\n\tassert_bool(arena.is_wall(Vector2i(28, 23))).is_false()\n\t# Conversions honor the customized cell_size\n\tassert_that(arena.grid_to_world(Vector2i(0, 0))).is_equal(Vector2(8, 8))\n\tassert_that(arena.world_to_grid(Vector2(16, 16))).is_equal(Vector2i(1, 1))"
+}
+```
+
+### Tool: unknown result
+```json
+"The file C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\arena_test.gd has been updated successfully. (file state is current in your context — no need to Read it back)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/arena_test.gd 2>&1 | tail -10",
+  "description": "Run arena tests with new test",
+  "timeout": 120000
+}
+```
+
+### Tool: unknown result
+```json
+"Exit code 1\n/usr/bin/bash: line 1: cd: snaketaskmaster: No such file or directory"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/arena_test.gd 2>&1 | tail -10",
+  "description": "Run arena tests with new test",
+  "timeout": 120000
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 11 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (11/11)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 2s 610ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_24/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_24/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster && godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/ 2>&1 | tail -10",
+  "description": "Run full test suite",
+  "timeout": 300000
+}
+```
+
+### Tool: unknown result
+```json
+"\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;250;235;215m\u001b[0m\r\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 103 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test suites: (16/16)\u001b[0m\r\n\u001b[38;2;233;150;122mExecuted test cases : (103/103)\u001b[0m\r\n\u001b[38;2;233;150;122mTotal execution time: 23s 331ms\u001b[0m\r\n\u001b[38;2;255;255;255m \u001b[0m\u001b[38;2;100;149;237mOpen XML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_25/results.xml\u001b[0m\r\n\u001b[38;2;100;149;237mOpen HTML Report at: file://C:/GameDev/SnakeGodotTaskmaster/snaketaskmaster/reports/report_25/index.html\u001b[0m\r\n\u001b[38;2;233;150;122mExit code: 0\u001b[0m\r\nFinallize .. done"
+```
+
+### Tool: mcp__task-master-ai__set_task_status input
+```json
+{
+  "id": "20",
+  "status": "done",
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"message\": \"Successfully updated 1 task(s) to \\\"done\\\"\",\n    \"tasks\": [\n      {\n        \"success\": true,\n        \"oldStatus\": \"pending\",\n        \"newStatus\": \"done\",\n        \"taskId\": \"20\"\n      }\n    ]\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.2\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "printf '\\n\\n## Iteration 17 - Task 20: Arena unit tests\\n- snaketaskmaster/test/arena_test.gd already covered most cases (dimensions, perimeter, interior, out-of-bounds, grid_to_world, world_to_grid, round-trip, tilemap population, tileset cell_size).\\n- Added one missing test from the spec: `test_custom_grid_size_export_vars` — assigns custom `grid_width/height/cell_size` on a fresh Arena and verifies `is_wall` perimeter math and `grid_to_world`/`world_to_grid` honor the new cell_size.\\n- arena_test 11/11 pass; full suite 103/103 pass.\\n' >> .taskmaster/progress.txt",
+  "description": "Append progress notes"
+}
+```
+
+### Tool: unknown result
+```json
+"Exit code 1\n/usr/bin/bash: line 1: .taskmaster/progress.txt: No such file or directory"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster && printf '\\n\\n## Iteration 17 - Task 20: Arena unit tests\\n- snaketaskmaster/test/arena_test.gd already covered most cases (dimensions, perimeter, interior, out-of-bounds, grid_to_world, world_to_grid, round-trip, tilemap population, tileset cell_size).\\n- Added one missing test from the spec: `test_custom_grid_size_export_vars` — assigns custom `grid_width/height/cell_size` on a fresh Arena and verifies `is_wall` perimeter math and `grid_to_world`/`world_to_grid` honor the new cell_size.\\n- arena_test 11/11 pass; full suite 103/103 pass.\\n' >> .taskmaster/progress.txt",
+  "description": "Append progress notes"
+}
+```
+
+### Tool: unknown result
+```json
+"(Bash completed with no output)"
+```
+
+### Tool: Bash input
+```json
+{
+  "command": "cd C:/GameDev/SnakeGodotTaskmaster && git add snaketaskmaster/test/arena_test.gd .taskmaster/progress.txt .taskmaster/tasks/tasks.json && git commit -m \"$(cat <<'EOF'\ntest(arena): add custom grid size export vars test\n\nAdds test_custom_grid_size_export_vars to arena_test.gd, asserting that overriding grid_width/grid_height/cell_size on a fresh Arena propagates through is_wall (custom perimeter) and grid_to_world/world_to_grid (cell-size-aware conversions). Closes out the test coverage listed in Task 20. arena_test 11/11, full suite 103/103.\n\nCo-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>\nEOF\n)\" 2>&1 | tail -5",
+  "description": "Commit task 20"
+}
+```
+
+### Tool: unknown result
+```json
+"warning: in the working copy of '.taskmaster/progress.txt', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.taskmaster/tasks/tasks.json', LF will be replaced by CRLF the next time Git touches it\n[user/gewan/snake_v5 06adcbd] test(arena): add custom grid size export vars test\n 3 files changed, 424 insertions(+), 4 deletions(-)"
+```
+
+### Iteration 17 summary
+- Tool calls:
+  - Bash: 9
+  - Read: 3
+  - ToolSearch: 1
+  - mcp__task-master-ai__next_task: 1
+  - Edit: 1
+  - mcp__task-master-ai__set_task_status: 1
+- Tokens:
+  - input: 31
+  - output: 4,608
+  - cache write: 58,447
+  - cache read: 836,828
+  - total: 899,914
+- Final result:
+```text
+Task 20 complete (committed as `06adcbd`). The arena_test.gd file already covered nearly all of the spec; I added the missing `test_custom_grid_size_export_vars` which mutates the exported `grid_width`/`grid_height`/`cell_size` on a fresh Arena and verifies `is_wall` and the world↔grid conversions honor the new values. arena_test 11/11 and full suite 103/103 pass.
+```
+
+---
+
+
+## Iteration 18 - Task 21: Snake unit tests
+- snake_test.gd already had most spec coverage (starting length, opposite-heading reject, perpendicular accept, body advance + tail pop, wall/self collision dies, food grows body, no-food maintains length, post-death noop, visuals).
+- Added test_tick_applies_queued_direction_to_heading: queues UP, calls tick, asserts heading=UP and head moved to (5,6). Closes the missing "queue_direction_changes_heading" case from the spec.
+- snake_test 17/17 pass; full suite 104/104 pass.

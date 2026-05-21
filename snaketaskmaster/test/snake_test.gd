@@ -45,6 +45,15 @@ func test_queue_direction_accepts_perpendicular() -> void:
 	assert_that(s.queued_direction).is_equal(Vector2i.UP)
 
 
+func test_tick_applies_queued_direction_to_heading() -> void:
+	var s := _make_snake()
+	var a := _make_arena()
+	s.queue_direction(Vector2i.UP)
+	s.tick(a, FOOD_OFFSCREEN)
+	assert_that(s.heading).is_equal(Vector2i.UP)
+	assert_that(s.body[0]).is_equal(Vector2i(5, 6))
+
+
 func test_tick_advances_body_and_pops_tail() -> void:
 	var s := _make_snake()
 	var a := _make_arena()
