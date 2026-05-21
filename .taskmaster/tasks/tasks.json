@@ -334,8 +334,9 @@
           "18",
           "19"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:14:35.881Z"
       },
       {
         "id": "25",
@@ -354,9 +355,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-21T07:11:59.725Z",
+      "lastModified": "2026-05-21T07:14:35.881Z",
       "taskCount": 25,
-      "completedCount": 23,
+      "completedCount": 24,
       "tags": [
         "master"
       ]
