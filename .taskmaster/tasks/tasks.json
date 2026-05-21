@@ -69,8 +69,9 @@
         "testStrategy": "Visual: Sprite2D with food.png, verify crisp rendering at game scale (likely 16x16 or 32x32 pixels per cell).",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:23:20.626Z"
       },
       {
         "id": "7",
@@ -94,8 +95,9 @@
           "2",
           "3"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:26:32.544Z"
       },
       {
         "id": "9",
@@ -336,9 +338,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-21T06:21:43.378Z",
+      "lastModified": "2026-05-21T06:26:32.545Z",
       "taskCount": 25,
-      "completedCount": 5,
+      "completedCount": 7,
       "tags": [
         "master"
       ]
