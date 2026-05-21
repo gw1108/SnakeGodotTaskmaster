@@ -8,6 +8,13 @@ Install Godot command line and put it on your path https://docs.godotengine.org/
 
 Install npm. Install highlight.js for gdscript at https://www.npmjs.com/package/@exercism/highlightjs-gdscript?activeTab=readme
 
+### One time setup
+
+Run in snaketaskmaster folder (godot project folder)
+```
+godot --headless --path . --import
+```
+
 ### MCPs
 
 Firebase for web search, scraping, and crawling: https://mcpmarket.com/server/firebase
