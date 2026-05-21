@@ -45,8 +45,9 @@
         "testStrategy": "Visual: Sprite2D with player_head.png, test rotation at 0°, 90°, 180°, 270° to verify all cardinal directions look correct with no filtering blur.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:20:10.255Z"
       },
       {
         "id": "5",
@@ -334,9 +335,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-21T06:18:23.816Z",
+      "lastModified": "2026-05-21T06:20:10.255Z",
       "taskCount": 25,
-      "completedCount": 3,
+      "completedCount": 4,
       "tags": [
         "master"
       ]
