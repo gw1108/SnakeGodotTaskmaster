@@ -10,6 +10,7 @@ const GAME_OVER_SCENE_PATH: String = "res://scenes/GameOver.tscn"
 @onready var tick_timer: Timer = $TickTimer
 @onready var death_timer: Timer = $DeathTimer
 @onready var eat_food_audio_player: AudioStreamPlayer = $EatFoodAudioPlayer
+@onready var death_audio_player: AudioStreamPlayer = $DeathAudioPlayer
 
 var score: int = 0
 
@@ -49,6 +50,7 @@ func _on_food_eaten() -> void:
 func _on_snake_died() -> void:
 	tick_timer.stop()
 	GameState.set_score(score)
+	death_audio_player.play()
 	death_timer.start()
 
 

@@ -82,3 +82,17 @@ func test_food_eaten_plays_eat_food_audio() -> void:
 	assert_bool(gameplay.eat_food_audio_player.playing).is_false()
 	gameplay.snake.food_eaten.emit()
 	assert_bool(gameplay.eat_food_audio_player.playing).is_true()
+
+
+func test_death_audio_player_has_death_stream() -> void:
+	var gameplay: Gameplay = _make_gameplay()
+	assert_object(gameplay.death_audio_player).is_not_null()
+	assert_object(gameplay.death_audio_player.stream).is_not_null()
+	assert_str(gameplay.death_audio_player.stream.resource_path).is_equal("res://audio/death.wav")
+
+
+func test_snake_died_plays_death_audio() -> void:
+	var gameplay: Gameplay = _make_gameplay()
+	assert_bool(gameplay.death_audio_player.playing).is_false()
+	gameplay.snake.died.emit()
+	assert_bool(gameplay.death_audio_player.playing).is_true()
