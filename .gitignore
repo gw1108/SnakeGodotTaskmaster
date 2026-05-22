@@ -85,5 +85,5 @@ node_modules/
 # tasks.json
 # tasks/ 
 
-# Transcript files. The LLM sometimes does weird stuff and we export and debug it into this folder.
+# Transcript files. Local LLM debug information.
 /transcripts/
