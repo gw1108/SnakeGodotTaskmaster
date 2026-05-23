@@ -13,9 +13,8 @@ The role of this file is to describe common mistakes and confusion points that a
 ## Project Structure
 
 Godot is on PATH.
-The Godot project lives in `snaketaskmaster/`, NOT the repo root. Run `godot` commands with `--path snaketaskmaster` (or `cd snaketaskmaster` first).
+The Godot project lives in `snaketaskmaster/`, NOT the repo root. Run `godot` commands with `--path snaketaskmaster`
 
-Do NOT scan files in the /thoughts/ folder unless specified.
 Do NOT scan files under any folder named ARCHIVE unless specified.
 
 ### Re-import after adding files
@@ -26,7 +25,24 @@ Whenever new files are added or created in the Godot project (scripts, scenes, r
 godot --headless --path . --import
 ```
 
-Run from `snaketaskmaster/` (or substitute `--path snaketaskmaster` from the repo root). The editor and `preload(...)` calls will not resolve new files until this completes.
+The gdUni4, editor, and `preload(...)` calls will not resolve new files until this completes.
+
+### Type checking
+
+GDScript type errors and syntax errors are caught at compile time by the Godot engine.
+After writing or editing code, check for them by running Godot headless:
+
+- **Whole project** (preferred — full project context). Run from `snaketaskmaster/`:
+  ```powershell
+  godot --headless --path . --import
+  ```
+Recompiles every script and prints any parse/type errors; returns non-zero on error. (Same import command used after adding files.)
+
+- **Single file** (faster). Run from `snaketaskmaster/`:
+  ```powershell
+  godot --headless --check-only --script res://path/to/file.gd
+  ```
+Checks a single script for parse/type errors. For project-wide checks, use the `--import` command above.
 
 ---
 
@@ -140,7 +156,6 @@ func test_something() -> void:      # methods MUST start with test_
 - `add_child(node)` is overridden by `GdUnitTestSuite` to track orphans — use it as normal; orphan counts surface in the summary.
 
 ### Running tests
-- **Editor**: FileSystem dock → right-click the test file → **Run Test(s)**. Or use the gdUnit Inspector bottom dock.
 - **Headless** (from `snaketaskmaster/`):
   ```powershell
   godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/<file>_test.gd
@@ -150,8 +165,6 @@ func test_something() -> void:      # methods MUST start with test_
 ### Gotchas
 - **gdUnit4 refuses headless by default** — always pass `--ignoreHeadlessMode` for CLI runs. UI / InputEvent tests genuinely won't work headless; run them from the editor.
 - **`runtest.cmd` is at `addons/gdUnit4/runtest.cmd`** (not the project root) and uses `-d` (debug = opens a window). For CI/headless use the `GdUnitCmdTool.gd` invocation above.
-- **Godot 4.6.2 compat patch in `addons/gdUnit4/src/core/GdUnitFileAccess.gd:199`** — changes `file.get_as_text(true)` → `file.get_as_text()`. Without it, the entire addon fails to compile. Re-installing or updating gdUnit4 via AssetLib will overwrite this patch — re-apply (or check whether upstream 6.0.1+ has fixed it).
-- **Test reports** are written to `snaketaskmaster/reports/` and are gitignored. Don't commit them.
 
 ---
 
@@ -171,27 +184,3 @@ func test_something() -> void:      # methods MUST start with test_
 - Keep each entry minimal: a short **category header** (e.g. `### Research scoping`) plus a **one-line prevention rule**. Nothing else.
 - The category lets future agents skim and skip entries that look unrelated without reading the body. If a rule needs more context to be actionable, the category itself is too broad.
 - Before adding a new entry, check if an existing category already covers it; extend or refine that line instead of duplicating.
-
----
-
-### Code Navigation & Type Checking
-
-Use Grep/Glob/Read for code search and navigation. Before renaming or changing a
-function signature, use Grep to find all call sites first.
-
-GDScript type errors (static-typing mismatches, undeclared identifiers) and syntax errors are caught at compile time by the Godot engine.
-After writing or editing code, check for them by running Godot headless:
-
-- **Whole project** (preferred — full project context). Run from `snaketaskmaster/`:
-  ```powershell
-  godot --headless --path . --import
-  ```
-Recompiles every script and prints any parse/type errors; returns non-zero on error. (Same import command used after adding files.)
-
-- **Single file** (faster). Run from `snaketaskmaster/`:
-  ```powershell
-  godot --headless --check-only --script res://path/to/file.gd
-  ```
-Checks a single script for parse/type errors. For project-wide checks, use the `--import` command above.
-
-Fix any reported type errors or missing references before moving on. Running the gdUnit4 tests also compiles the scripts under test.
