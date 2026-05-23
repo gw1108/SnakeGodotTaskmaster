@@ -155,6 +155,58 @@ func test_something() -> void:      # methods MUST start with test_
 
 ---
 
+## Gameplay Tuning (final values)
+
+These values were settled during task 19 (gameplay parameter tuning). Treat them as the project's defaults; if you change one, update this section and check the constraints below.
+
+| Parameter | Value | Where | Rationale |
+|---|---|---|---|
+| `grid_width` | 20 | `arena.gd` `@export` (default on `Arena.tscn`) | 18 playable columns after walls — wide enough for sustained horizontal runs, narrow enough that the player must turn often |
+| `grid_height` | 15 | `arena.gd` `@export` | 13 playable rows — keeps the play field landscape (matches 4:3 viewport) |
+| `cell_size` | 32 | `arena.gd` `@export` | Sprite art is authored at 32px; smaller cells look mushy at this viewport |
+| `viewport_width` | 640 | `project.godot` `[display]` | Must equal `grid_width * cell_size` (20 × 32 = 640) — otherwise tiles are clipped or the play area is letterboxed |
+| `viewport_height` | 480 | `project.godot` `[display]` | Must equal `grid_height * cell_size` (15 × 32 = 480) |
+| `TickTimer.wait_time` | 0.15 s | `Gameplay.tscn` | ~6.7 ticks/sec — fast enough to feel brisk, slow enough that a reaction-time turn lands on the next cell rather than overshooting |
+| `DeathTimer.wait_time` | 0.5 s | `Gameplay.tscn` | Long enough to register the death audio + visual before transitioning to game over |
+| `Snake.starting_head` | (5, 7) | `snake.gd` `@export` | Left-of-center horizontally, vertically centered. Snake starts facing right with body at (5,7),(4,7),(3,7), giving ~13 cells of runway before the right wall — enough to read the screen and pick a direction. Tests hardcode this position; bump them together if you move it |
+| `Snake.starting_length` | 3 | `snake.gd` `@export` | Classic Snake starting length; anything longer crowds the small grid |
+
+**Constraint to preserve:** `viewport_width == grid_width * cell_size` and `viewport_height == grid_height * cell_size`. If you tune the grid, also resize the viewport in `project.godot` or you'll get visible clipping/letterboxing.
+
+---
+
+## Web (HTML5) Export
+
+The `Web` preset is defined in `snaketaskmaster/export_presets.cfg` and writes to `snaketaskmaster/build/web/index.html`. `build/` is gitignored.
+
+- **Export templates are required and not committed.** Install via Editor → Manage Export Templates → Download and Install (Godot 4.6.2 templates). Without templates, the CLI export creates a partial `.tmp` file and exits with code 255.
+- **CLI export** (after templates are installed):
+  ```powershell
+  godot --headless --path snaketaskmaster --export-release "Web" "build/web/index.html"
+  ```
+- **Local browser test:** HTML5 builds need an HTTP server (file:// won't work due to CORS). From `snaketaskmaster/build/web/`:
+  ```powershell
+  python -m http.server 8000
+  # then open http://localhost:8000/index.html
+  ```
+
+---
+
+## Windows Desktop Export
+
+The `Windows Desktop` preset is defined in `snaketaskmaster/export_presets.cfg` and writes to `snaketaskmaster/build/windows/snake.exe`. PCK is embedded (`binary_format/embed_pck=true`), so the export produces a single self-contained `.exe`. `build/` is gitignored and `*.exe` is independently gitignored.
+
+- **Export templates are required** (same caveat as the Web preset). Install via Editor → Manage Export Templates.
+- **The output directory must exist before exporting.** The CLI export errors with "The given export path doesn't exist" if `build/windows/` is missing. Create it first:
+  ```powershell
+  New-Item -ItemType Directory -Force snaketaskmaster\build\windows
+  godot --headless --path snaketaskmaster --export-release "Windows Desktop" "build/windows/snake.exe"
+  ```
+- **A post-export editor-process crash (SIGSEGV) is harmless** in this configuration — the `.exe` is fully written before the crash. Verify `snake.exe` exists and is ~100 MB before assuming the export failed. The bash wrapper reports `EXIT: 0` despite the backtrace.
+- **Manual verification:** double-click `snake.exe` and confirm the title screen appears, controls respond, audio plays, and the full gameplay loop runs to game-over. No Godot install is required to run the embedded build.
+
+---
+
 ## Workflow Orchestration
 
 ### 1. Subagent Strategy (Parallelize Intelligently)

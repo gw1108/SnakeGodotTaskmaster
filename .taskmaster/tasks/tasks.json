@@ -1,11 +1,364 @@
 {
   "master": {
-    "tasks": [],
+    "tasks": [
+      {
+        "id": "1",
+        "title": "Configure project input map",
+        "description": "Add input actions for game controls: move_up, move_down, move_left, move_right (Arrow keys + WASD), start (Enter), and restart (R)",
+        "details": "1. Open project.godot in editor or modify directly\n2. Add input map entries under [input] section:\n   - move_up: KEY_W, KEY_UP\n   - move_down: KEY_S, KEY_DOWN\n   - move_left: KEY_A, KEY_LEFT\n   - move_right: KEY_D, KEY_RIGHT\n   - start: KEY_ENTER\n   - restart: KEY_R\n3. Use Input.is_action_pressed() for movement, Input.is_action_just_pressed() for discrete actions\n4. Ensure deadzone = 0.5 (default) for keyboard inputs",
+        "testStrategy": "Manual test: Open project settings → Input Map tab and verify all 6 actions are present with correct key bindings. Create a simple test scene that prints action names when pressed.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:14:30.405Z"
+      },
+      {
+        "id": "2",
+        "title": "Import and configure floor tile sprite",
+        "description": "Import source/sprites/floor_tile.png with pixel-art import settings (filter off, mipmaps off)",
+        "details": "1. Create directory structure: res://sprites/\n2. Copy source/sprites/floor_tile.png to res://sprites/\n3. Select the imported .png in FileSystem dock\n4. In Import tab, set:\n   - Filter: Off (Nearest neighbor)\n   - Mipmaps: Off\n   - Compress Mode: Lossless or VRAM Compressed\n5. Click Reimport\n6. Verify texture appears crisp at integer scales (2x, 3x, 4x)",
+        "testStrategy": "Visual verification: Create a test scene with a Sprite2D node, assign floor_tile.png, scale to 2x/3x/4x. Verify no blurring occurs. Check import settings in the Import dock.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:16:32.598Z"
+      },
+      {
+        "id": "3",
+        "title": "Import and configure wall tile sprite",
+        "description": "Import source/sprites/wall_tile.png with pixel-art import settings (filter off, mipmaps off)",
+        "details": "1. Copy source/sprites/wall_tile.png to res://sprites/\n2. Select in FileSystem dock\n3. In Import tab, set:\n   - Filter: Off\n   - Mipmaps: Off\n   - Compress Mode: Lossless or VRAM Compressed\n4. Click Reimport\n5. Verify crisp rendering at integer scales",
+        "testStrategy": "Visual verification: Add to test scene alongside floor_tile, scale identically, verify matching pixel clarity and no filtering artifacts.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:18:23.816Z"
+      },
+      {
+        "id": "4",
+        "title": "Import snake head sprite",
+        "description": "Import source/sprites/player_head.png with pixel-art import settings",
+        "details": "1. Copy source/sprites/player_head.png to res://sprites/\n2. Import settings:\n   - Filter: Off\n   - Mipmaps: Off\n   - Compress Mode: Lossless\n3. This sprite will be rotated programmatically (0°, 90°, 180°, 270°) for heading direction\n4. Assume default orientation faces right (0° rotation = heading right)",
+        "testStrategy": "Visual: Sprite2D with player_head.png, test rotation at 0°, 90°, 180°, 270° to verify all cardinal directions look correct with no filtering blur.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:20:10.255Z"
+      },
+      {
+        "id": "5",
+        "title": "Import snake body sprite",
+        "description": "Import source/sprites/player_body.png with pixel-art import settings",
+        "details": "1. Copy source/sprites/player_body.png to res://sprites/\n2. Import settings:\n   - Filter: Off\n   - Mipmaps: Off\n   - Compress Mode: Lossless\n3. Body segments do not rotate; use same sprite for all body cells",
+        "testStrategy": "Visual: Place multiple Sprite2D nodes with player_body.png in a line to simulate snake body. Verify consistent appearance and pixel clarity.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:21:43.377Z"
+      },
+      {
+        "id": "6",
+        "title": "Import food sprite",
+        "description": "Import source/sprites/food.png with pixel-art import settings",
+        "details": "1. Copy source/sprites/food.png to res://sprites/\n2. Import settings:\n   - Filter: Off\n   - Mipmaps: Off\n   - Compress Mode: Lossless\n3. Food sprite will be rendered at a single random grid cell",
+        "testStrategy": "Visual: Sprite2D with food.png, verify crisp rendering at game scale (likely 16x16 or 32x32 pixels per cell).",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:23:20.626Z"
+      },
+      {
+        "id": "7",
+        "title": "Import audio files",
+        "description": "Import source/audio/eat_food.wav and source/audio/death.wav",
+        "details": "1. Create directory: res://audio/\n2. Copy source/audio/eat_food.wav and source/audio/death.wav to res://audio/\n3. Godot auto-imports .wav files; verify import in FileSystem dock\n4. Check import settings:\n   - Loop: Off (these are one-shot SFX)\n   - Compress Mode: ADPCM or Uncompressed depending on file size\n5. Ensure AudioStreamPlayer or AudioStreamPlayer2D can load and play these",
+        "testStrategy": "Create test scene with AudioStreamPlayer, assign each .wav, call play() in _ready(). Verify both sounds play correctly without distortion or looping.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:37:41.146Z"
+      },
+      {
+        "id": "8",
+        "title": "Implement Arena scene with grid-based tilemap",
+        "description": "Create Arena.tscn with TileMap node rendering floor interior and wall perimeter. Expose grid width/height as export vars.",
+        "details": "1. Create res://scenes/Arena.tscn with root Node2D named Arena\n2. Attach script res://scripts/arena.gd:\n   - @export var grid_width: int = 20\n   - @export var grid_height: int = 15\n   - @export var cell_size: int = 32 (pixels per grid cell)\n3. Add TileMap child node (Godot 4 TileMapLayer or TileMap with single layer)\n4. Create TileSet resource:\n   - Add floor_tile.png as tile ID 0 (interior)\n   - Add wall_tile.png as tile ID 1 (perimeter)\n5. In _ready(), programmatically fill tilemap:\n   - Perimeter (x=0, x=grid_width-1, y=0, y=grid_height-1): wall tiles\n   - Interior (1 <= x < grid_width-1, 1 <= y < grid_height-1): floor tiles\n6. TileMap.tile_set.tile_size = Vector2i(cell_size, cell_size)\n7. Provide method is_wall(grid_pos: Vector2i) -> bool for collision checks\n8. Provide method grid_to_world(grid_pos: Vector2i) -> Vector2 and world_to_grid(world_pos: Vector2) -> Vector2i",
+        "testStrategy": "Unit tests (arena_test.gd): Instantiate Arena, verify grid_width/height exports work. Test is_wall() returns true for perimeter cells and false for interior. Test grid_to_world() and world_to_grid() conversions. Visual: Run scene, verify floor fills interior and wall ring appears around perimeter.",
+        "priority": "high",
+        "dependencies": [
+          "2",
+          "3"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:26:32.544Z"
+      },
+      {
+        "id": "9",
+        "title": "Implement Snake logic script",
+        "description": "Create snake.gd with grid-based movement, collision detection, growth, and death signaling",
+        "details": "1. Create res://scripts/snake.gd (class_name Snake extends Node2D)\n2. State:\n   - var body: Array[Vector2i] = [] (ordered list of grid cells, [0] = head)\n   - var heading: Vector2i = Vector2i.RIGHT (current direction)\n   - var queued_direction: Vector2i = Vector2i.RIGHT (input buffer)\n   - var is_alive: bool = true\n3. Signals:\n   - signal food_eaten\n   - signal died\n4. Initialization (_init or _ready):\n   - Start with 3 cells: [(5,7), (4,7), (3,7)] (heading right, center-ish)\n   - heading = Vector2i.RIGHT\n5. Methods:\n   - func queue_direction(dir: Vector2i) -> void:\n     - Reject if dir == -heading (opposite direction)\n     - Set queued_direction = dir\n   - func tick(arena: Arena, food_pos: Vector2i) -> void:\n     - heading = queued_direction\n     - new_head = body[0] + heading\n     - if arena.is_wall(new_head) or new_head in body:\n       - is_alive = false\n       - died.emit()\n       - return\n     - body.push_front(new_head)\n     - if new_head == food_pos:\n       - food_eaten.emit()\n       - (do NOT pop tail, snake grows)\n     - else:\n       - body.pop_back()\n6. Export var starting_length: int = 3 for testing\n7. Use Vector2i for grid coordinates (Godot 4)",
+        "testStrategy": "Unit tests (snake_test.gd): Test queue_direction rejects opposite heading. Test tick() advances body correctly. Test collision with wall triggers died signal. Test collision with own body triggers died. Test eating food emits food_eaten and grows body by 1. Test starting_length = 3.",
+        "priority": "high",
+        "dependencies": [
+          "8"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:29:04.818Z"
+      },
+      {
+        "id": "10",
+        "title": "Implement Snake rendering with head and body sprites",
+        "description": "Render snake body using Sprite2D nodes: head sprite (rotated) at body[0], body sprite for remaining segments",
+        "details": "1. In snake.gd, add rendering logic:\n   - Preload head and body textures:\n     - const HEAD_TEXTURE := preload(\"res://sprites/player_head.png\")\n     - const BODY_TEXTURE := preload(\"res://sprites/player_body.png\")\n2. Add child Sprite2D nodes dynamically:\n   - func _update_visuals(arena: Arena) -> void:\n     - Clear existing sprite children\n     - For i in body.size():\n       - var sprite := Sprite2D.new()\n       - sprite.texture = HEAD_TEXTURE if i == 0 else BODY_TEXTURE\n       - sprite.position = arena.grid_to_world(body[i])\n       - if i == 0:\n         - var angle := _heading_to_angle(heading)\n         - sprite.rotation = angle\n       - add_child(sprite)\n3. Helper: func _heading_to_angle(h: Vector2i) -> float:\n   - Vector2i.RIGHT: 0.0\n   - Vector2i.DOWN: PI/2\n   - Vector2i.LEFT: PI\n   - Vector2i.UP: -PI/2 or 3*PI/2\n4. Call _update_visuals() after each tick()\n5. Alternatively, use a Node2D with manually positioned Sprite2D children for better performance (pool sprites instead of recreating)",
+        "testStrategy": "Manual/visual test: Instantiate Snake in a test scene with Arena. Call tick() repeatedly, verify head sprite rotates to match heading and body sprites trail behind. Verify growth on food_eaten (body length increases by 1).",
+        "priority": "high",
+        "dependencies": [
+          "4",
+          "5",
+          "9"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:32:07.569Z"
+      },
+      {
+        "id": "11",
+        "title": "Implement food spawning logic",
+        "description": "Create food.gd that spawns a single food item in a random empty grid cell (not on snake or wall)",
+        "details": "1. Create res://scripts/food.gd (class_name Food extends Node2D)\n2. State:\n   - var position_grid: Vector2i\n   - var sprite: Sprite2D\n3. Preload food texture:\n   - const FOOD_TEXTURE := preload(\"res://sprites/food.png\")\n4. func spawn(arena: Arena, snake_body: Array[Vector2i]) -> void:\n   - Collect all valid empty cells:\n     - For x in range(1, arena.grid_width - 1):\n       - For y in range(1, arena.grid_height - 1):\n         - cell = Vector2i(x, y)\n         - if cell not in snake_body:\n           - valid_cells.append(cell)\n   - position_grid = valid_cells.pick_random() (Godot 4 Array method)\n   - Update sprite.position = arena.grid_to_world(position_grid)\n5. In _ready(), create sprite child:\n   - sprite = Sprite2D.new()\n   - sprite.texture = FOOD_TEXTURE\n   - add_child(sprite)\n6. Provide method get_grid_pos() -> Vector2i",
+        "testStrategy": "Unit tests (food_test.gd): Mock arena with 5x5 grid, snake occupying [(2,2), (1,2)]. Call spawn(), verify food position is not (2,2), (1,2), or any wall cell. Run 100 times, verify food always spawns in valid cells. Visual: Spawn food in test scene, verify sprite appears at correct grid position.",
+        "priority": "high",
+        "dependencies": [
+          "6",
+          "8",
+          "9"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:34:47.406Z"
+      },
+      {
+        "id": "12",
+        "title": "Implement in-game HUD with score display",
+        "description": "Create HUD.tscn with a Label showing current score (food eaten count)",
+        "details": "1. Create res://scenes/HUD.tscn with root CanvasLayer named HUD\n2. Attach script res://scripts/hud.gd\n3. Add Label child node:\n   - Name: ScoreLabel\n   - Position: Top-left corner (offset_left=10, offset_top=10)\n   - Text: \"Score: 0\"\n   - Font size: 24 (or use theme for larger pixel font)\n4. In hud.gd:\n   - var score: int = 0\n   - func update_score(new_score: int) -> void:\n     - score = new_score\n     - $ScoreLabel.text = \"Score: \" + str(score)\n   - func reset() -> void:\n     - update_score(0)\n5. HUD should be added to gameplay scene and connected to snake.food_eaten signal",
+        "testStrategy": "Unit tests (hud_test.gd): Instantiate HUD, call update_score(5), verify ScoreLabel.text == \"Score: 5\". Call reset(), verify text == \"Score: 0\". Visual: Add HUD to test scene, manually call update_score() with various values, verify label updates.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:40:39.727Z"
+      },
+      {
+        "id": "13",
+        "title": "Implement Title screen scene",
+        "description": "Create TitleScreen.tscn with game title and \"Press Enter to Start\" prompt, transitions to Gameplay on start action",
+        "details": "1. Create res://scenes/TitleScreen.tscn with root Control node named TitleScreen\n2. Attach script res://scripts/title_screen.gd\n3. Add UI children:\n   - VBoxContainer (centered, anchors preset: Center)\n     - Label: text = \"SNAKE\" (large font, 48pt)\n     - Label: text = \"Press Enter to Start\" (smaller font, 18pt)\n4. In title_screen.gd:\n   - func _input(event: InputEvent) -> void:\n     - if event.is_action_pressed(\"start\"):\n       - get_tree().change_scene_to_file(\"res://scenes/Gameplay.tscn\")\n5. Ensure this scene is set as run/main_scene in project.godot initially (or loaded by a main controller)",
+        "testStrategy": "Manual test: Run TitleScreen.tscn, press Enter, verify scene transitions to Gameplay.tscn (even if Gameplay is a stub). Verify WASD/Arrow keys do not trigger transition (only Enter).",
+        "priority": "medium",
+        "dependencies": [
+          "1"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:49:06.792Z"
+      },
+      {
+        "id": "14",
+        "title": "Implement Game Over screen scene",
+        "description": "Create GameOver.tscn displaying final score and \"Press R to Restart\" prompt, transitions back to Gameplay on restart action",
+        "details": "1. Create res://scenes/GameOver.tscn with root Control node named GameOver\n2. Attach script res://scripts/game_over.gd\n3. Add UI children:\n   - VBoxContainer (centered, anchors preset: Center)\n     - Label: name = \"GameOverLabel\", text = \"GAME OVER\" (36pt)\n     - Label: name = \"ScoreLabel\", text = \"Score: 0\" (24pt)\n     - Label: text = \"Press R to Restart\" (18pt)\n4. In game_over.gd:\n   - var final_score: int = 0\n   - func _ready() -> void:\n     - $VBoxContainer/ScoreLabel.text = \"Score: \" + str(final_score)\n   - func _input(event: InputEvent) -> void:\n     - if event.is_action_pressed(\"restart\"):\n       - get_tree().change_scene_to_file(\"res://scenes/Gameplay.tscn\")\n   - func set_score(score: int) -> void:\n     - final_score = score\n5. Gameplay scene must pass score to GameOver before transitioning (e.g., via autoload singleton or scene constructor)",
+        "testStrategy": "Manual test: Instantiate GameOver, call set_score(10), verify ScoreLabel shows \"Score: 10\". Press R, verify scene transitions to Gameplay.tscn. Verify only R key triggers restart.",
+        "priority": "medium",
+        "dependencies": [
+          "1"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:52:48.659Z"
+      },
+      {
+        "id": "15",
+        "title": "Implement Gameplay scene integrating Arena, Snake, Food, and HUD",
+        "description": "Create Gameplay.tscn orchestrating the game loop: tick timer, input handling, collision detection, score tracking, and death transition",
+        "details": "1. Create res://scenes/Gameplay.tscn with root Node2D named Gameplay\n2. Attach script res://scripts/gameplay.gd\n3. Scene children:\n   - Arena instance (Arena.tscn)\n   - Snake instance (or instantiate in code)\n   - Food instance (or instantiate in code)\n   - HUD instance (HUD.tscn)\n   - Timer node: name = \"TickTimer\", wait_time = 0.15 (6.67 ticks/sec), autostart = true, one_shot = false\n4. In gameplay.gd:\n   - var score: int = 0\n   - @onready var arena := $Arena\n   - @onready var snake := $Snake (or instantiate: snake = Snake.new(), add_child(snake))\n   - @onready var food := $Food\n   - @onready var hud := $HUD\n   - @onready var tick_timer := $TickTimer\n   - func _ready() -> void:\n     - snake.food_eaten.connect(_on_food_eaten)\n     - snake.died.connect(_on_snake_died)\n     - food.spawn(arena, snake.body)\n     - hud.reset()\n     - tick_timer.timeout.connect(_on_tick)\n   - func _input(event: InputEvent) -> void:\n     - if event.is_action_pressed(\"move_up\"):\n       - snake.queue_direction(Vector2i.UP)\n     - elif event.is_action_pressed(\"move_down\"):\n       - snake.queue_direction(Vector2i.DOWN)\n     - elif event.is_action_pressed(\"move_left\"):\n       - snake.queue_direction(Vector2i.LEFT)\n     - elif event.is_action_pressed(\"move_right\"):\n       - snake.queue_direction(Vector2i.RIGHT)\n   - func _on_tick() -> void:\n     - snake.tick(arena, food.get_grid_pos())\n   - func _on_food_eaten() -> void:\n     - score += 1\n     - hud.update_score(score)\n     - food.spawn(arena, snake.body)\n   - func _on_snake_died() -> void:\n     - tick_timer.stop()\n     - # Play death SFX (task 17)\n     - await get_tree().create_timer(0.5).timeout\n     - # Pass score to GameOver scene (use autoload or pass via scene param)\n     - get_tree().change_scene_to_file(\"res://scenes/GameOver.tscn\")\n5. Consider using an autoload singleton (e.g., GameState) to pass score to GameOver",
+        "testStrategy": "Integration test: Run Gameplay.tscn, verify snake starts at center heading right, food spawns in valid cell, HUD shows Score: 0. Press arrow keys, verify snake changes direction. Steer snake to food, verify score increments and new food spawns. Steer into wall or body, verify game transitions to GameOver after 0.5s. Manual playtesting for game feel.",
+        "priority": "high",
+        "dependencies": [
+          "8",
+          "9",
+          "10",
+          "11",
+          "12"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:44:46.654Z"
+      },
+      {
+        "id": "16",
+        "title": "Wire eat-food sound effect",
+        "description": "Play eat_food.wav when snake eats food (hook to food_eaten signal)",
+        "details": "1. In Gameplay.tscn or gameplay.gd, add AudioStreamPlayer child node:\n   - Name: EatFoodAudioPlayer\n   - Stream: res://audio/eat_food.wav\n   - Autoplay: false\n   - Bus: Master (or SFX bus if configured)\n2. In gameplay.gd _on_food_eaten():\n   - $EatFoodAudioPlayer.play()\n3. Ensure sound plays immediately when snake head overlaps food cell\n4. Volume: default (0 dB) or adjust in inspector if too loud/quiet",
+        "testStrategy": "Manual test: Run Gameplay, steer snake to food, verify eat_food.wav plays exactly once when food is eaten. Verify no sound plays on movement or other events.",
+        "priority": "medium",
+        "dependencies": [
+          "7",
+          "15"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:05:04.046Z"
+      },
+      {
+        "id": "17",
+        "title": "Wire death sound effect",
+        "description": "Play death.wav when snake dies (hook to died signal), before transitioning to Game Over",
+        "details": "1. In Gameplay.tscn or gameplay.gd, add AudioStreamPlayer child node:\n   - Name: DeathAudioPlayer\n   - Stream: res://audio/death.wav\n   - Autoplay: false\n   - Bus: Master (or SFX bus)\n2. In gameplay.gd _on_snake_died():\n   - $DeathAudioPlayer.play()\n   - await $DeathAudioPlayer.finished (or fixed timer)\n   - get_tree().change_scene_to_file(\"res://scenes/GameOver.tscn\")\n3. Ensure death sound plays fully before scene transition (0.5s delay or await finished)\n4. Volume: default or adjust",
+        "testStrategy": "Manual test: Run Gameplay, steer snake into wall or body, verify death.wav plays, then GameOver screen appears after sound finishes. Verify sound does not cut off early.",
+        "priority": "medium",
+        "dependencies": [
+          "7",
+          "15"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:07:18.232Z"
+      },
+      {
+        "id": "18",
+        "title": "Implement scene transition flow: Title → Gameplay → GameOver → Gameplay",
+        "description": "Wire up complete scene flow with proper state reset and score passing between scenes",
+        "details": "1. Create autoload singleton res://scripts/game_state.gd:\n   - var current_score: int = 0\n   - func set_score(score: int) -> void: current_score = score\n   - func get_score() -> int: return current_score\n2. Register autoload in project.godot:\n   - [autoload]\n   - GameState=\"*res://scripts/game_state.gd\"\n3. In gameplay.gd _on_snake_died():\n   - GameState.set_score(score)\n4. In game_over.gd _ready():\n   - final_score = GameState.get_score()\n   - $VBoxContainer/ScoreLabel.text = \"Score: \" + str(final_score)\n5. Set project.godot run/main_scene to res://scenes/TitleScreen.tscn\n6. Ensure each Gameplay instantiation resets all state (snake position, score, food position)\n7. Test full loop: Title → Gameplay → GameOver → Gameplay → GameOver → ...",
+        "testStrategy": "Manual integration test: Launch game from TitleScreen, press Enter, play until death, verify GameOver shows correct score. Press R, verify new Gameplay starts fresh (score = 0, snake at starting position). Play again, verify score passes correctly again. Repeat 3 times to ensure no state leaks.",
+        "priority": "high",
+        "dependencies": [
+          "13",
+          "14",
+          "15"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:56:30.077Z"
+      },
+      {
+        "id": "19",
+        "title": "Tune gameplay parameters (grid size, tick rate, starting position)",
+        "description": "Adjust grid dimensions, tick speed, and snake starting position for optimal game feel",
+        "details": "1. In Arena.tscn inspector, tune:\n   - grid_width: try 20, 24, 30\n   - grid_height: try 15, 18, 20\n   - cell_size: try 32 (recommended), 24, 16 based on window size\n2. Adjust window size in project.godot to fit grid:\n   - viewport_width = grid_width * cell_size + margins\n   - viewport_height = grid_height * cell_size + margins\n   - Example: 20x15 grid at 32px/cell = 640x480 viewport\n3. In Gameplay.tscn TickTimer, tune wait_time:\n   - Start at 0.15 (6.67 ticks/sec)\n   - Try 0.1 (faster), 0.2 (slower)\n   - Ideal: player can react but game feels brisk\n4. In snake.gd initialization, adjust starting position:\n   - Center-ish: (grid_width/2, grid_height/2)\n   - Ensure starting body (3 cells) fits without hitting wall\n5. Playtest for 5-10 runs, adjust based on feel\n6. Document final values in CLAUDE.md or a tuning doc",
+        "testStrategy": "Manual playtesting: Play 10 full games with different parameter sets. Evaluate: Is grid too cramped/spacious? Is tick rate too fast/slow? Does snake start in a fair position? Gather feedback, iterate until game feels responsive and fair.",
+        "priority": "low",
+        "dependencies": [
+          "15",
+          "16",
+          "17",
+          "18"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:11:59.723Z"
+      },
+      {
+        "id": "20",
+        "title": "Write unit tests for Arena",
+        "description": "Create test/arena_test.gd covering grid generation, wall detection, and coordinate conversions",
+        "details": "1. Create res://test/arena_test.gd extending GdUnitTestSuite\n2. Test cases:\n   - test_arena_initializes_with_correct_dimensions()\n   - test_is_wall_returns_true_for_perimeter()\n   - test_is_wall_returns_false_for_interior()\n   - test_grid_to_world_conversion()\n   - test_world_to_grid_conversion()\n   - test_custom_grid_size_export_vars()\n3. Use auto_free() for instantiated Arena nodes\n4. Use assert_bool(), assert_int(), assert_vector() for assertions\n5. Run with: godot --headless --path snaketaskmaster -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/arena_test.gd",
+        "testStrategy": "Run test suite, verify all assertions pass. Check test coverage: perimeter cells (all 4 edges + corners) return is_wall=true, interior cells return false. Verify coordinate conversions are bidirectional (grid→world→grid == original).",
+        "priority": "medium",
+        "dependencies": [
+          "8"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T06:59:01.133Z"
+      },
+      {
+        "id": "21",
+        "title": "Write unit tests for Snake",
+        "description": "Create test/snake_test.gd covering movement, collision, growth, and death logic",
+        "details": "1. Create res://test/snake_test.gd extending GdUnitTestSuite\n2. Test cases:\n   - test_snake_starts_with_length_3()\n   - test_queue_direction_changes_heading()\n   - test_queue_direction_rejects_opposite_heading()\n   - test_tick_advances_body_by_one_cell()\n   - test_tick_detects_wall_collision_and_emits_died()\n   - test_tick_detects_self_collision_and_emits_died()\n   - test_tick_detects_food_and_emits_food_eaten()\n   - test_eating_food_grows_body_by_one()\n   - test_not_eating_food_maintains_body_length()\n3. Mock Arena with a simple stub: is_wall returns true for test boundaries\n4. Use await_signal_on() for testing died and food_eaten signals\n5. Run with gdUnit4 CLI",
+        "testStrategy": "Run test suite, verify all test_* methods pass. Ensure edge cases covered: opposite direction input ignored, collision with wall/body triggers died, growth only happens on food.",
+        "priority": "medium",
+        "dependencies": [
+          "9"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:01:07.082Z"
+      },
+      {
+        "id": "22",
+        "title": "Write unit tests for Food",
+        "description": "Create test/food_test.gd covering spawn logic and empty cell validation",
+        "details": "1. Create res://test/food_test.gd extending GdUnitTestSuite\n2. Test cases:\n   - test_food_spawns_in_valid_empty_cell()\n   - test_food_does_not_spawn_on_snake_body()\n   - test_food_does_not_spawn_on_wall()\n   - test_food_spawn_randomness() (run 50 times, verify food spawns in different cells)\n3. Mock Arena: 5x5 grid, walls at perimeter\n4. Mock Snake body: [(2,2), (1,2)]\n5. Call food.spawn(arena, snake_body) and assert position_grid not in snake_body and not arena.is_wall(position_grid)\n6. Run with gdUnit4 CLI",
+        "testStrategy": "Run test suite, verify food never spawns on snake or wall. Run randomness test 100 times to ensure no crashes and position varies.",
+        "priority": "medium",
+        "dependencies": [
+          "11"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:02:49.171Z"
+      },
+      {
+        "id": "23",
+        "title": "Write unit tests for HUD",
+        "description": "Create test/hud_test.gd covering score display updates and reset",
+        "details": "1. Create res://test/hud_test.gd extending GdUnitTestSuite\n2. Test cases:\n   - test_hud_initializes_with_score_zero()\n   - test_update_score_changes_label_text()\n   - test_reset_sets_score_to_zero()\n3. Instantiate HUD with auto_free()\n4. Access $ScoreLabel node and assert text content\n5. Use assert_str() for text assertions\n6. Run with gdUnit4 CLI",
+        "testStrategy": "Run test suite, verify label text updates correctly when update_score() is called with various values (0, 1, 10, 999). Verify reset() restores \"Score: 0\".",
+        "priority": "low",
+        "dependencies": [
+          "12"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:09:20.276Z"
+      },
+      {
+        "id": "24",
+        "title": "Configure HTML5 web export preset",
+        "description": "Set up web export template for deploying game to browser (itch.io, GitHub Pages, etc.)",
+        "details": "1. Open Project → Export... in Godot editor\n2. Add export preset: Web (HTML5)\n3. Configure settings:\n   - Export Path: build/web/index.html\n   - Head Include: (leave default or add custom HTML if needed)\n   - Custom HTML Shell: (optional, for custom branding)\n   - Ensure SharedArrayBuffer support if using threads (not needed for this game)\n4. Download/install export templates if not present:\n   - Editor → Manage Export Templates → Download and Install\n   - Godot 4.x templates\n5. Test export: Project → Export... → Export Project → Save to build/web/\n6. Test locally:\n   - Run a local HTTP server: python -m http.server 8000 (from build/web/)\n   - Open browser: http://localhost:8000/index.html\n   - Verify game loads and plays correctly in browser\n7. .gitignore: add build/ to avoid committing export artifacts",
+        "testStrategy": "Manual test: Export to build/web/, serve locally, open in Chrome/Firefox/Edge. Verify: game loads, controls work (keyboard input), audio plays, no console errors. Test on at least 2 browsers.",
+        "priority": "low",
+        "dependencies": [
+          "18",
+          "19"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:14:35.881Z"
+      },
+      {
+        "id": "25",
+        "title": "Configure Windows desktop export preset",
+        "description": "Set up Windows executable export for desktop distribution",
+        "details": "1. Open Project → Export...\n2. Add export preset: Windows Desktop\n3. Configure settings:\n   - Export Path: build/windows/snake.exe\n   - Embed PCK: true (embeds resources in .exe)\n   - Rcedit tool: (optional, for custom icon/metadata)\n4. Download export templates if needed (same as task 24)\n5. Test export: Project → Export... → Export Project → Save to build/windows/\n6. Run snake.exe on Windows, verify game launches and plays correctly\n7. .gitignore: add build/ if not already present",
+        "testStrategy": "Manual test: Export to build/windows/snake.exe, run executable on Windows 10/11. Verify: game launches, no missing DLL errors, controls work, audio plays, full gameplay loop functions. Test on clean machine if possible (no Godot installed).",
+        "priority": "low",
+        "dependencies": [
+          "18",
+          "19"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-21T07:17:00.796Z"
+      }
+    ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-18T00:00:00.000Z",
-      "taskCount": 0,
-      "completedCount": 0,
+      "lastModified": "2026-05-21T07:17:00.797Z",
+      "taskCount": 25,
+      "completedCount": 25,
       "tags": [
         "master"
       ],
