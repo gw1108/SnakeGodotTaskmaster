@@ -26,7 +26,7 @@ Whenever new files are added or created in the Godot project (scripts, scenes, r
 godot --headless --path . --import
 ```
 
-Run from `snaketaskmaster/` (or substitute `--path snaketaskmaster` from the repo root). LSP, the editor, and `preload(...)` calls will not resolve new files until this completes.
+Run from `snaketaskmaster/` (or substitute `--path snaketaskmaster` from the repo root). The editor and `preload(...)` calls will not resolve new files until this completes.
 
 ---
 
@@ -174,21 +174,24 @@ func test_something() -> void:      # methods MUST start with test_
 
 ---
 
-### Code Intelligence
+### Code Navigation & Type Checking
 
-Prefer LSP over Grep/Glob/Read for code navigation:
-- `goToDefinition` / `goToImplementation` to jump to source
-- `findReferences` to see all usages across the codebase
-- `workspaceSymbol` to find where something is defined
-- `documentSymbol` to list all symbols in a file
-- `hover` for type info without reading the file
-- `incomingCalls` / `outgoingCalls` for call hierarchy
+Use Grep/Glob/Read for code search and navigation. Before renaming or changing a
+function signature, use Grep to find all call sites first.
 
-Before renaming or changing a function signature, use
-`findReferences` to find all call sites first.
+GDScript type errors (static-typing mismatches, undeclared identifiers) and syntax errors are caught at compile time by the Godot engine.
+After writing or editing code, check for them by running Godot headless:
 
-Use Grep/Glob only for text/pattern searches (comments,
-strings, config values) where LSP doesn't help.
+- **Whole project** (preferred — full project context). Run from `snaketaskmaster/`:
+  ```powershell
+  godot --headless --path . --import
+  ```
+Recompiles every script and prints any parse/type errors; returns non-zero on error. (Same import command used after adding files.)
 
-After writing or editing code, check LSP diagnostics before
-moving on. Fix any type errors or missing imports immediately.
+- **Single file** (faster). Run from `snaketaskmaster/`:
+  ```powershell
+  godot --headless --check-only --script res://path/to/file.gd
+  ```
+Checks a single script for parse/type errors. For project-wide checks, use the `--import` command above.
+
+Fix any reported type errors or missing references before moving on. Running the gdUnit4 tests also compiles the scripts under test.
