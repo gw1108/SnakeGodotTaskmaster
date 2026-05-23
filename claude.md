@@ -22,7 +22,7 @@ Do NOT scan files under any folder named ARCHIVE unless specified.
 Whenever new files are added or created in the Godot project (scripts, scenes, resources, assets), run the headless import so Godot picks them up and generates `.import`/`.uid` metadata:
 
 ```powershell
-godot --headless --path . --import
+godot --headless --path snaketaskmaster --import
 ```
 
 The gdUni4, editor, and `preload(...)` calls will not resolve new files until this completes.
@@ -158,7 +158,7 @@ func test_something() -> void:      # methods MUST start with test_
 ### Running tests
 - **Headless** (from `snaketaskmaster/`):
   ```powershell
-  godot --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/<file>_test.gd
+  godot --headless --path snaketaskmaster -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/<file>_test.gd
   ```
   Exit code 0 on pass. `-a <path>` can be a file or a directory.
 
