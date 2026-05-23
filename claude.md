@@ -18,6 +18,16 @@ The Godot project lives in `snaketaskmaster/`, NOT the repo root. Run `godot` co
 Do NOT scan files in the /thoughts/ folder unless specified.
 Do NOT scan files under any folder named ARCHIVE unless specified.
 
+### Re-import after adding files
+
+Whenever new files are added or created in the Godot project (scripts, scenes, resources, assets), run the headless import so Godot picks them up and generates `.import`/`.uid` metadata:
+
+```powershell
+godot --headless --path . --import
+```
+
+Run from `snaketaskmaster/` (or substitute `--path snaketaskmaster` from the repo root). LSP, the editor, and `preload(...)` calls will not resolve new files until this completes.
+
 ---
 
 ## Test Guidelines

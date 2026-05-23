@@ -126,6 +126,14 @@ def detect_output_with_tag(output_dir: str, run_id: str, started_at: float) -> P
     return None
 
 
+def archive_plan(plan_path: str) -> None:
+    """Archive an implemented plan by just deleting it, if the file exists."""
+    path = Path(plan_path)
+    if path.exists():
+        path.unlink()
+        print(f"\n[pipeline] Archived plan (deleted): {path.name}")
+
+
 def run_stage(stage: dict, input_value: str, run_id: str) -> Path | None:
     is_terminal = stage.get("terminal", False)
     context = stage["context_template"].format(input=input_value)
@@ -156,6 +164,8 @@ def run_stage(stage: dict, input_value: str, run_id: str) -> Path | None:
         if process.returncode != 0:
             print(f"\nERROR: Stage '{stage['name']}' exited with code {process.returncode}.")
             return None
+        # Plan has been implemented; archive it by just deleting the plan file.
+        archive_plan(input_value)
         # Signal success to the pipeline loop without producing a new file.
         return Path(input_value)
 
