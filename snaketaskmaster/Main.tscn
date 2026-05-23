@@ -1,12 +1,8 @@
-; Placeholder main scene — the entrypoint of the game.
-; Wired up via `run/main_scene` in project.godot so F5 / `godot --path .` loads this.
-; Replace this with the real gameplay scene (HUD, etc.) when ready.
+[gd_scene format=3 uid="uid://vpv8fh7vjagf"]
 
-[gd_scene format=3]
+[node name="Main" type="Node2D" unique_id=1624429783]
 
-[node name="Main" type="Node2D"]
-
-[node name="HelloLabel" type="Label" parent="."]
+[node name="HelloLabel" type="Label" parent="." unique_id=521176167]
 offset_left = 40.0
 offset_top = 40.0
 offset_right = 300.0
