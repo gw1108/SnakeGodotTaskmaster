@@ -34,13 +34,13 @@ After writing or editing code, check for them by running Godot headless:
 
 - **Whole project** (preferred — full project context). Run from `snaketaskmaster/`:
   ```powershell
-  godot --headless --path . --import
+  godot --headless --path snaketaskmaster --import
   ```
 Recompiles every script and prints any parse/type errors; returns non-zero on error. (Same import command used after adding files.)
 
 - **Single file** (faster). Run from `snaketaskmaster/`:
   ```powershell
-  godot --headless --check-only --script res://path/to/file.gd
+  godot --headless --path snaketaskmaster --check-only --script res://path/to/file.gd
   ```
 Checks a single script for parse/type errors. For project-wide checks, use the `--import` command above.
 
