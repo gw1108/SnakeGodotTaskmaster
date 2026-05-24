@@ -1,0 +1,130 @@
+<context>
+# Overview
+A simple, classic 2D Snake game built in Godot. The player steers a continuously
+moving snake around a bordered, top-down arena, eating apples to grow longer. The
+challenge comes from avoiding the deadly outer walls and the snake's own ever-growing
+body. It is for casual players who want a quick, familiar arcade experience, and it
+serves as a small, well-scoped reference project.
+
+The game is intentionally minimal: one screen, one snake, one food item at a time,
+and a score that goes up as you eat. There is no win state — the player tries to beat
+their own high score before they crash.
+
+# Core Features
+- Grid-based arena with a deadly wall border and a grass floor.
+- A snake (head + trailing body segments) that moves at a constant speed on a fixed grid tick.
+- Absolute 4-direction steering (Arrow keys / WASD map to up/down/left/right). The snake
+  cannot immediately reverse into itself.
+- Food (apple) that spawns on a random empty cell; eating it grows the snake by one segment
+  and increases the score.
+- Collision rules: the run ends if the head hits the wall border or any body segment.
+- A score display during play and a high score tracked for the current session.
+- Game over flow: a death sound plays, the final score and high score are shown with a
+  "press to restart" prompt, and pressing a key starts a new run.
+- Sound effects for eating food and for dying.
+
+# User Experience
+- Single player, single screen, top-down perspective.
+- Player flow: launch → snake is already moving → steer to eat apples and grow → crash into
+  wall or self → see score + restart prompt → press a key → new run begins.
+- UI/UX: a clean grass playfield framed by a brick wall border, a readable score in a corner,
+  and a clear game-over message. Controls are immediate and require no menus to start playing.
+</context>
+
+<PRD>
+# Technical Architecture
+- Engine: Godot 4 (GDScript). The project lives in `snaketaskmaster/`.
+- 2D, top-down, grid-based. The arena is a fixed grid of cells; all positions (snake segments,
+  food, walls) are cell coordinates. Movement advances one cell per game tick at a constant rate.
+- Core components:
+  - Arena/Grid: defines grid dimensions and cell size, draws the floor and wall border, and
+    converts between grid cells and pixel positions.
+  - Snake: an ordered list of grid cells (head first). On each tick it moves forward; on eating
+    it appends a segment instead of dropping the tail.
+  - Food: a single apple occupying one empty cell; respawns to a new random empty cell when eaten.
+  - Game controller: owns the tick timer, input, scoring, collision checks, and the
+    play/game-over state machine.
+- Data: snake body as an Array of Vector2i cells; current direction as a Vector2i; score and
+  session high score as ints.
+
+# Asset Inventory
+All required assets already exist in the repo and should be used as-is.
+- Sprites (`source/sprites/`): `player_head.png`, `player_body.png`, `food.png`,
+  `floor_tile.png`, `wall_tile.png`.
+- Audio (`source/audio/`): `eat_food.wav`, `death.wav`.
+
+# Features / Tasks
+Each task is tagged with exactly one of [code], [art], or [audio]. Art tasks name the sprite
+to use; audio tasks name the sound file to use. Tasks that would need more than one discipline
+are split so each task needs only one.
+
+## Foundation
+- [code] Project & scene setup: create the main game scene and root game controller script in
+  `snaketaskmaster/`, wire up the game loop entry point.
+- [code] Grid system: define grid dimensions and cell size; provide cell <-> pixel conversion
+  helpers used by every visual and movement task.
+- [code] Game tick: a fixed-interval timer that advances the game one step at a constant speed.
+
+## Snake & movement
+- [code] Snake data model: maintain the ordered list of body cells with the head first.
+- [code] Movement: on each tick, move the snake forward one cell in the current direction.
+- [code] Input handling: read Arrow keys / WASD as absolute up/down/left/right; update the
+  direction; reject the immediate 180-degree reversal.
+
+## Food & growth
+- [code] Food spawning: place the apple on a random empty cell, and respawn it when eaten.
+- [code] Eating & growth: when the head enters the food cell, grow the snake by one segment and
+  increment the score.
+
+## Collisions & game state
+- [code] Collision detection: end the run when the head enters a wall-border cell or any body cell.
+- [code] Score & high score: track the current score and the highest score of the session.
+- [code] Game over & restart: enter a game-over state on death, show the final score, high score,
+  and a "press to restart" prompt; on input, reset and start a new run.
+
+## Visuals (art)
+- [art] Floor background: tile the playfield using `source/sprites/floor_tile.png`.
+- [art] Wall border: draw the deadly arena border using `source/sprites/wall_tile.png`.
+- [art] Snake head sprite: render the head segment using `source/sprites/player_head.png`
+  (oriented to face the current movement direction).
+- [art] Snake body sprite: render each trailing body segment using `source/sprites/player_body.png`.
+- [art] Food sprite: render the apple using `source/sprites/food.png`.
+
+## UI (code)
+- [code] Score & game-over UI: on-screen Label(s) showing the live score during play and the
+  final score, high score, and restart prompt on game over.
+
+## Audio
+- [audio] Eat sound: play `source/audio/eat_food.wav` when the snake eats food.
+- [audio] Death sound: play `source/audio/death.wav` when the snake dies.
+
+# Development Roadmap
+- MVP (everything above): a fully playable single-screen Snake game with art, scoring, restart,
+  and sound. This is the complete intended scope.
+- Order of build: foundation (scene, grid, tick) first so movement is visible as early as
+  possible, then snake movement and input, then food and growth, then collisions and game state,
+  then visuals and audio polish.
+
+# Logical Dependency Chain
+1. Project & scene setup, grid system, and game tick — nothing else works without these.
+2. Snake data model and movement (need the grid + tick); then input handling (needs movement).
+3. Food spawning and eating/growth (need the snake and grid).
+4. Collision detection, score/high score, and game over/restart (need movement, food, and growth).
+5. Visuals: floor and wall border can be done after the grid; snake head/body and food sprites
+   after the snake and food exist.
+6. UI score/game-over display after scoring and game-over state exist.
+7. Audio: eat sound after eating exists; death sound after game-over exists.
+
+# Risks and Mitigations
+- Reverse-into-self bug: a snake longer than one segment must not be allowed to instantly turn
+  180 degrees. Mitigation: reject the opposite-of-current direction in input handling and test it.
+- Food spawning on the snake or in a wall: mitigation: only choose from empty, non-wall cells.
+- Off-by-one at the border: the wall cells must align with the grid so collisions read correctly.
+  Mitigation: derive wall cells from the grid system, not from hard-coded pixels.
+
+# Appendix
+- Source concept: `.firecrawl/snake-gameplay-extracted.md` (classic top-down Snake — growing line,
+  eat food to grow, avoid walls and self-collision).
+- Confirmed design decisions: absolute 4-direction controls; deadly wall border (no wrap-around);
+  constant snake speed; on death show score + high score + restart prompt.
+</PRD>

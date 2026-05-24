@@ -162,6 +162,9 @@ func test_something() -> void:      # methods MUST start with test_
   ```
   Exit code 0 on pass. `-a <path>` can be a file or a directory.
 
+### Golden Path Test
+There should be a golden path test. This test is like an integration test and represents what the player is expected to typically do. It is meant to play the game so claude can verify interactions in the core game loop.
+
 ### Gotchas
 - **gdUnit4 refuses headless by default** — always pass `--ignoreHeadlessMode` for CLI runs. UI / InputEvent tests genuinely won't work headless; run them from the editor.
 - **`runtest.cmd` is at `addons/gdUnit4/runtest.cmd`** (not the project root) and uses `-d` (debug = opens a window). For CI/headless use the `GdUnitCmdTool.gd` invocation above.
