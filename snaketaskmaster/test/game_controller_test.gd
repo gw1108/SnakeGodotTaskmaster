@@ -122,6 +122,47 @@ func test_spawn_food_never_lands_on_border_or_snake() -> void:
 		assert_bool(Grid.is_border_cell(controller.food_position)).is_false()
 		assert_bool(controller.snake.body.has(controller.food_position)).is_false()
 
+func test_spawn_food_no_op_when_interior_full() -> void:
+	var controller := _make_controller()
+	# Fill every interior cell so there is nowhere new to place food. spawn_food
+	# must leave the existing food_position untouched rather than clearing it.
+	var full: Array[Vector2i] = []
+	for x in range(1, Grid.GRID_WIDTH - 1):
+		for y in range(1, Grid.GRID_HEIGHT - 1):
+			full.append(Vector2i(x, y))
+	controller.snake.body = full
+	var sentinel := Vector2i(3, 4)
+	controller.food_position = sentinel
+	controller.spawn_food()
+	assert_that(controller.food_position).is_equal(sentinel)
+
+func test_poll_direction_returns_each_held_direction() -> void:
+	var controller := _make_controller()
+	Input.action_press("move_down")
+	assert_that(controller._poll_direction()).is_equal(Vector2i.DOWN)
+	Input.action_release("move_down")
+	Input.action_press("move_left")
+	assert_that(controller._poll_direction()).is_equal(Vector2i.LEFT)
+	Input.action_release("move_left")
+	Input.action_press("move_right")
+	assert_that(controller._poll_direction()).is_equal(Vector2i.RIGHT)
+
+func test_poll_direction_returns_zero_with_no_input() -> void:
+	var controller := _make_controller()
+	assert_that(controller._poll_direction()).is_equal(Vector2i.ZERO)
+
+func test_poll_direction_resolves_simultaneous_presses_by_priority() -> void:
+	var controller := _make_controller()
+	# Up is checked first, then down, left, right — simultaneous presses must
+	# resolve deterministically to the highest-priority held action.
+	Input.action_press("move_up")
+	Input.action_press("move_right")
+	assert_that(controller._poll_direction()).is_equal(Vector2i.UP)
+	Input.action_release("move_up")
+	# With up released, down outranks the still-held right.
+	Input.action_press("move_down")
+	assert_that(controller._poll_direction()).is_equal(Vector2i.DOWN)
+
 func test_eating_food_grows_snake_and_increments_score() -> void:
 	var controller := _make_controller()
 	# Put food directly ahead of the head so the next tick eats it.
