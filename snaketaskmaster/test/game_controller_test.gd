@@ -273,6 +273,29 @@ func test_reset_after_game_over_restores_playing_ui() -> void:
 	assert_bool(controller.game_over_label.visible).is_false()
 	assert_str(controller.score_label.text).is_equal("Score: 0")
 
+# --- Audio tests ---
+# Audio players exist only in Main.tscn, so these use the scene controller. The
+# bare .new() controller leaves eat_sound/death_sound null; the null-guarded
+# play() calls are covered by the eating/game_over tests above not crashing.
+
+func test_scene_wires_up_audio_players_with_streams() -> void:
+	var controller := _make_scene_controller()
+	assert_object(controller.eat_sound).is_not_null()
+	assert_object(controller.death_sound).is_not_null()
+	assert_object(controller.eat_sound.stream).is_not_null()
+	assert_object(controller.death_sound.stream).is_not_null()
+
+func test_eating_food_plays_eat_sound() -> void:
+	var controller := _make_scene_controller()
+	controller.food_position = controller.snake.get_head() + controller.snake.direction
+	controller._on_tick()
+	assert_bool(controller.eat_sound.playing).is_true()
+
+func test_game_over_plays_death_sound() -> void:
+	var controller := _make_scene_controller()
+	controller.game_over()
+	assert_bool(controller.death_sound.playing).is_true()
+
 # --- Visual rendering tests ---
 # _ready -> reset_game -> update_visuals builds the initial snake sprites. Tests
 # that re-call update_visuals await one frame so the queue_free'd old sprites are

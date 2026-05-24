@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://vpv8fh7vjagf"]
+[gd_scene load_steps=5 format=3 uid="uid://vpv8fh7vjagf"]
 
 [ext_resource type="Script" path="res://scripts/game_controller.gd" id="1_gctrl"]
 [ext_resource type="Script" path="res://scripts/arena_renderer.gd" id="2_arena"]
+[ext_resource type="AudioStream" uid="uid://bj3q8lee3q2xu" path="res://source/audio/eat_food.wav" id="3_eat"]
+[ext_resource type="AudioStream" uid="uid://di8j4rtnix11n" path="res://source/audio/death.wav" id="4_death"]
 
 [node name="Main" type="Node2D" unique_id=1624429783]
 script = ExtResource("1_gctrl")
@@ -31,3 +33,9 @@ grow_vertical = 2
 text = "GAME OVER"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="EatSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_eat")
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_death")

@@ -44,6 +44,12 @@ var food_sprite: Sprite2D
 @onready var score_label: Label = get_node_or_null("ScoreLabel")
 @onready var game_over_label: Label = get_node_or_null("GameOverLabel")
 
+## Audio players live in Main.tscn. Like the labels, get_node_or_null keeps the
+## play() calls safe when the controller is built bare via .new() (unit tests),
+## where these scene children are absent.
+@onready var eat_sound: AudioStreamPlayer = get_node_or_null("EatSound")
+@onready var death_sound: AudioStreamPlayer = get_node_or_null("DeathSound")
+
 func _ready() -> void:
 	tick_timer = Timer.new()
 	tick_timer.wait_time = TICK_INTERVAL
@@ -99,7 +105,8 @@ func _on_tick() -> void:
 	if snake.get_head() + snake.direction == food_position:
 		snake.grow()
 		score += 1
-		# (eat sound is added by the later audio task)
+		if eat_sound != null:
+			eat_sound.play()
 		spawn_food()
 	else:
 		snake.move_forward()
@@ -136,6 +143,8 @@ func reset_game() -> void:
 func game_over() -> void:
 	if tick_timer != null:
 		tick_timer.stop()
+	if death_sound != null:
+		death_sound.play()
 	high_score = maxi(high_score, score)
 	state = GameState.GAME_OVER
 	update_ui()
