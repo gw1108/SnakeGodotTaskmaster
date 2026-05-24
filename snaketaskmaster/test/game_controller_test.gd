@@ -296,6 +296,26 @@ func test_game_over_plays_death_sound() -> void:
 	controller.game_over()
 	assert_bool(controller.death_sound.playing).is_true()
 
+func test_bare_controller_has_no_audio_players() -> void:
+	# Built via .new(), the controller has no scene children, so the @onready
+	# audio lookups resolve to null — the precondition the play() guards protect.
+	var controller := _make_controller()
+	assert_object(controller.eat_sound).is_null()
+	assert_object(controller.death_sound).is_null()
+
+func test_eating_food_without_audio_node_does_not_crash() -> void:
+	# Null eat_sound: the guarded eat_sound.play() must be skipped, not crash.
+	var controller := _make_controller()
+	controller.food_position = controller.snake.get_head() + controller.snake.direction
+	controller._on_tick()
+	assert_int(controller.score).is_equal(1)
+
+func test_game_over_without_audio_node_does_not_crash() -> void:
+	# Null death_sound: the guarded death_sound.play() must be skipped, not crash.
+	var controller := _make_controller()
+	controller.game_over()
+	assert_int(controller.state).is_equal(GameController.GameState.GAME_OVER)
+
 # --- Visual rendering tests ---
 # _ready -> reset_game -> update_visuals builds the initial snake sprites. Tests
 # that re-call update_visuals await one frame so the queue_free'd old sprites are
