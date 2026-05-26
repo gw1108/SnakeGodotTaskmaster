@@ -93,6 +93,7 @@ Checks a single script for parse/type errors. For project-wide checks, use the `
 - Pure pass-through wrappers with no logic
 - Exported config-only resources (`@export` vars with no behavior)
 - Code that just forwards to an already-tested autoload or helper
+- Initialization or construction of objects
 
 **Examples:**
 
