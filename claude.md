@@ -93,6 +93,7 @@ Checks a single script for parse/type errors. For project-wide checks, use the `
 - Pure pass-through wrappers with no logic
 - Exported config-only resources (`@export` vars with no behavior)
 - Code that just forwards to an already-tested autoload or helper
+- Initialization or construction of objects
 
 **Examples:**
 
@@ -161,6 +162,9 @@ func test_something() -> void:      # methods MUST start with test_
   godot --headless --path snaketaskmaster -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/<file>_test.gd
   ```
   Exit code 0 on pass. `-a <path>` can be a file or a directory.
+
+### Golden Path Test
+There should be a golden path test. This test is like an integration test and represents what the player is expected to typically do. It is meant to play the game so claude can verify interactions in the core game loop.
 
 ### Gotchas
 - **gdUnit4 refuses headless by default** — always pass `--ignoreHeadlessMode` for CLI runs. UI / InputEvent tests genuinely won't work headless; run them from the editor.

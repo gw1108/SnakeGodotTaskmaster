@@ -1,0 +1,268 @@
+## [VERBOSE] Iteration 9
+
+### [TRACE] LLM input
+```text
+Loop iteration 9 of 10
+
+TASK: Implement ONE task/subtask from the Taskmaster backlog.
+
+PROCESS:
+1. Call mcp__task-master-ai__next_task with { "projectRoot": "C:\GameDev\SnakeGodotTaskmaster" } to get the next available task/subtask.
+2. Call mcp__task-master-ai__get_task with { "id": "<task id>", "projectRoot": "C:\GameDev\SnakeGodotTaskmaster" } to read full task details.
+3. Implement following codebase patterns.
+4. Write tests alongside implementation.
+5. Run type check
+6. Run tests
+7. Call mcp__task-master-ai__set_task_status with { "id": "<task id>", "status": "done", "projectRoot": "C:\GameDev\SnakeGodotTaskmaster" } to mark complete.
+8. Emit <loop-summary>task <ID>: <one-line description of work done></loop-summary>
+9. Append super-concise notes to progress file: task ID, what was done. If there were any mistakes or false assumptions, append them as learnings.
+
+IMPORTANT:
+- Complete ONLY ONE task per iteration.
+- Keep changes small and focused.
+- Do NOT start another task after completing one.
+- If all tasks are done, output <loop-complete>ALL_DONE</loop-complete>.
+- If blocked, output <loop-blocked>REASON</loop-blocked>.
+
+```
+
+### [TRACE] Tool: ToolSearch input
+```json
+{
+  "query": "select:mcp__task-master-ai__next_task,mcp__task-master-ai__get_task,mcp__task-master-ai__set_task_status",
+  "max_results": 5
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+[
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__next_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__get_task"
+  },
+  {
+    "type": "tool_reference",
+    "tool_name": "mcp__task-master-ai__set_task_status"
+  }
+]
+```
+
+### [TRACE] Tool: mcp__task-master-ai__next_task input
+```json
+{
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"nextTask\": {\n      \"id\": 11,\n      \"title\": \"Golden Path Integration Test\",\n      \"description\": \"[code] Create an integration test that simulates a complete game session from start to game over\",\n      \"details\": \"Create `test/golden_path_test.gd` extending GdUnitTestSuite:\\n- Test simulates: game start → input commands → eating food → growing → collision → game over → restart\\n- Use GdUnitSceneRunner to run Main.tscn:\\n  ```gdscript\\n  var runner := scene_runner(\\\"res://Main.tscn\\\")\\n  var controller := runner.get_property(\\\"game_controller\\\")\\n  ```\\n- Simulate inputs by directly calling controller methods or injecting InputEvents\\n- Assert: initial snake length == 3, score == 0\\n- Simulate movement toward food, assert snake grows and score increments\\n- Simulate collision with wall or self, assert state == GAME_OVER\\n- Simulate restart input, assert score resets and state == PLAYING\\n\\nPseudo-code:\\n```gdscript\\nextends GdUnitTestSuite\\n\\nfunc test_golden_path_full_game_cycle() -> void:\\n    var runner := scene_runner(\\\"res://Main.tscn\\\")\\n    var controller = runner.get_property(\\\".\\\")\\n    \\n    # Verify initial state\\n    assert_int(controller.snake.body.size()).is_equal(3)\\n    assert_int(controller.score).is_equal(0)\\n    \\n    # Simulate eating food\\n    controller.snake.direction = Vector2i.RIGHT\\n    var initial_length := controller.snake.body.size()\\n    # ... manually trigger tick, food collision ...\\n    assert_int(controller.snake.body.size()).is_greater(initial_length)\\n    assert_int(controller.score).is_greater(0)\\n    \\n    # Simulate wall collision\\n    controller.snake.body[0] = Vector2i(0, 5)  # move to wall\\n    controller._on_tick()\\n    assert_that(controller.state).is_equal(controller.GameState.GAME_OVER)\\n    \\n    # Simulate restart\\n    controller.reset_game()\\n    assert_int(controller.score).is_equal(0)\\n    assert_that(controller.state).is_equal(controller.GameState.PLAYING)\\n```\",\n      \"testStrategy\": \"Integration test covering full game loop: movement, eating, collision, game over, restart\",\n      \"priority\": \"medium\",\n      \"dependencies\": [\n        \"3\",\n        \"4\",\n        \"5\",\n        \"6\"\n      ],\n      \"status\": \"pending\",\n      \"subtasks\": []\n    },\n    \"isSubtask\": false,\n    \"nextSteps\": \"When ready to work on the task, use set-status to set the status to \\\"in progress\\\" Tasks can be updated to reflect a change in the direction of the task, or to reformulate the task per your prompt. Research can be used when updating the task to collect up-to-date information. It is best to update subtasks as you work on them, and to update the task for more high-level changes that may affect pending subtasks or the general direction of the task.\"\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.4\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### [TRACE] Tool: Bash input
+```json
+{
+  "command": "ls snaketaskmaster/ && echo \"---SCRIPTS---\" && ls snaketaskmaster/scripts/ && echo \"---TEST---\" && ls snaketaskmaster/test/ && echo \"---ROOT TSCN---\" && ls snaketaskmaster/*.tscn snaketaskmaster/*.gd 2>/dev/null",
+  "description": "List project structure"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"Exit code 2\nMain.tscn\naddons\nbuild\nexport_presets.cfg\nicon.svg\nicon.svg.import\nproject.godot\nreports\nscripts\nsource\ntest\n---SCRIPTS---\narena_renderer.gd\narena_renderer.gd.uid\ngame_controller.gd\ngame_controller.gd.uid\ngrid.gd\ngrid.gd.uid\nsnake.gd\nsnake.gd.uid\n---TEST---\narena_renderer_test.gd\narena_renderer_test.gd.uid\ngame_controller_test.gd\ngame_controller_test.gd.uid\ngrid_test.gd\ngrid_test.gd.uid\nsnake_test.gd\nsnake_test.gd.uid\nverify_gdunit4_works_test.gd\nverify_gdunit4_works_test.gd.uid\n---ROOT TSCN---\nsnaketaskmaster/Main.tscn"
+```
+
+### [TRACE] Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\game_controller.gd"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"1\textends Node2D\n2\tclass_name GameController\n3\t## Root controller for Main.tscn: owns the snake, drives the fixed-interval\n4\t## tick, and runs the PLAYING/GAME_OVER state machine.\n5\t##\n6\t## Each tick advances the snake exactly one grid cell. Input handling, food,\n7\t## collision, rendering, and audio are layered on in later tasks; this script\n8\t## provides the loop and state they hook into.\n9\t\n10\tenum GameState { PLAYING, GAME_OVER }\n11\t\n12\t## Seconds between ticks (one snake step per tick).\n13\tconst TICK_INTERVAL := 0.15\n14\t\n15\t## Sprites for the snake and food (placeholder art generated at 32x32).\n16\tconst HEAD_SPRITE: Texture2D = preload(\"res://source/sprites/player_head.png\")\n17\tconst BODY_SPRITE: Texture2D = preload(\"res://source/sprites/player_body.png\")\n18\tconst FOOD_SPRITE: Texture2D = preload(\"res://source/sprites/food.png\")\n19\t\n20\t## Head rotation per movement direction. The head texture faces RIGHT, so\n21\t## RIGHT is 0 degrees and the others rotate from there.\n22\tconst HEAD_ROTATIONS := {\n23\t\tVector2i.UP: -90.0,\n24\t\tVector2i.DOWN: 90.0,\n25\t\tVector2i.LEFT: 180.0,\n26\t\tVector2i.RIGHT: 0.0,\n27\t}\n28\t\n29\tvar state: GameState = GameState.PLAYING\n30\tvar snake: Snake\n31\tvar score: int = 0\n32\tvar high_score: int = 0\n33\tvar tick_timer: Timer\n34\t## Grid cell currently holding food. Set by spawn_food().\n35\tvar food_position: Vector2i\n36\t\n37\t## Container holding one Sprite2D per snake segment, rebuilt each tick.\n38\tvar snake_visuals: Node2D\n39\t## Single sprite repositioned onto the current food cell.\n40\tvar food_sprite: Sprite2D\n41\t\n42\t## UI labels live in Main.tscn. get_node_or_null keeps update_ui() safe when the\n43\t## controller is built bare via .new() (e.g. unit tests) and the labels are absent.\n44\t@onready var score_label: Label = get_node_or_null(\"ScoreLabel\")\n45\t@onready var game_over_label: Label = get_node_or_null(\"GameOverLabel\")\n46\t\n47\tfunc _ready() -> void:\n48\t\ttick_timer = Timer.new()\n49\t\ttick_timer.wait_time = TICK_INTERVAL\n50\t\ttick_timer.one_shot = false\n51\t\ttick_timer.timeout.connect(_on_tick)\n52\t\tadd_child(tick_timer)\n53\t\t# Added after any scene children (e.g. the arena background) so the snake and\n54\t\t# food draw on top of it; Node2D z-orders siblings by tree order.\n55\t\tsnake_visuals = Node2D.new()\n56\t\tadd_child(snake_visuals)\n57\t\tfood_sprite = Sprite2D.new()\n58\t\tfood_sprite.texture = FOOD_SPRITE\n59\t\tadd_child(food_sprite)\n60\t\treset_game()\n61\t\n62\t## Polls input every frame. While PLAYING, the held movement key steers the\n63\t## snake (set_direction rejects 180-degree reversals). In GAME_OVER, any key\n64\t## press restarts the game.\n65\tfunc _process(_delta: float) -> void:\n66\t\tif state == GameState.GAME_OVER:\n67\t\t\t# Any key restarts. is_anything_pressed() covers real physical input;\n68\t\t\t# the movement-action check makes restart reachable in headless tests\n69\t\t\t# (Input.action_press doesn't flag is_anything_pressed()).\n70\t\t\tif Input.is_anything_pressed() or _poll_direction() != Vector2i.ZERO:\n71\t\t\t\treset_game()\n72\t\t\treturn\n73\t\tvar dir := _poll_direction()\n74\t\tif dir != Vector2i.ZERO:\n75\t\t\tsnake.set_direction(dir)\n76\t\n77\t## Returns the grid step for the currently held movement action, or\n78\t## Vector2i.ZERO when none is held. Up is checked first, then down/left/right,\n79\t## so simultaneous presses resolve deterministically.\n80\tfunc _poll_direction() -> Vector2i:\n81\t\tif Input.is_action_pressed(\"move_up\"):\n82\t\t\treturn Vector2i.UP\n83\t\tif Input.is_action_pressed(\"move_down\"):\n84\t\t\treturn Vector2i.DOWN\n85\t\tif Input.is_action_pressed(\"move_left\"):\n86\t\t\treturn Vector2i.LEFT\n87\t\tif Input.is_action_pressed(\"move_right\"):\n88\t\t\treturn Vector2i.RIGHT\n89\t\treturn Vector2i.ZERO\n90\t\n91\t## Executes one game step. Ignored unless PLAYING so a stopped/over game can't\n92\t## advance. If the cell ahead holds food the snake grows (and respawns food)\n93\t## instead of plain-moving, so eating never double-advances the head. After the\n94\t## move, a head on a border cell or overlapping the body ends the game. Food\n95\t## only spawns on interior cells, so eating can never coincide with a wall hit.\n96\tfunc _on_tick() -> void:\n97\t\tif state != GameState.PLAYING:\n98\t\t\treturn\n99\t\tif snake.get_head() + snake.direction == food_position:\n100\t\t\tsnake.grow()\n101\t\t\tscore += 1\n102\t\t\t# (eat sound is added by the later audio task)\n103\t\t\tspawn_food()\n104\t\telse:\n105\t\t\tsnake.move_forward()\n106\t\tif Grid.is_border_cell(snake.get_head()) or snake.is_colliding_with_self():\n107\t\t\tgame_over()\n108\t\tupdate_ui()\n109\t\tupdate_visuals()\n110\t\n111\t## Places food on a random interior cell (never a border, never on the snake).\n112\t## No-op if the snake fills every interior cell, keeping the old food in place.\n113\tfunc spawn_food() -> void:\n114\t\tvar empty_cells: Array[Vector2i] = []\n115\t\tfor x in range(1, Grid.GRID_WIDTH - 1):\n116\t\t\tfor y in range(1, Grid.GRID_HEIGHT - 1):\n117\t\t\t\tvar cell := Vector2i(x, y)\n118\t\t\t\tif not snake.body.has(cell):\n119\t\t\t\t\tempty_cells.append(cell)\n120\t\tif empty_cells.is_empty():\n121\t\t\treturn\n122\t\tfood_position = empty_cells.pick_random()\n123\t\n124\t## Starts a fresh game: new snake, zeroed score, PLAYING, timer running.\n125\tfunc reset_game() -> void:\n126\t\tsnake = Snake.new()\n127\t\tscore = 0\n128\t\tstate = GameState.PLAYING\n129\t\tspawn_food()\n130\t\tif tick_timer != null:\n131\t\t\ttick_timer.start()\n132\t\tupdate_ui()\n133\t\tupdate_visuals()\n134\t\n135\t## Ends the game: stops the tick, records a new high score, enters GAME_OVER.\n136\tfunc game_over() -> void:\n137\t\tif tick_timer != null:\n138\t\t\ttick_timer.stop()\n139\t\thigh_score = maxi(high_score, score)\n140\t\tstate = GameState.GAME_OVER\n141\t\tupdate_ui()\n142\t\n143\t## Syncs the score and game-over labels to the current state. The score label\n144\t## shows only while PLAYING; the game-over panel shows only in GAME_OVER. Safe to\n145\t## call when the labels are absent (a controller built via .new() in unit tests).\n146\tfunc update_ui() -> void:\n147\t\tif score_label != null:\n148\t\t\tscore_label.text = \"Score: %d\" % score\n149\t\t\tscore_label.visible = (state == GameState.PLAYING)\n150\t\tif game_over_label != null:\n151\t\t\tgame_over_label.visible = (state == GameState.GAME_OVER)\n152\t\t\tif state == GameState.GAME_OVER:\n153\t\t\t\tgame_over_label.text = \"GAME OVER\\nScore: %d\\nHigh Score: %d\\nPress any key to restart\" % [score, high_score]\n154\t\n155\t## Redraws the snake and food. Snake sprites are rebuilt from scratch each call\n156\t## (cleared then recreated) so length and direction changes are always reflected;\n157\t## the food sprite is just repositioned. Sprites are centered on their cell, so\n158\t## head rotation pivots about the cell center. Safe to call before _ready creates\n159\t## the visual nodes (a controller built via .new() before being added to the tree).\n160\tfunc update_visuals() -> void:\n161\t\tif snake_visuals == null or food_sprite == null:\n162\t\t\treturn\n163\t\tvar center := Vector2(Grid.CELL_SIZE / 2.0, Grid.CELL_SIZE / 2.0)\n164\t\tfor child in snake_visuals.get_children():\n165\t\t\tchild.queue_free()\n166\t\tfor i in snake.body.size():\n167\t\t\tvar sprite := Sprite2D.new()\n168\t\t\tsprite.texture = HEAD_SPRITE if i == 0 else BODY_SPRITE\n169\t\t\tsprite.position = Grid.cell_to_pixel(snake.body[i]) + center\n170\t\t\tif i == 0:\n171\t\t\t\tsprite.rotation_degrees = HEAD_ROTATIONS[snake.direction]\n172\t\t\tsnake_visuals.add_child(sprite)\n173\t\tfood_sprite.position = Grid.cell_to_pixel(food_position) + center\n174\t"
+```
+
+### [TRACE] Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\snake.gd"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"1\tclass_name Snake\n2\t## Snake data model: an ordered list of grid cells with the head first.\n3\t##\n4\t## `body[0]` is the head; the tail is the last element. `direction` is the\n5\t## current movement step, always one of Vector2i.UP/DOWN/LEFT/RIGHT. This is a\n6\t## pure data object (no node, no rendering) so it can be unit-tested directly.\n7\t\n8\t## Segments from head (index 0) to tail (last index).\n9\tvar body: Array[Vector2i] = []\n10\t## Current movement direction (a unit grid step).\n11\tvar direction := Vector2i.RIGHT\n12\t\n13\t## Spawns a 3-segment snake at the arena center, facing right.\n14\t## The tail trails to the left so the first move_forward() advances cleanly.\n15\tfunc _init() -> void:\n16\t\tvar start := Vector2i(Grid.GRID_WIDTH / 2, Grid.GRID_HEIGHT / 2)\n17\t\tbody = [start, start - Vector2i.RIGHT, start - Vector2i.RIGHT * 2]\n18\t\n19\t## Returns the head cell (body[0]).\n20\tfunc get_head() -> Vector2i:\n21\t\treturn body[0]\n22\t\n23\t## Advances one cell: inserts a new head ahead and drops the tail (length stays).\n24\tfunc move_forward() -> void:\n25\t\tbody.insert(0, body[0] + direction)\n26\t\tbody.pop_back()\n27\t\n28\t## Like move_forward() but keeps the tail, so the snake grows by one segment.\n29\tfunc grow() -> void:\n30\t\tbody.insert(0, body[0] + direction)\n31\t\n32\t## Sets the movement direction, rejecting a 180-degree reversal while the snake\n33\t## has more than one segment (which would otherwise drive it into its own neck).\n34\tfunc set_direction(new_dir: Vector2i) -> void:\n35\t\tif body.size() > 1 and new_dir == -direction:\n36\t\t\treturn\n37\t\tdirection = new_dir\n38\t\n39\t## True if the head occupies the same cell as any other body segment.\n40\tfunc is_colliding_with_self() -> bool:\n41\t\treturn body.slice(1).has(body[0])\n42\t"
+```
+
+### [TRACE] Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\scripts\\grid.gd"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"1\tclass_name Grid\n2\t## Grid-based coordinate system for the arena.\n3\t##\n4\t## Defines the arena dimensions and cell size, and provides conversions\n5\t## between grid cells (Vector2i) and pixel positions (Vector2), plus\n6\t## bounds and border checks. All members are static — reference as\n7\t## `Grid.CELL_SIZE`, `Grid.cell_to_pixel(...)`, etc.\n8\t\n9\tconst CELL_SIZE := 32\n10\tconst GRID_WIDTH := 20\n11\tconst GRID_HEIGHT := 15\n12\t\n13\t## Returns the top-left pixel corner of the given cell.\n14\tstatic func cell_to_pixel(cell: Vector2i) -> Vector2:\n15\t\treturn Vector2(cell.x * CELL_SIZE, cell.y * CELL_SIZE)\n16\t\n17\t## Returns the cell containing the given pixel position.\n18\t## Uses floored division so negative positions map correctly.\n19\tstatic func pixel_to_cell(pos: Vector2) -> Vector2i:\n20\t\treturn Vector2i(floori(pos.x / CELL_SIZE), floori(pos.y / CELL_SIZE))\n21\t\n22\t## True if the cell is within the arena bounds.\n23\tstatic func is_valid_cell(cell: Vector2i) -> bool:\n24\t\treturn cell.x >= 0 and cell.x < GRID_WIDTH and cell.y >= 0 and cell.y < GRID_HEIGHT\n25\t\n26\t## True if the cell lies on the outer edge of the arena.\n27\tstatic func is_border_cell(cell: Vector2i) -> bool:\n28\t\treturn cell.x == 0 or cell.x == GRID_WIDTH - 1 or cell.y == 0 or cell.y == GRID_HEIGHT - 1\n29\t"
+```
+
+### [TRACE] Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\Main.tscn"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"1\t[gd_scene load_steps=3 format=3 uid=\"uid://vpv8fh7vjagf\"]\n2\t\n3\t[ext_resource type=\"Script\" path=\"res://scripts/game_controller.gd\" id=\"1_gctrl\"]\n4\t[ext_resource type=\"Script\" path=\"res://scripts/arena_renderer.gd\" id=\"2_arena\"]\n5\t\n6\t[node name=\"Main\" type=\"Node2D\" unique_id=1624429783]\n7\tscript = ExtResource(\"1_gctrl\")\n8\t\n9\t[node name=\"ArenaBackground\" type=\"Node2D\" parent=\".\"]\n10\tscript = ExtResource(\"2_arena\")\n11\t\n12\t[node name=\"ScoreLabel\" type=\"Label\" parent=\".\"]\n13\toffset_left = 8.0\n14\toffset_top = 8.0\n15\toffset_right = 208.0\n16\toffset_bottom = 38.0\n17\ttext = \"Score: 0\"\n18\t\n19\t[node name=\"GameOverLabel\" type=\"Label\" parent=\".\"]\n20\tvisible = false\n21\tanchor_left = 0.5\n22\tanchor_top = 0.5\n23\tanchor_right = 0.5\n24\tanchor_bottom = 0.5\n25\toffset_left = -160.0\n26\toffset_top = -64.0\n27\toffset_right = 160.0\n28\toffset_bottom = 64.0\n29\tgrow_horizontal = 2\n30\tgrow_vertical = 2\n31\ttext = \"GAME OVER\"\n32\thorizontal_alignment = 1\n33\tvertical_alignment = 1\n34\t"
+```
+
+### [TRACE] Tool: Read input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\game_controller_test.gd"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"1\textends GdUnitTestSuite\n2\t\n3\t# GameController is a global `class_name` class, referenced directly. The\n4\t# controller is added to the tree so _ready() runs (creates timer + snake);\n5\t# tests are synchronous so the timer never fires on its own.\n6\t\n7\tfunc _make_controller() -> GameController:\n8\t\tvar controller: GameController = auto_free(GameController.new())\n9\t\tadd_child(controller)\n10\t\treturn controller\n11\t\n12\t# Input actions are global engine state; release them after every test so a\n13\t# simulated press can't leak into the next one.\n14\tfunc after_test() -> void:\n15\t\tfor action in [\"move_up\", \"move_down\", \"move_left\", \"move_right\"]:\n16\t\t\tInput.action_release(action)\n17\t\n18\tfunc test_ready_initializes_snake_and_timer() -> void:\n19\t\tvar controller := _make_controller()\n20\t\tassert_object(controller.snake).is_not_null()\n21\t\tassert_object(controller.tick_timer).is_not_null()\n22\t\tassert_float(controller.tick_timer.wait_time).is_equal(GameController.TICK_INTERVAL)\n23\t\tassert_bool(controller.tick_timer.one_shot).is_false()\n24\t\n25\tfunc test_ready_starts_in_playing_state_with_zero_score() -> void:\n26\t\tvar controller := _make_controller()\n27\t\tassert_int(controller.state).is_equal(GameController.GameState.PLAYING)\n28\t\tassert_int(controller.score).is_equal(0)\n29\t\n30\tfunc test_on_tick_moves_snake_forward() -> void:\n31\t\tvar controller := _make_controller()\n32\t\tvar old_head: Vector2i = controller.snake.get_head()\n33\t\tcontroller._on_tick()\n34\t\tassert_that(controller.snake.get_head()).is_equal(old_head + controller.snake.direction)\n35\t\n36\tfunc test_on_tick_ignored_when_game_over() -> void:\n37\t\tvar controller := _make_controller()\n38\t\tcontroller.state = GameController.GameState.GAME_OVER\n39\t\tvar head_before: Vector2i = controller.snake.get_head()\n40\t\tcontroller._on_tick()\n41\t\tassert_that(controller.snake.get_head()).is_equal(head_before)\n42\t\n43\tfunc test_game_over_sets_state_and_stops_timer() -> void:\n44\t\tvar controller := _make_controller()\n45\t\tcontroller.game_over()\n46\t\tassert_int(controller.state).is_equal(GameController.GameState.GAME_OVER)\n47\t\tassert_bool(controller.tick_timer.is_stopped()).is_true()\n48\t\n49\tfunc test_game_over_updates_high_score_when_score_higher() -> void:\n50\t\tvar controller := _make_controller()\n51\t\tcontroller.score = 7\n52\t\tcontroller.game_over()\n53\t\tassert_int(controller.high_score).is_equal(7)\n54\t\n55\tfunc test_game_over_keeps_high_score_when_score_lower() -> void:\n56\t\tvar controller := _make_controller()\n57\t\tcontroller.high_score = 10\n58\t\tcontroller.score = 4\n59\t\tcontroller.game_over()\n60\t\tassert_int(controller.high_score).is_equal(10)\n61\t\n62\tfunc test_reset_game_zeroes_score_and_returns_to_playing() -> void:\n63\t\tvar controller := _make_controller()\n64\t\tcontroller.score = 5\n65\t\tcontroller.game_over()\n66\t\tcontroller.reset_game()\n67\t\tassert_int(controller.score).is_equal(0)\n68\t\tassert_int(controller.state).is_equal(GameController.GameState.PLAYING)\n69\t\tassert_bool(controller.tick_timer.is_stopped()).is_false()\n70\t\n71\tfunc test_reset_game_creates_fresh_snake() -> void:\n72\t\tvar controller := _make_controller()\n73\t\tcontroller._on_tick()\n74\t\tvar moved_snake := controller.snake\n75\t\tcontroller.reset_game()\n76\t\t# A new Snake instance, spawned back at its 3-segment starting layout.\n77\t\tassert_object(controller.snake).is_not_same(moved_snake)\n78\t\tassert_array(controller.snake.body).has_size(3)\n79\t\n80\tfunc test_process_steers_snake_to_held_direction() -> void:\n81\t\tvar controller := _make_controller()\n82\t\t# Snake spawns facing RIGHT; UP is a valid 90-degree turn.\n83\t\tInput.action_press(\"move_up\")\n84\t\tcontroller._process(0.0)\n85\t\tassert_that(controller.snake.direction).is_equal(Vector2i.UP)\n86\t\n87\tfunc test_process_rejects_180_reversal() -> void:\n88\t\tvar controller := _make_controller()\n89\t\t# Facing RIGHT with 3 segments: LEFT is a reversal and must be ignored.\n90\t\tInput.action_press(\"move_left\")\n91\t\tcontroller._process(0.0)\n92\t\tassert_that(controller.snake.direction).is_equal(Vector2i.RIGHT)\n93\t\n94\tfunc test_process_leaves_direction_unchanged_with_no_input() -> void:\n95\t\tvar controller := _make_controller()\n96\t\tcontroller._process(0.0)\n97\t\tassert_that(controller.snake.direction).is_equal(Vector2i.RIGHT)\n98\t\n99\tfunc test_process_restarts_on_input_when_game_over() -> void:\n100\t\tvar controller := _make_controller()\n101\t\tcontroller.game_over()\n102\t\tInput.action_press(\"move_up\")\n103\t\tcontroller._process(0.0)\n104\t\tassert_int(controller.state).is_equal(GameController.GameState.PLAYING)\n105\t\n106\tfunc test_process_stays_game_over_without_input() -> void:\n107\t\tvar controller := _make_controller()\n108\t\tcontroller.game_over()\n109\t\tcontroller._process(0.0)\n110\t\tassert_int(controller.state).is_equal(GameController.GameState.GAME_OVER)\n111\t\n112\tfunc test_ready_spawns_food_on_valid_interior_cell() -> void:\n113\t\tvar controller := _make_controller()\n114\t\tassert_bool(Grid.is_valid_cell(controller.food_position)).is_true()\n115\t\tassert_bool(Grid.is_border_cell(controller.food_position)).is_false()\n116\t\n117\tfunc test_spawn_food_never_lands_on_border_or_snake() -> void:\n118\t\tvar controller := _make_controller()\n119\t\t# Many draws: every result must be a non-border interior cell off the snake.\n120\t\tfor _i in range(200):\n121\t\t\tcontroller.spawn_food()\n122\t\t\tassert_bool(Grid.is_border_cell(controller.food_position)).is_false()\n123\t\t\tassert_bool(controller.snake.body.has(controller.food_position)).is_false()\n124\t\n125\tfunc test_spawn_food_no_op_when_interior_full() -> void:\n126\t\tvar controller := _make_controller()\n127\t\t# Fill every interior cell so there is nowhere new to place food. spawn_food\n128\t\t# must leave the existing food_position untouched rather than clearing it.\n129\t\tvar full: Array[Vector2i] = []\n130\t\tfor x in range(1, Grid.GRID_WIDTH - 1):\n131\t\t\tfor y in range(1, Grid.GRID_HEIGHT - 1):\n132\t\t\t\tfull.append(Vector2i(x, y))\n133\t\tcontroller.snake.body = full\n134\t\tvar sentinel := Vector2i(3, 4)\n135\t\tcontroller.food_position = sentinel\n136\t\tcontroller.spawn_food()\n137\t\tassert_that(controller.food_position).is_equal(sentinel)\n138\t\n139\tfunc test_poll_direction_returns_each_held_direction() -> void:\n140\t\tvar controller := _make_controller()\n141\t\tInput.action_press(\"move_down\")\n142\t\tassert_that(controller._poll_direction()).is_equal(Vector2i.DOWN)\n143\t\tInput.action_release(\"move_down\")\n144\t\tInput.action_press(\"move_left\")\n145\t\tassert_that(controller._poll_direction()).is_equal(Vector2i.LEFT)\n146\t\tInput.action_release(\"move_left\")\n147\t\tInput.action_press(\"move_right\")\n148\t\tassert_that(controller._poll_direction()).is_equal(Vector2i.RIGHT)\n149\t\n150\tfunc test_poll_direction_returns_zero_with_no_input() -> void:\n151\t\tvar controller := _make_controller()\n152\t\tassert_that(controller._poll_direction()).is_equal(Vector2i.ZERO)\n153\t\n154\tfunc test_poll_direction_resolves_simultaneous_presses_by_priority() -> void:\n155\t\tvar controller := _make_controller()\n156\t\t# Up is checked first, then down, left, right — simultaneous presses must\n157\t\t# resolve deterministically to the highest-priority held action.\n158\t\tInput.action_press(\"move_up\")\n159\t\tInput.action_press(\"move_right\")\n160\t\tassert_that(controller._poll_direction()).is_equal(Vector2i.UP)\n161\t\tInput.action_release(\"move_up\")\n162\t\t# With up released, down outranks the still-held right.\n163\t\tInput.action_press(\"move_down\")\n164\t\tassert_that(controller._poll_direction()).is_equal(Vector2i.DOWN)\n165\t\n166\tfunc test_eating_food_grows_snake_and_increments_score() -> void:\n167\t\tvar controller := _make_controller()\n168\t\t# Put food directly ahead of the head so the next tick eats it.\n169\t\tcontroller.food_position = controller.snake.get_head() + controller.snake.direction\n170\t\tvar eaten := controller.food_position\n171\t\tcontroller._on_tick()\n172\t\tassert_array(controller.snake.body).has_size(4)\n173\t\tassert_that(controller.snake.get_head()).is_equal(eaten)\n174\t\tassert_int(controller.score).is_equal(1)\n175\t\n176\tfunc test_eating_food_respawns_it_off_the_snake() -> void:\n177\t\tvar controller := _make_controller()\n178\t\tcontroller.food_position = controller.snake.get_head() + controller.snake.direction\n179\t\tcontroller._on_tick()\n180\t\t# Food moved to a fresh interior cell that isn't under the (grown) snake.\n181\t\tassert_bool(Grid.is_border_cell(controller.food_position)).is_false()\n182\t\tassert_bool(controller.snake.body.has(controller.food_position)).is_false()\n183\t\n184\tfunc test_tick_without_food_ahead_does_not_grow_or_score() -> void:\n185\t\tvar controller := _make_controller()\n186\t\t# Park food far from the head's path; a plain step must not eat it.\n187\t\tcontroller.food_position = Vector2i(1, 1)\n188\t\tcontroller._on_tick()\n189\t\tassert_array(controller.snake.body).has_size(3)\n190\t\tassert_int(controller.score).is_equal(0)\n191\t\n192\tfunc test_tick_into_wall_triggers_game_over() -> void:\n193\t\tvar controller := _make_controller()\n194\t\t# Position the head one cell inside the right border, moving right; the next\n195\t\t# step lands on the border column and must end the game.\n196\t\tvar head := Vector2i(Grid.GRID_WIDTH - 2, 5)\n197\t\tcontroller.snake.body = [head, head - Vector2i.RIGHT, head - Vector2i.RIGHT * 2]\n198\t\tcontroller.snake.direction = Vector2i.RIGHT\n199\t\tcontroller.food_position = Vector2i(1, 1)\n200\t\tcontroller._on_tick()\n201\t\tassert_int(controller.state).is_equal(GameController.GameState.GAME_OVER)\n202\t\tassert_bool(controller.tick_timer.is_stopped()).is_true()\n203\t\n204\tfunc test_tick_into_self_triggers_game_over() -> void:\n205\t\tvar controll… [truncated, 6464 more chars]
+```
+
+### [TRACE] Tool: Write input
+```json
+{
+  "file_path": "C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\golden_path_test.gd",
+  "content": "extends GdUnitTestSuite\n\n# Golden path integration test: walks the full game session a player experiences\n# — start → steer → eat & grow → wall collision → game over → restart — through a\n# live Main.tscn instance. Unlike game_controller_test (which exercises pieces in\n# isolation), this drives them in sequence so the core loop is verified end to end.\n#\n# The scene is instantiated and added to the tree so _ready() builds the snake,\n# timer, labels, and visuals. Steps advance the game by calling _on_tick()\n# directly (synchronous, no waiting on the real timer) and steer/restart via real\n# Input actions, the same path _process() uses in play.\n\nconst MainScene := preload(\"res://Main.tscn\")\n\n# Input actions are global engine state; release them after the test so a\n# simulated press can't leak elsewhere.\nfunc after_test() -> void:\n\tfor action in [\"move_up\", \"move_down\", \"move_left\", \"move_right\"]:\n\t\tInput.action_release(action)\n\nfunc test_golden_path_full_game_cycle() -> void:\n\tvar controller: GameController = auto_free(MainScene.instantiate())\n\tadd_child(controller)\n\n\t# --- Start: fresh 3-segment snake, zero score, playing, score shown. ---\n\tassert_int(controller.snake.body.size()).is_equal(3)\n\tassert_int(controller.score).is_equal(0)\n\tassert_int(controller.state).is_equal(GameController.GameState.PLAYING)\n\tassert_bool(controller.score_label.visible).is_true()\n\tassert_bool(controller.game_over_label.visible).is_false()\n\n\t# --- Steer: hold UP, poll input; the snake turns from its spawn RIGHT to UP. ---\n\tInput.action_press(\"move_up\")\n\tcontroller._process(0.0)\n\tassert_that(controller.snake.direction).is_equal(Vector2i.UP)\n\tInput.action_release(\"move_up\")\n\n\t# --- Eat: food directly ahead -> snake grows and score rises. Do it twice. ---\n\tfor expected_score in [1, 2]:\n\t\tcontroller.food_position = controller.snake.get_head() + controller.snake.direction\n\t\tvar len_before := controller.snake.body.size()\n\t\tcontroller._on_tick()\n\t\tassert_int(controller.snake.body.size()).is_equal(len_before + 1)\n\t\tassert_int(controller.score).is_equal(expected_score)\n\t\tassert_int(controller.state).is_equal(GameController.GameState.PLAYING)\n\tassert_str(controller.score_label.text).is_equal(\"Score: 2\")\n\n\t# --- Collide: head one cell inside the right border, moving into it. The next\n\t# tick lands on the border and ends the game; the run becomes the high score. ---\n\tvar head := Vector2i(Grid.GRID_WIDTH - 2, 5)\n\tcontroller.snake.body = [head, head - Vector2i.RIGHT, head - Vector2i.RIGHT * 2]\n\tcontroller.snake.direction = Vector2i.RIGHT\n\tcontroller.food_position = Vector2i(1, 1)  # well clear of the head's path\n\tcontroller._on_tick()\n\tassert_int(controller.state).is_equal(GameController.GameState.GAME_OVER)\n\tassert_bool(controller.tick_timer.is_stopped()).is_true()\n\tassert_int(controller.high_score).is_equal(2)\n\tassert_bool(controller.score_label.visible).is_false()\n\tassert_bool(controller.game_over_label.visible).is_true()\n\n\t# --- Restart: any key press while game over starts a fresh game. ---\n\tInput.action_press(\"move_up\")\n\tcontroller._process(0.0)\n\tassert_int(controller.state).is_equal(GameController.GameState.PLAYING)\n\tassert_int(controller.score).is_equal(0)\n\tassert_int(controller.snake.body.size()).is_equal(3)\n\tassert_bool(controller.score_label.visible).is_true()\n\tassert_bool(controller.game_over_label.visible).is_false()\n\t# High score persists across the restart.\n\tassert_int(controller.high_score).is_equal(2)\n"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"File created successfully at: C:\\GameDev\\SnakeGodotTaskmaster\\snaketaskmaster\\test\\golden_path_test.gd (file state is current in your context — no need to Read it back)"
+```
+
+### [TRACE] Tool: Bash input
+```json
+{
+  "command": "godot --headless --path snaketaskmaster --import 2>&1 | grep -iE \"error|SCRIPT ERROR|golden\" | head -40; echo \"EXIT_PIPE_DONE\"",
+  "description": "Headless import / type check"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"SCRIPT ERROR: Trying to assign value of type 'Nil' to a variable of type 'bool'.\nEXIT_PIPE_DONE"
+```
+
+### [TRACE] Tool: Bash input
+```json
+{
+  "command": "godot --headless --path snaketaskmaster --import 2>&1 | grep -iE \"error|golden_path|\\.gd:\" -A2 -B2 | head -60; echo \"---EXIT: $?---\"",
+  "description": "Full import error context"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"[  50% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | Creating autoload scripts...\u001b[39m\u001b[0m\n[  66% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | Initializing plugins...\u001b[39m\u001b[0m\nSCRIPT ERROR: Trying to assign value of type 'Nil' to a variable of type 'bool'.\n   at: _enter_tree (res://addons/gdUnit4/plugin.gd:17)\n   GDScript backtrace (most recent call first):\n       [0] _enter_tree (res://addons/gdUnit4/plugin.gd:17)\n[  83% ] \u001b[90m\u001b[1mfirst_scan_filesystem\u001b[22m | Starting file scan...\u001b[39m\u001b[0m\n\u001b[92m[ DONE ]\u001b[39m \u001b[1mfirst_scan_filesystem\u001b[22m\n---EXIT: 0---"
+```
+
+### [TRACE] Tool: Bash input
+```json
+{
+  "command": "godot --headless --path snaketaskmaster --check-only --script res://test/golden_path_test.gd 2>&1 | grep -iE \"error|warn\" | head; echo \"---EXIT: ${PIPESTATUS[0]}---\"",
+  "description": "Single-file parse check of golden path test"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"---EXIT: 0---"
+```
+
+### [TRACE] Tool: Bash input
+```json
+{
+  "command": "godot --headless --path snaketaskmaster -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a test/golden_path_test.gd 2>&1 | grep -iE \"test|pass|fail|error|orphan|summary|golden\" | head -40; echo \"---EXIT: ${PIPESTATUS[0]}---\"",
+  "description": "Run golden path test headless"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"Please note that tests that use UI interaction do not work correctly in headless mode.\nhave no effect in the test!\n\u001b[38;2;100;149;237mSession hook 'GdUnitHtmlTestReporter' installed.\u001b[0m\n\u001b[38;2;100;149;237mSession hook 'GdUnitXMLTestReporter' installed.\u001b[0m\n\u001b[38;2;0;206;209mRun Test Suite: \u001b[0m\u001b[38;2;250;235;215mres://test/golden_path_test.gd\u001b[0m\n  \u001b[38;2;250;235;215mres://test/golden_path_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_golden_path_full_game_cycle\u001b[0m\u001b[38;2;34;139;34m STARTED\u001b[0m\u001b[38;2;250;235;215m\u001b[0m\n  \u001b[38;2;250;235;215mres://test/golden_path_test.gd\u001b[0m\u001b[38;2;250;235;215m > \u001b[0m\u001b[38;2;250;235;215mtest_golden_path_full_game_cycle\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 138ms\u001b[0m\n\u001b[38;2;30;144;255mStatistics:\u001b[0m\u001b[38;2;250;235;215m 1 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\u001b[38;2;34;139;34m PASSED\u001b[0m\u001b[38;2;100;149;237m 296ms\u001b[0m\n\u001b[38;2;30;144;255mOverall Summary:\u001b[0m\u001b[38;2;255;255;255m 1 test cases | 0 errors | 0 failures | 0 flaky | 0 skipped | 0 orphans |\u001b[0m\n\u001b[38;2;233;150;122mExecuted test suites: (1/1)\u001b[0m\n\u001b[38;2;233;150;122mExecuted test cases : (1/1)\u001b[0m\n---EXIT: 0---"
+```
+
+### [TRACE] Tool: mcp__task-master-ai__set_task_status input
+```json
+{
+  "id": "11",
+  "status": "done",
+  "projectRoot": "C:\\GameDev\\SnakeGodotTaskmaster"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+[
+  {
+    "type": "text",
+    "text": "{\n  \"data\": {\n    \"message\": \"Successfully updated 1 task(s) to \\\"done\\\"\",\n    \"tasks\": [\n      {\n        \"success\": true,\n        \"oldStatus\": \"pending\",\n        \"newStatus\": \"done\",\n        \"taskId\": \"11\"\n      }\n    ]\n  },\n  \"version\": {\n    \"version\": \"1.0.0-rc.4\",\n    \"name\": \"task-master-ai\"\n  },\n  \"tag\": \"master\"\n}"
+  }
+]
+```
+
+### [TRACE] Tool: Bash input
+```json
+{
+  "command": "cat >> .taskmaster/progress.txt << 'EOF'\n\nTask 11 (Golden Path Integration Test): Added test/golden_path_test.gd — single\nend-to-end test walking start -> steer (Input.action_press move_up + _process) ->\neat x2 (food ahead, _on_tick, asserts grow+score) -> wall collision (head at right\nborder, _on_tick -> GAME_OVER, timer stopped, high_score=2) -> restart (any key ->\nreset). Verifies snake len/score/state/label visibility at each stage. Passed: 1 case,\n0 failures, 0 orphans.\nLearnings: Task pseudocode said use GdUnitSceneRunner, but codebase pattern (and\nworking approach) is MainScene.instantiate() + add_child; scene_runner/UI input is\nflaky headless per CLAUDE.md. gdUnit4 plugin.gd:17 prints a Nil->bool SCRIPT ERROR\nduring --import but it's the editor plugin, harmless, import exits 0.\nEOF\necho done",
+  "description": "Append progress notes"
+}
+```
+
+### [TRACE] Tool: unknown result
+```json
+"done"
+```
+
+### [VERBOSE] Iteration 9 summary
+[VERBOSE] - Tool calls: 15 total
+[VERBOSE]   - Task-master: 2
+[VERBOSE]   - Writes: 1
+[VERBOSE]   - Non-writes: 14
+[VERBOSE] - Tool calls by name:
+[VERBOSE]   - Bash: 6
+[VERBOSE]   - Read: 5
+[VERBOSE]   - ToolSearch: 1
+[VERBOSE]   - mcp__task-master-ai__next_task: 1
+[VERBOSE]   - Write: 1
+[VERBOSE]   - mcp__task-master-ai__set_task_status: 1
+[VERBOSE] - Tokens:
+[VERBOSE]   - input: 4,837
+[VERBOSE]   - output: 6,957
+[VERBOSE]   - cache write: 39,393
+[VERBOSE]   - cache read: 581,758
+[VERBOSE]   - total: 632,945
+[VERBOSE] - Context: 625,988 tokens (62.6% of ctx)
+[VERBOSE] - Final result:
+```text
+<loop-summary>task 11: Added golden_path_test.gd — end-to-end integration test driving Main.tscn through start → steer → eat/grow → wall collision → game over → restart; passes headless (1 case, 0 failures, 0 orphans).</loop-summary>
+
+Task 11 complete. Created `test/golden_path_test.gd`, a single golden-path integration test that drives a live `Main.tscn` through the full player cycle: spawn (3 segments, score 0, PLAYING) → steer via `Input.action_press` → eat food twice (grow + score) → wall collision (GAME_OVER, timer stopped, high score recorded) → restart on key press (reset to PLAYING, score 0, high score persists). Type check clean (exit 0), test passes headless with 0 failures and 0 orphans. Task marked done; progress notes appended.
+```
+
+---
