@@ -1,10 +1,33 @@
-[gd_scene format=3 uid="uid://vpv8fh7vjagf"]
+[gd_scene load_steps=7 format=3 uid="uid://vpv8fh7vjagf"]
 
-[node name="Main" type="Node2D" unique_id=1624429783]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_game"]
+[ext_resource type="Script" path="res://scripts/board_view.gd" id="6_board"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="2_hud"]
+[ext_resource type="Script" path="res://scripts/title_screen.gd" id="3_title"]
+[ext_resource type="Script" path="res://scripts/pause_overlay.gd" id="4_pause"]
+[ext_resource type="Script" path="res://scripts/game_over_screen.gd" id="5_over"]
 
-[node name="HelloLabel" type="Label" parent="." unique_id=521176167]
-offset_left = 40.0
-offset_top = 40.0
-offset_right = 300.0
-offset_bottom = 70.0
-text = "Hello World"
+[node name="Main" type="Node2D"]
+script = ExtResource("1_game")
+
+[node name="TickTimer" type="Timer" parent="."]
+wait_time = 0.125
+
+[node name="BoardView" type="Node2D" parent="."]
+visible = false
+script = ExtResource("6_board")
+
+[node name="ScoreHUD" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("2_hud")
+
+[node name="TitleScreen" type="CanvasLayer" parent="."]
+script = ExtResource("3_title")
+
+[node name="PauseOverlay" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("4_pause")
+
+[node name="GameOverScreen" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("5_over")
