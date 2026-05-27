@@ -6,7 +6,7 @@ model: opus
 
 # Clarify Game Design
 
-You are tasked with turning a rough, vague, or incomplete game document into a clear, structured Game Design Document (GDD). You do this by **interrogating the source for ambiguity and gaps, asking the user clarifying questions, and iterating** until the design can be implemented into a full featured game — only then do you write the GDD.
+You are tasked with turning a rough, vague, or incomplete game document into a clear, structured Game Design Document (GDD). You do this by **interrogating the source for ambiguity and gaps, asking the user clarifying questions, and iterating** until the design can be implemented into a full featured game — only then do you write the GDD. You create the GDD file early and update it continuously as answers arrive — by the time you finish, nothing is left unclarified and there are no open questions.
 
 ## Your job is to clarify, not to invent
 
@@ -63,27 +63,31 @@ Present your findings in a single turn:
 2. **What's already clear** — a short bullet list, so the user sees you won't re-litigate settled things.
 3. **Questions**, grouped by dimension. For each ambiguity ask a focused question. Where a choice has a small set of natural options, offer them so the user can answer quickly (and flag contradictions explicitly: "X says A here but B there — which holds?").
 
-Keep it manageable: roughly 3–8 questions per round, more only if the source is genuinely sparse. For crisp multiple-choice decisions you may use the `AskUserQuestion` tool; for open-ended or numeric answers, plain grouped markdown questions are better.
+Ask as many questions as it takes. Group them by dimension so the user can work through them efficiently. For crisp multiple-choice decisions you may use the `AskUserQuestion` tool (it accepts at most 4 questions per call, so issue multiple calls or fall back to markdown when you have more); for open-ended or numeric answers, plain grouped markdown questions are better.
 
 Do not ask about things the source already settles. Do not ask cosmetic questions whose answer wouldn't change the design.
 
 ### 4. Iterate until the design is clear
 
-The user will answer some questions, skip others (skipped → record as "not specified"), push back, or add context. After each round, update your understanding and either:
-- Ask focused follow-ups if answers opened new ambiguities or important dimensions remain open, or
-- Move to writing if the design is now clear.
+The user will answer some questions, push back, or add context. After **every** round:
+1. **Update the GDD file** (see step 5) so it reflects every decision settled so far.
+2. Ask focused follow-ups on whatever is still vague, contradictory, or missing.
 
-"Clear enough" means: every major dimension is either answered or explicitly out of scope, contradictions are resolved, and someone could start building without guessing at core decisions.
+Keep iterating. You are done **only when every dimension is fully resolved**: nothing vague, nothing contradictory, nothing missing, and no open questions remain.
 
-Aim for two or three rounds. If the user says "just go", wrap up with what you have — record open items under **Open Questions** rather than blocking.
+Do not leave gaps. If the user skips a question or says "just go", do **not** record it as unresolved — instead propose a concrete, sensible default for each remaining item and let the user confirm or tweak (a "go" confirms your proposed defaults). The proposal-and-confirmation is itself clarification, so the result is a recorded decision, never an open question. This keeps you honest to "clarify, not invent" while guaranteeing nothing is left open.
 
-### 5. Write the clarified GDD
+### 5. Create the GDD file early, then update it continuously
 
-Once the iteration in step 4 has resolved the design, save **immediately**. Do not pause to summarize or ask for confirmation before saving — the iteration *was* the agreement.
+You do **not** wait until the end to write. Create the file as soon as you have done your first read and scan (step 2), and rewrite it after every round of answers.
+
+- **Create early.** After the first scan, get the target path (Step 1 below) and write an initial draft: fill in everything already clear, and use an explicit `TBD` placeholder for every dimension still open. Get the path **once** and reuse it for all subsequent updates.
+- **Update every round.** Each time the user answers, rewrite the file so it captures every decision settled so far and shrinks the remaining `TBD` placeholders. Use the `Write` tool to overwrite the file (or `Edit` for targeted changes).
+- **Finish only when complete.** When every dimension is resolved and **no `TBD` placeholders remain**, the file is the final GDD. Do not pause to ask for confirmation before saving — saving is continuous and the iteration *is* the agreement.
 
 Saving is a two-step process to avoid shell-quoting bugs with large markdown content:
 
-**Step 1** — get the target path by running:
+**Step 1 (run once, when you first create the file)** — get the target path by running:
 
 ```
 python "$(git rev-parse --show-toplevel)/create_thought.py" game-design <file_name_description> [ticket]
@@ -95,7 +99,9 @@ Where `<file_name_description>` is a short kebab-case label for the game/topic, 
 
 **Step 2** — use the `Write` tool directly to write the content (formatted per the template below) to that printed path.
 
-After writing, your entire reply to the user is the single line:
+While you are still iterating, each reply to the user is your next round of questions (not the export line), even though you have already written/updated the file behind the scenes.
+
+Only once the design is **fully clarified and the file is complete** (no `TBD` remaining), your entire reply to the user is the single line:
 
 ```
 I have exported your game design document into [FULL_FILE_PATH]
@@ -105,7 +111,7 @@ Replace `[FULL_FILE_PATH]` with the absolute path printed by `create_thought.py`
 
 ## Output file format
 
-Use this structure. **Omit any section that genuinely doesn't apply** rather than padding it. Mark anything the user left unresolved in **Open Questions** instead of inventing an answer.
+Use this structure. **Omit any section that genuinely doesn't apply** rather than padding it. The finished document must contain **no unresolved items** — every dimension is a settled decision. (Interim drafts may carry explicit `TBD` placeholders while you iterate, but none may remain when you finish, and there is no Open Questions section.)
 
 ```markdown
 # Game Design Document: [Game Title]
@@ -164,9 +170,6 @@ Use this structure. **Omit any section that genuinely doesn't apply** rather tha
 
 ## Technical Constraints
 [Game Engine, platform limits.]
-
-## Open Questions
-[Anything still unresolved that a designer/programmer must settle before or during build.]
 ```
 
 ## Notes
