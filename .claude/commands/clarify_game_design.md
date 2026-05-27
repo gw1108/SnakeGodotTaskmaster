@@ -119,9 +119,6 @@ Use this structure. **Omit any section that genuinely doesn't apply** rather tha
 ## Concept
 [One-sentence pitch, then a short paragraph: what the player is, does, and why it's compelling.]
 
-## Source Document
-[Path to the document this was clarified from.]
-
 ## Genre & References
 [Genre and concrete comparison titles.]
 

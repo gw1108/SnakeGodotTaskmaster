@@ -37,5 +37,13 @@ You are tasked with analyzing Game Design Documents (GDDs) and architecting the 
 
 Each system should represent a logical module that handles an aspect of the game. Each system should have a stated goal or purpose and ideally be a pure functional stateless code with inputs and outputs. Prefer modules modifying objects passed by reference instead of creating and updating a state themselves. Export your results into .taskmaster/docs/systems.md.
 
-The goal is to describe a simple 2D game that will be implemented in godot. If it's not clear what features should be in the final game work back and forth with me by asking clarifying questions before writing out the plan.
+The goal is to describe a simple playable vertical slice of the game that will be implemented in godot.
 
+
+If it's not clear what features should be in the final game work back and forth with me by asking clarifying questions before writing out the plan.
+
+(trying again but before we make the system design document we make the GDD)
+
+/clarify_game_design .firecrawl/snake-gameplay-extracted.md
+
+(then /architect_game_systems thoughts/shared/game-design/2026-05-27-ENG-snake.md)
