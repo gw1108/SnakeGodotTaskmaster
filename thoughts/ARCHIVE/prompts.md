@@ -28,7 +28,7 @@ Read the .firecrawl/snake-gameplay-extracted.md file and create a very simple pr
 
 Read the .firecrawl/snake-gameplay-extracted.md file and create a very simple product requirement document based off of that file into .taskmaster/docs/prd.txt. The goal is to describe a simple 2D game that will be implemented in godot. It should be 2D. Tag the feature or task with art, code, or audio depending on if it requires art, code, or audio. If it requires more than one of these split the task into so that each task only requires one tag. For art tagged tasks find the appropriate art asset in sprites folder which should already be setup. For audio tagged tasks find the appropriate audio asset in audio. If it's not clear what features should be in the final game work back and forth with me by asking clarifying questions before writing out the prd.
 
-(Gonna try architect prompt => from architect plan => PRDs => task-master on prds)
+(Gonna try architect prompt => from architect plan => PRDs => task-master on prds. Used the following to create /architect_game_systems)
 Read the .firecrawl/snake-gameplay-extracted.md as a game design document.
 
 You are tasked with analyzing Game Design Documents (GDDs) and architecting the top-level major code systems necessary to implement the game. Before breaking down the GDD into systems, you will:
@@ -38,9 +38,6 @@ You are tasked with analyzing Game Design Documents (GDDs) and architecting the 
 Each system should represent a logical module that handles an aspect of the game. Each system should have a stated goal or purpose and ideally be a pure functional stateless code with inputs and outputs. Prefer modules modifying objects passed by reference instead of creating and updating a state themselves. Export your results into .taskmaster/docs/systems.md.
 
 The goal is to describe a simple playable vertical slice of the game that will be implemented in godot.
-
-
-If it's not clear what features should be in the final game work back and forth with me by asking clarifying questions before writing out the plan.
 
 (trying again but before we make the system design document we make the GDD)
 
