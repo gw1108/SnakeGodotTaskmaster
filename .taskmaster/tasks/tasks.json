@@ -1,17 +1,145 @@
 {
   "master": {
-    "tasks": [],
+    "tasks": [
+      {
+        "id": "1",
+        "title": "Implement grid model and game tick system",
+        "description": "Create the foundational grid system and constant-rate tick timer that drives all game logic",
+        "details": "Create a Grid autoload singleton (res://grid.gd) with constants for grid dimensions (e.g., 20x15 cells), cell size (e.g., 32 pixels), and helper functions to convert between grid coordinates (Vector2i) and world positions (Vector2). In Main.tscn, add a Timer node configured for one-shot=false with a fixed wait_time (e.g., 0.15 seconds for ~6-7 moves/second). Connect the Timer's timeout signal to a _on_tick() function in the main script. Pseudo-code:\n\n```gdscript\n# grid.gd (autoload)\nextends Node\nconst GRID_WIDTH: int = 20\nconst GRID_HEIGHT: int = 15\nconst CELL_SIZE: int = 32\n\nfunc grid_to_world(grid_pos: Vector2i) -> Vector2:\n    return Vector2(grid_pos.x * CELL_SIZE, grid_pos.y * CELL_SIZE)\n\nfunc world_to_grid(world_pos: Vector2) -> Vector2i:\n    return Vector2i(int(world_pos.x / CELL_SIZE), int(world_pos.y / CELL_SIZE))\n\nfunc is_in_bounds(grid_pos: Vector2i) -> bool:\n    return grid_pos.x >= 0 and grid_pos.x < GRID_WIDTH and grid_pos.y >= 0 and grid_pos.y < GRID_HEIGHT\n```\n\n```gdscript\n# main.gd\nextends Node2D\n\nfunc _ready() -> void:\n    $TickTimer.start()\n\nfunc _on_tick() -> void:\n    # Future: advance snake, check collisions\n    pass\n```\n\nTest strategy: Create test/grid_test.gd to verify grid_to_world, world_to_grid, and is_in_bounds conversions.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:12:57.895Z"
+      },
+      {
+        "id": "2",
+        "title": "Render arena floor and boundary walls",
+        "description": "Display the playfield floor tiles and deadly wall tiles to establish the visible play area",
+        "details": "In Main.tscn, add a TileMapLayer node named 'Floor' and another named 'Walls'. Create a TileSet resource with two atlases: one for sprites/floor_tile.png (texture filter: Nearest, tile size matching CELL_SIZE), and one for sprites/wall_tile.png. In the main script's _ready(), programmatically fill the floor TileMapLayer with floor tiles across the grid area (0,0 to GRID_WIDTH-1, GRID_HEIGHT-1). Then fill the Walls TileMapLayer with wall tiles around the perimeter: top row (y=0), bottom row (y=GRID_HEIGHT-1), left column (x=0), and right column (x=GRID_WIDTH-1). Pseudo-code:\n\n```gdscript\nfunc _ready() -> void:\n    _setup_floor()\n    _setup_walls()\n\nfunc _setup_floor() -> void:\n    for x in range(Grid.GRID_WIDTH):\n        for y in range(Grid.GRID_HEIGHT):\n            $Floor.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))\n\nfunc _setup_walls() -> void:\n    for x in range(Grid.GRID_WIDTH):\n        $Walls.set_cell(Vector2i(x, 0), 1, Vector2i(0, 0))\n        $Walls.set_cell(Vector2i(x, Grid.GRID_HEIGHT - 1), 1, Vector2i(0, 0))\n    for y in range(Grid.GRID_HEIGHT):\n        $Walls.set_cell(Vector2i(0, y), 1, Vector2i(0, 0))\n        $Walls.set_cell(Vector2i(Grid.GRID_WIDTH - 1, y), 1, Vector2i(0, 0))\n```\n\nNo unit tests required for visual rendering; verify manually that floor and walls appear correctly.",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:15:03.032Z"
+      },
+      {
+        "id": "3",
+        "title": "Implement snake data structure and movement logic",
+        "description": "Create the snake as an ordered array of grid cells that advances one cell per tick in the current direction",
+        "details": "Create res://snake.gd extending Node2D. Store the snake as an Array[Vector2i] named body, where body[0] is the head. Initialize with a starting position (e.g., center of grid at Vector2i(10, 7)) and length 3. Add a direction: Vector2i property (start with Vector2i.RIGHT). On each tick, calculate the new head position by adding direction to current head, insert it at body[0], and remove the last element (body.pop_back()). Add a grow_pending: int flag; if > 0, skip the pop_back() and decrement the flag. Pseudo-code:\n\n```gdscript\nclass_name Snake\nextends Node2D\n\nvar body: Array[Vector2i] = []\nvar direction: Vector2i = Vector2i.RIGHT\nvar grow_pending: int = 0\n\nfunc _init() -> void:\n    body = [Vector2i(10, 7), Vector2i(9, 7), Vector2i(8, 7)]\n\nfunc move() -> void:\n    var new_head: Vector2i = body[0] + direction\n    body.insert(0, new_head)\n    if grow_pending > 0:\n        grow_pending -= 1\n    else:\n        body.pop_back()\n\nfunc grow() -> void:\n    grow_pending += 1\n\nfunc get_head() -> Vector2i:\n    return body[0]\n\nfunc check_self_collision() -> bool:\n    for i in range(1, body.size()):\n        if body[i] == body[0]:\n            return true\n    return false\n```\n\nTest strategy: Create test/snake_test.gd to verify move() advances correctly, grow() increases length by 1, and check_self_collision() detects head-body overlap.",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:16:39.243Z"
+      },
+      {
+        "id": "4",
+        "title": "Implement arrow-key input with no-reverse constraint",
+        "description": "Handle arrow key input to change snake direction, preventing 180-degree turns into the neck",
+        "details": "In snake.gd, add a set_direction(new_dir: Vector2i) method that only updates direction if new_dir is not the exact opposite of the current direction. The opposite check: new_dir != -direction. In main.gd's _input() or _unhandled_input(), map arrow keys to direction vectors and call snake.set_direction(). Use Input.is_action_just_pressed() with Godot's built-in ui_up, ui_down, ui_left, ui_right actions. Pseudo-code:\n\n```gdscript\n# snake.gd\nfunc set_direction(new_dir: Vector2i) -> void:\n    if new_dir != -direction and new_dir != Vector2i.ZERO:\n        direction = new_dir\n```\n\n```gdscript\n# main.gd\nfunc _input(event: InputEvent) -> void:\n    if event.is_action_pressed(\"ui_up\"):\n        snake.set_direction(Vector2i.UP)\n    elif event.is_action_pressed(\"ui_down\"):\n        snake.set_direction(Vector2i.DOWN)\n    elif event.is_action_pressed(\"ui_left\"):\n        snake.set_direction(Vector2i.LEFT)\n    elif event.is_action_pressed(\"ui_right\"):\n        snake.set_direction(Vector2i.RIGHT)\n```\n\nTest strategy: Add tests in test/snake_test.gd to verify set_direction() rejects 180-degree reversals (e.g., RIGHT -> LEFT is ignored) but accepts perpendicular turns.",
+        "priority": "high",
+        "dependencies": [
+          "3"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:19:00.482Z"
+      },
+      {
+        "id": "5",
+        "title": "Render snake head and body segments",
+        "description": "Visually display the snake using player_head.png for the head and player_body.png for each body segment",
+        "details": "In snake.gd's _ready(), create a Sprite2D node for the head with texture = preload('res://sprites/player_head.png'), and configure texture_filter = TEXTURE_FILTER_NEAREST. For each body segment, instantiate additional Sprite2D nodes. Override _process() to update sprite positions: head sprite at Grid.grid_to_world(body[0]), and body sprites at Grid.grid_to_world(body[i]) for i in 1..body.size()-1. Manage sprite pool to match body.size(). Pseudo-code:\n\n```gdscript\nvar head_sprite: Sprite2D\nvar body_sprites: Array[Sprite2D] = []\n\nfunc _ready() -> void:\n    head_sprite = Sprite2D.new()\n    head_sprite.texture = preload('res://sprites/player_head.png')\n    head_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST\n    add_child(head_sprite)\n\nfunc _process(_delta: float) -> void:\n    head_sprite.position = Grid.grid_to_world(body[0])\n    _update_body_sprites()\n\nfunc _update_body_sprites() -> void:\n    while body_sprites.size() < body.size() - 1:\n        var sprite := Sprite2D.new()\n        sprite.texture = preload('res://sprites/player_body.png')\n        sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST\n        add_child(sprite)\n        body_sprites.append(sprite)\n    while body_sprites.size() > body.size() - 1:\n        var sprite := body_sprites.pop_back()\n        sprite.queue_free()\n    for i in range(body_sprites.size()):\n        body_sprites[i].position = Grid.grid_to_world(body[i + 1])\n```\n\nNo unit tests required; verify visually that head and body render at correct grid positions.",
+        "priority": "medium",
+        "dependencies": [
+          "3"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:21:45.484Z"
+      },
+      {
+        "id": "6",
+        "title": "Implement food spawn and respawn logic",
+        "description": "Spawn food at a random empty grid cell and respawn to a new random empty cell when eaten",
+        "details": "Create res://food.gd extending Node2D with a grid_pos: Vector2i property. Add a spawn() method that selects a random cell from the set of all grid cells not occupied by the snake body or walls. Use Grid.GRID_WIDTH and Grid.GRID_HEIGHT to iterate all cells, filter out occupied ones, and pick randomly. Pseudo-code:\n\n```gdscript\nclass_name Food\nextends Node2D\n\nvar grid_pos: Vector2i\n\nfunc spawn(snake_body: Array[Vector2i]) -> void:\n    var empty_cells: Array[Vector2i] = []\n    for x in range(1, Grid.GRID_WIDTH - 1):\n        for y in range(1, Grid.GRID_HEIGHT - 1):\n            var cell := Vector2i(x, y)\n            if cell not in snake_body:\n                empty_cells.append(cell)\n    if empty_cells.size() > 0:\n        grid_pos = empty_cells.pick_random()\n        position = Grid.grid_to_world(grid_pos)\n```\n\nIn main.gd, instantiate Food, call spawn() initially, and on each tick check if snake.get_head() == food.grid_pos; if true, call snake.grow() and food.spawn(snake.body). Test strategy: Create test/food_test.gd to verify spawn() never returns a cell occupied by the snake.",
+        "priority": "medium",
+        "dependencies": [
+          "3"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:23:25.671Z"
+      },
+      {
+        "id": "7",
+        "title": "Render food sprite and play eat sound",
+        "description": "Display the food using food.png and play eat_food.wav when the snake eats it",
+        "details": "In food.gd's _ready(), create a Sprite2D child with texture = preload('res://sprites/food.png'), texture_filter = TEXTURE_FILTER_NEAREST. Add an AudioStreamPlayer child with stream = preload('res://audio/eat_food.wav'). Add a play_eat_sound() method that calls audio_player.play(). In main.gd, when food is eaten (snake head == food position), call food.play_eat_sound() before respawning. Pseudo-code:\n\n```gdscript\n# food.gd\nvar sprite: Sprite2D\nvar audio_player: AudioStreamPlayer\n\nfunc _ready() -> void:\n    sprite = Sprite2D.new()\n    sprite.texture = preload('res://sprites/food.png')\n    sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST\n    add_child(sprite)\n    \n    audio_player = AudioStreamPlayer.new()\n    audio_player.stream = preload('res://audio/eat_food.wav')\n    add_child(audio_player)\n\nfunc play_eat_sound() -> void:\n    audio_player.play()\n```\n\n```gdscript\n# main.gd _on_tick()\nif snake.get_head() == food.grid_pos:\n    food.play_eat_sound()\n    snake.grow()\n    score += 1\n    food.spawn(snake.body)\n```\n\nNo unit tests required; verify audio plays on food consumption.",
+        "priority": "medium",
+        "dependencies": [
+          "6"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:30:10.286Z"
+      },
+      {
+        "id": "8",
+        "title": "Implement collision detection and game-over state",
+        "description": "Detect wall and self-collision to transition to game-over state and play death sound",
+        "details": "In main.gd, add a game_state enum (PLAYING, GAME_OVER). On each tick after snake.move(), check if snake head is out of bounds (!Grid.is_in_bounds(snake.get_head())) or if snake.check_self_collision() returns true. If either is true, transition to GAME_OVER state. Add an AudioStreamPlayer node to Main.tscn with stream = preload('res://audio/death.wav'). On collision, stop the tick timer, play death sound, and set game_state. Pseudo-code:\n\n```gdscript\nenum GameState { PLAYING, GAME_OVER }\nvar game_state: GameState = GameState.PLAYING\n\nfunc _on_tick() -> void:\n    if game_state != GameState.PLAYING:\n        return\n    \n    snake.move()\n    \n    if not Grid.is_in_bounds(snake.get_head()) or snake.check_self_collision():\n        _game_over()\n        return\n    \n    # Check food collision...\n\nfunc _game_over() -> void:\n    game_state = GameState.GAME_OVER\n    $TickTimer.stop()\n    $DeathSound.play()\n```\n\nTest strategy: Create test/main_test.gd to verify collision detection triggers game-over state correctly for wall and self-collision scenarios.",
+        "priority": "high",
+        "dependencies": [
+          "3",
+          "6"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:28:57.758Z"
+      },
+      {
+        "id": "9",
+        "title": "Implement score tracking and HUD display",
+        "description": "Track the player's score and display it in a minimal HUD",
+        "details": "In Main.tscn, add a CanvasLayer node named 'HUD' with a Label child positioned at the top-left (e.g., offset_left=10, offset_top=10). In main.gd, add a score: int variable initialized to 0. Each time food is eaten (task 7), increment score. Update the HUD label text with the current score. Pseudo-code:\n\n```gdscript\nvar score: int = 0\n\nfunc _ready() -> void:\n    _update_score_display()\n\nfunc _update_score_display() -> void:\n    $HUD/ScoreLabel.text = \"Score: %d\" % score\n\nfunc _on_tick() -> void:\n    # ... existing tick logic\n    if snake.get_head() == food.grid_pos:\n        food.play_eat_sound()\n        snake.grow()\n        score += 1\n        _update_score_display()\n        food.spawn(snake.body)\n```\n\nNo unit tests required; verify score increments and displays correctly during gameplay.",
+        "priority": "medium",
+        "dependencies": [
+          "7"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:31:29.994Z"
+      },
+      {
+        "id": "10",
+        "title": "Implement game-over UI and restart functionality",
+        "description": "Display a game-over prompt and allow the player to restart the game",
+        "details": "In Main.tscn's HUD CanvasLayer, add a ColorRect or Panel node covering the screen (initially hidden) with a Label child displaying 'Game Over! Press R to Restart'. In main.gd, when game_state becomes GAME_OVER, show this overlay. Listen for 'R' key press (or a custom restart action) in _input(); when detected and in GAME_OVER state, call a _restart_game() method that resets score to 0, recreates the snake at starting position/length, respawns food, sets game_state to PLAYING, hides the game-over overlay, and restarts the tick timer. Pseudo-code:\n\n```gdscript\nfunc _game_over() -> void:\n    game_state = GameState.GAME_OVER\n    $TickTimer.stop()\n    $DeathSound.play()\n    $HUD/GameOverPanel.visible = true\n\nfunc _input(event: InputEvent) -> void:\n    if game_state == GameState.GAME_OVER and event.is_action_pressed(\"ui_accept\"):\n        _restart_game()\n\nfunc _restart_game() -> void:\n    score = 0\n    _update_score_display()\n    snake.queue_free()\n    snake = Snake.new()\n    add_child(snake)\n    food.spawn(snake.body)\n    game_state = GameState.PLAYING\n    $HUD/GameOverPanel.visible = false\n    $TickTimer.start()\n```\n\nTest strategy: Create test/main_test.gd to verify restart resets score, snake, and game state correctly. Verify manually that pressing R restarts the game.",
+        "priority": "medium",
+        "dependencies": [
+          "8",
+          "9"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-05-26T23:33:33.854Z"
+      }
+    ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-18T00:00:00.000Z",
-      "taskCount": 0,
-      "completedCount": 0,
+      "lastModified": "2026-05-26T23:33:33.855Z",
+      "taskCount": 10,
+      "completedCount": 10,
       "tags": [
         "master"
-      ],
-      "created": "2026-05-22T17:27:11.944Z",
-      "description": "Tasks for master context",
-      "updated": "2026-05-22T17:27:11.944Z"
+      ]
     }
   }
 }

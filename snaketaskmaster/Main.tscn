@@ -1,6 +1,17 @@
-[gd_scene format=3 uid="uid://vpv8fh7vjagf"]
+[gd_scene load_steps=4 format=3 uid="uid://vpv8fh7vjagf"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_main"]
+[ext_resource type="TileSet" path="res://arena_tileset.tres" id="2_tileset"]
+[ext_resource type="AudioStream" path="res://audio/death.wav" id="3_death"]
 
 [node name="Main" type="Node2D" unique_id=1624429783]
+script = ExtResource("1_main")
+
+[node name="Floor" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tileset")
+
+[node name="Walls" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tileset")
 
 [node name="HelloLabel" type="Label" parent="." unique_id=521176167]
 offset_left = 40.0
@@ -8,3 +19,33 @@ offset_top = 40.0
 offset_right = 300.0
 offset_bottom = 70.0
 text = "Hello World"
+
+[node name="TickTimer" type="Timer" parent="."]
+wait_time = 0.15
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_death")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="HUD"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 200.0
+offset_bottom = 40.0
+text = "Score: 0"
+
+[node name="GameOverPanel" type="ColorRect" parent="HUD"]
+visible = false
+offset_right = 640.0
+offset_bottom = 480.0
+color = Color(0, 0, 0, 0.6)
+
+[node name="Label" type="Label" parent="HUD/GameOverPanel"]
+offset_right = 640.0
+offset_bottom = 480.0
+text = "Game Over! Press R to Restart"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="timeout" from="TickTimer" to="." method="_on_tick"]
