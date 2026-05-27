@@ -27,3 +27,15 @@ Read the .firecrawl/snake-gameplay-extracted.md file and create a very simple pr
 (results: The snake game didn't copy and paste the art assets from source. In the future, will have to copy and paste them to the correct spot from the start probably.)
 
 Read the .firecrawl/snake-gameplay-extracted.md file and create a very simple product requirement document based off of that file into .taskmaster/docs/prd.txt. The goal is to describe a simple 2D game that will be implemented in godot. It should be 2D. Tag the feature or task with art, code, or audio depending on if it requires art, code, or audio. If it requires more than one of these split the task into so that each task only requires one tag. For art tagged tasks find the appropriate art asset in sprites folder which should already be setup. For audio tagged tasks find the appropriate audio asset in audio. If it's not clear what features should be in the final game work back and forth with me by asking clarifying questions before writing out the prd.
+
+(Gonna try architect prompt => from architect plan => PRDs => task-master on prds)
+Read the .firecrawl/snake-gameplay-extracted.md as a game design document.
+
+You are tasked with analyzing Game Design Documents (GDDs) and architecting the top-level major code systems necessary to implement the game. Before breaking down the GDD into systems, you will:
+1. Identify any potential technical challenges not explicitly mentioned in the PRD without discarding any explicit requirements or going overboard with complexity. -- always aim to provide the most direct path to implementation, avoiding over-engineering or roundabout approaches
+2. Make sure your content is relevant to Godot 4 game engine and not other Godot versions
+
+Each system should represent a logical module that handles an aspect of the game. Each system should have a stated goal or purpose and ideally be a pure functional stateless code with inputs and outputs. Prefer modules modifying objects passed by reference instead of creating and updating a state themselves. Export your results into .taskmaster/docs/systems.md.
+
+The goal is to describe a simple 2D game that will be implemented in godot. If it's not clear what features should be in the final game work back and forth with me by asking clarifying questions before writing out the plan.
+
