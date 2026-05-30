@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://mvs6vtmdl2a4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n2snw"]
+bg_color = Color(0.26393965, 0.6311365, 0.89704984, 1)
+
+[node name="hud" type="CanvasLayer" unique_id=519216409]
+
+[node name="ScorePanel" type="Panel" parent="." unique_id=1014065492]
+anchors_preset = 10
+anchor_right = 1.0
+offset_right = 360.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_n2snw")
+
+[node name="ScoreLabel" type="Label" parent="ScorePanel" unique_id=1684538793]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -146.0
+offset_right = 101.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Score Label"
+horizontal_alignment = 1
+vertical_alignment = 1

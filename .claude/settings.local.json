@@ -22,7 +22,11 @@
       "Bash(python3 *)"
     ]
   },
+  "enabledMcpjsonServers": [
+    "task-master-ai"
+  ],
   "enabledPlugins": {
     "taskmaster@taskmaster": true
-  }
+  },
+  "enableAllProjectMcpServers": true
 }
