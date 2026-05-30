@@ -1,10 +1,34 @@
 [gd_scene format=3 uid="uid://vpv8fh7vjagf"]
 
-[node name="Main" type="Node2D" unique_id=1624429783]
+[ext_resource type="Script" uid="uid://br772pqfnl5iv" path="res://main.gd" id="1_glv2v"]
+[ext_resource type="PackedScene" uid="uid://c7usqwuqmpbvs" path="res://snake_segment.tscn" id="2_cm0pq"]
+[ext_resource type="Texture2D" uid="uid://bb2vu3y2uh513" path="res://sprites/floor_tile.png" id="2_uu6xs"]
+[ext_resource type="PackedScene" uid="uid://mvs6vtmdl2a4" path="res://hud.tscn" id="3_r0du0"]
+[ext_resource type="Texture2D" uid="uid://payi7axmkcy3" path="res://sprites/food.png" id="5_fos0i"]
+[ext_resource type="PackedScene" uid="uid://b5qg6etfjgbrc" path="res://GameOver.tscn" id="6_3dxm6"]
 
-[node name="HelloLabel" type="Label" parent="." unique_id=521176167]
-offset_left = 40.0
-offset_top = 40.0
-offset_right = 300.0
-offset_bottom = 70.0
-text = "Hello World"
+[node name="Main" type="Node" unique_id=485074466]
+script = ExtResource("1_glv2v")
+snake_scene = ExtResource("2_cm0pq")
+
+[node name="Bg" type="Sprite2D" parent="." unique_id=1025299035]
+position = Vector2(322, 300)
+scale = Vector2(19.318905, 17.202402)
+texture = ExtResource("2_uu6xs")
+
+[node name="hud" parent="." unique_id=519216409 instance=ExtResource("3_r0du0")]
+scale = Vector2(0.635, 1)
+transform = Transform2D(0.635, 0, 0, 1, 0, 0)
+
+[node name="Timer" type="Timer" parent="." unique_id=386370108]
+wait_time = 0.1
+
+[node name="Food" type="Sprite2D" parent="." unique_id=1242606625]
+texture = ExtResource("5_fos0i")
+offset = Vector2(12.5, 12.5)
+
+[node name="GameOver" parent="." unique_id=1762792342 instance=ExtResource("6_3dxm6")]
+process_mode = 2
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="restart" from="GameOver" to="." method="_on_game_over_restart"]
